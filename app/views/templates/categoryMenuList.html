@@ -1,0 +1,15 @@
+<div class="list-area-menu">
+    <div class="title font-label">{{title}}</div>
+    <caph-list id="list-{{listCategory}}" container-class="list-container" wrapper-class="list-scroll-wrapper" items="item in menuArray" on-scroll-start="onScrollStart($context)" on-scroll-finish="onScrollFinish($context)" mouse-scroll-area-size="40">
+        <div id="item-{{$index}}" class="item item-playlist" focusable data-focusable-depth="1" on-focused="categoryMenuFocus($event, listCategory, this,$index)" on-blurred="categoryMenuBlur($event, listCategory, this)" on-selected="categoryMenuSelected($event, listCategory, this,$index)">
+            <div class="loader" ng-show="item.loaded===false"></div>
+            <div class="content" ng-hide="item.loaded===false" style="background: {{item.color || ''}};-webkit-background-size:100% 100%;">
+                <div class="playlist-text font-label">
+                    <h2>
+                        {{item.this.name[0].text}}
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </caph-list>
+</div>

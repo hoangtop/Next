@@ -1,0 +1,15 @@
+<div class="list-area" ng-class="{'list-fadeout': currentCategory !== listCategory,'second-category':currentCategory === 0 && id === 1}" >
+    <!-- opacity 0.2 -->
+    <div class="title font-label" ng-class="{'title-opacity': currentCategory !== listCategory}">{{homeCategoryNameList[id-1].name}}</div>
+    <caph-list id="list-{{listCategory}}" container-class="list-container" wrapper-class="list-scroll-wrapper" items="item in dataCategory[listCategory]" on-scroll-start="onScrollStart($context)" on-scroll-finish="onScrollFinish($context)" mouse-scroll-area-size="40"
+        loop="true">
+        <div id="{{listCategory}}-{{item.id}}" class="item" ng-class="{'item-blank': item.isBlank === true}" focusable data-focusable-depth="1" on-focused="vodFocus($event, listCategory, item, $index)" on-blurred="blur($event, listCategory, this)" on-selected="selected($event, listCategory, item, $index)">
+            <div class="loader" ng-show="item.loaded === false"></div>
+            <div class="content" ng-hide="item.loaded === false" style="background: url({{item.photoUrl || ''}});-webkit-background-size:100% 100%;">
+                <!--<div class="text font-label">
+                    <div class="font-info">{{item.name}}</div>
+                </div>-->
+            </div>
+        </div>
+    </caph-list>
+</div>
