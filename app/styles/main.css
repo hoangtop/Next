@@ -1566,6 +1566,7 @@ span.login-input-lable {
 }
 
 .videoMainPlay.player-shown {
+    /*opacity: 1;*/
     opacity: 1;
 }
 
