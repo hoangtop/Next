@@ -175,6 +175,14 @@ module.exports = function(grunt) {
                     ]
                 }]
             },
+            production: {
+                files: [{
+                    dot: true,
+                    src: [
+                        'production/*', '!production/.project', '!production/.tproject', '!production/.settings'
+                    ]
+                }]
+            },
             server: '.tmp'
         },
 
@@ -235,9 +243,9 @@ module.exports = function(grunt) {
             dist: {
                 src: [
                     '<%= yeoman.dist %>/scripts/{,*/}*.js',
-                    '<%= yeoman.dist %>/styles/{,*/}*.css',
-                    '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-                    '<%= yeoman.dist %>/styles/fonts/*'
+                    '<%= yeoman.dist %>/styles/{,*/}*.css'
+                    // '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+                    // '<%= yeoman.dist %>/styles/fonts/*'
                 ]
             }
         },
@@ -293,18 +301,20 @@ module.exports = function(grunt) {
         //     }
         //   }
         // },
-        // uglify: {
-        //   dist: {
-        //     files: {
-        //       '<%= yeoman.dist %>/scripts/scripts.js': [
-        //         '<%= yeoman.dist %>/scripts/scripts.js'
-        //       ]
-        //     }
-        //   }
-        // },
+        uglify: {
+            options: {
+                mangle: false,
+                compress: {
+                    drop_console: true
+                        //                    unsafe :true
+                }
+            }
+
+        },
         // concat: {
         //   dist: {}
         // },
+
 
         imagemin: {
             dist: {
@@ -348,7 +358,7 @@ module.exports = function(grunt) {
         ngtemplates: {
             dist: {
                 options: {
-                    module: 'vietteltvApp',
+                    module: 'vietteltv',
                     htmlmin: '<%= htmlmin.dist.options %>',
                     usemin: 'scripts/scripts.js'
                 },
@@ -389,8 +399,10 @@ module.exports = function(grunt) {
                     src: [
                         '*.{ico,png,txt}',
                         '*.html',
+                        '*.xml',
                         'images/{,*/}*.{webp}',
-                        'styles/fonts/{,*/}*.*'
+                        'styles/fonts/{,*/}*.*',
+                        'scripts/custom/smarttv-keyboard-1.0.1/en-boxed.js'
                     ]
                 }, {
                     expand: true,
@@ -404,6 +416,12 @@ module.exports = function(grunt) {
                 cwd: '<%= yeoman.app %>/styles',
                 dest: '.tmp/styles/',
                 src: '{,*/}*.css'
+            },
+            production: {
+                expand: true,
+                dest: 'production',
+                cwd: '<%= yeoman.dist %>',
+                src: ['{,*/}*.*', 'styles/fonts/{,*/}*.*', 'scripts/custom/smarttv-keyboard-1.0.1/{,*/}*.*', 'images/spotlight/{,*/}*.*']
             }
         },
 
@@ -476,7 +494,9 @@ module.exports = function(grunt) {
         'uglify',
         'filerev',
         'usemin',
-        'htmlmin'
+        'htmlmin',
+        'clean:production',
+        'copy:production'
     ]);
 
     grunt.registerTask('default', [

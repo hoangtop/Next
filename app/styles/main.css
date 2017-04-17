@@ -1,11 +1,11 @@
 @font-face {
     font-family: "SamsungSVD_Latin Light";
-    src: url("../fonts/SamsungSVDLight_Latin.ttf");
+    src: url("fonts/SamsungSVDLight_Latin.ttf");
 }
 
 @font-face {
     font-family: "SamsungSVD_Latin Medium";
-    src: url("../fonts/SamsungSVDMedium_Latin.ttf");
+    src: url("fonts/SamsungSVDMedium_Latin.ttf");
 }
 
 body {
@@ -837,13 +837,13 @@ body {
 .btn-play:before {
     content: 'XEM NGAY';
     line-height: 57px;
-    margin: 0 44px 0 42px;
+    margin: 0 0px 0 42px;
 }
 
 .btn-login:before {
     content: 'Đăng nhập';
     line-height: 57px;
-    margin: 0 44px 0 42px;
+    margin: 0 0px 0 42px;
 }
 
 .btn-login-cancel:before {
@@ -855,7 +855,7 @@ body {
 .btn-view:before {
     content: 'XEM THÊM';
     line-height: 57px;
-    margin: 0 44px 0 42px;
+    margin: 0 0px 0 42px;
 }
 
 .btn-return {
@@ -1381,7 +1381,8 @@ li.short-info-li.short-info-1 {
     height: 24%;
     margin-top: 161px;
     visibility: hidden;
-    display: none;
+    /*display: none;*/
+    position: fixed;
 }
 
 .button-row {
@@ -1601,7 +1602,7 @@ span.login-input-lable {
 
 .toast-warning {
     color: #ffffff;
-    background-color: rgba(248, 148, 6, 0.51);
+    background-color: rgba(248, 148, 6, 0.71);
 }
 
 .toast-error {

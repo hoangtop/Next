@@ -31,7 +31,7 @@
             $http.post(
                     requestUrl,
                     param)
-                .success(function(response) {
+                .then(function(response) {
                     console.log("renew token response..");
                     console.log(response);
                     if (typeof response.access_token !== "undefined" && typeof response.expiration_date !== "undefined" && typeof response.refresh_token !== "undefined" && typeof response.refresh_token_expiration_date !== "undefined") {
@@ -54,8 +54,7 @@
 
                     def.resolve(response);
 
-                })
-                .error(function() {
+                }, function() {
                     def.reject("Failed to get renewToken");
                 });
 
@@ -96,13 +95,12 @@
                     var url = CONSTANT.API_HOST + '/ott/accounts/login';
 
                     return $http.post(url, requestObj, {
-                            headers: {
-                                "Accept": "application/json"
-                            }
-                        }).success(authenticateSuccess)
-                        .error(function(error) {
-                            return error;
-                        });
+                        headers: {
+                            "Accept": "application/json"
+                        }
+                    }).then(authenticateSuccess, function(error) {
+                        return error;
+                    });
                 });
             } else {
                 deviceObject.id = localStorageService.get('deviceUdid');
@@ -117,7 +115,7 @@
                     headers: {
                         "Accept": "application/json"
                     }
-                }).success(authenticateSuccess).error(function(error) {
+                }).then(authenticateSuccess, function(error) {
                     return error;
                 });
             }
@@ -127,18 +125,19 @@
 
 
             function authenticateSuccess(response) {
-                if (response.error) {
+                console.log('authenticateSuccess', response);
+                if (response.data.error) {
                     var def = $q.defer();
                     def.reject('Loi Dang nhap');
                 } else {
                     var token = {
-                        'access_token': response.access_token,
-                        'token_secret': response.token_secret,
-                        'login_access_token': response.access_token,
-                        'refresh_token': response.refresh_token,
-                        'expiration_date': response.expiration_date,
-                        'refresh_token_expiration_date': response.refresh_token_expiration_date,
-                        'temp_password': response.temp_password
+                        'access_token': response.data.access_token,
+                        'token_secret': response.data.token_secret,
+                        'login_access_token': response.data.access_token,
+                        'refresh_token': response.data.refresh_token,
+                        'expiration_date': response.data.expiration_date,
+                        'refresh_token_expiration_date': response.data.refresh_token_expiration_date,
+                        'temp_password': response.data.temp_password
                     };
                     console.log("authenticate success token ....", token);
 

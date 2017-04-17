@@ -1,0 +1,162 @@
+.smart-tv-keyboard {
+    background: transparent;
+    padding: 5px;
+    margin: 0 auto;
+    font-family: Arial;
+    display: inline-block;
+    width: 40%;
+    position: fixed;
+    left: 52px;
+    top: 218px;
+    /* z-index: 1000000000000000000 !important; */
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-title {
+    text-align: left;
+    color: #fff;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-input-section {
+    /* margin-bottom: 5px; */
+    /* position: fixed; */
+    /* left: 894.6px; */
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-input {
+    display: none;
+    /* position: fixed;*/
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-input:focus {
+    outline: 0
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-input.textarea {
+    height: 4em
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button {
+    margin: 1px;
+    height: 65px;
+    line-height: 63px;
+    color: #666;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-length-6 {
+    width: 250px
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-length-5 {
+    width: 208px
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-length-4 {
+    width: 374px;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-length-3 {
+    width: 124px
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-length-2 {
+    width: 186px;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-length-1 {
+    width: 92px;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-color-disabled {
+    background: 0 0
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-color-letter {
+    background: rgba(238, 238, 238, 0.12);
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-color-symbol {
+    background: rgba(134, 151, 190, 0.12);
+    color: #eee;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-color-number {
+    background: rgba(86, 132, 157, 0.12);
+    color: #eee;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-color-toggle {
+    background: rgba(86, 152, 115, 0.12);
+    color: #eee;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-color-danger {
+    background: rgba(194, 86, 86, 0.12);
+    color: #eee;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-color-success {
+    background: rgba(134, 151, 190, 0.12);
+    color: #eee;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-color-warning {
+    background: rgba(157, 143, 0, 0.12);
+    color: #eee;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-color-navigation {
+    background: rgba(134, 151, 190, 0.12);
+    color: #eee;
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-selected {
+    background: #fff!important;
+    color: #444!important
+}
+
+.smart-tv-keyboard-modal {
+    background: #000;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -132px;
+    margin-left: -225px;
+    z-index: 1050
+}
+
+.smart-tv-keyboard-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+    background-color: rgba(0, 0, 0, .75)
+}
+
+.smart-tv-keyboard>div {
+    /* opacity: 0.1 !important; */
+}
+
+.smart-tv-keyboard .smart-tv-keyboard-button-color-success.disabled {
+    opacity: 0.2;
+}
+
+.smart-tv-keyboard-row:last-child {
+    margin-top: 15px;
+}

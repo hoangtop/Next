@@ -1,0 +1,2 @@
+C:\tizen-studio\tools\certificate-generator\certificates\distributor\tizen-distributor-signer.p12
+E:\HoangCH\Workspace\SVN\OTT_Web\Documents\Samsung Cerr\Samsung Cert\author.p12

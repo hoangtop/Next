@@ -57,8 +57,9 @@ app.controller('controller', ['$rootScope', '$scope', '$state', '$timeout', '$do
         $scope.bgImgUrl = CONSTANT.SPOTLIGHT_BG_IMG_URL;
     }, 400);
     $scope.login = {
-        username: '01647937941',
-        password: '1'
+        username: '',
+        password: ''
+            // password: 'qaz123'
     };
     $scope.CATEGORY_MENU = CONSTANT.PREPARED_DATA.CATEGORY_MENUS;
     var hls;
@@ -73,43 +74,46 @@ app.controller('controller', ['$rootScope', '$scope', '$state', '$timeout', '$do
     var currentSpotlight = null;
     var allChannelList = null;
     var noCategoryInHome = 0;
-    $document.on('ready', function() {
-        $timeout(function() { // Set 'focus' to specific element by 'focus' controller.
-            RestService.getChannelList().then(function success(channelList) {
-                allChannelList = channelList;
-                updateCategoryListData(channelList, 0, true);
-            }, function error(response) {
-                console.error('Loi trong qua trinh goi getChannelList!');
-                console.error(response);
-            });
-            RestService.getMenuCategories().then(function(menus) {
-                $scope.menuArray = menus;
-                noCategoryInHome = menus[0].children.length;
-                console.log("menu ac---------------------:", menus);
-                var homeCategoryNameList = [];
-                for (var index = 1; index < menus[0].children.length; index++) {
-                    var menuItem = menus[0].children[index];
-                    homeCategoryNameList.push({
-                        'index': index,
-                        'name': menuItem.this.name[0].text
-                    });
+    // alert('111');
+    // $document.on('ready', function() {to
+    // alert('222');
+    $timeout(function() { // Set 'focus' to specific element by 'focus' controller.
+        RestService.getChannelList().then(function success(channelList) {
+            console.info(' getChannelList!', channelList);
+            allChannelList = channelList;
+            updateCategoryListData(channelList, 0, true);
+        }, function error(response) {
+            console.error('Loi trong qua trinh goi getChannelList!');
+            console.error(response);
+        });
+        RestService.getMenuCategories().then(function(menus) {
+            $scope.menuArray = menus;
+            noCategoryInHome = menus[0].children.length;
+            console.log("menu ac---------------------:", menus);
+            var homeCategoryNameList = [];
+            for (var index = 1; index < menus[0].children.length; index++) {
+                var menuItem = menus[0].children[index];
+                homeCategoryNameList.push({
+                    'index': index,
+                    'name': menuItem.this.name[0].text
+                });
+            }
+            $scope.homeCategoryNameList = homeCategoryNameList;
+            for (var index = 1; index < menus[0].children.length; index++) {
+                var menuItem = menus[0].children[index];
+                if (UltilService.isSeriesCategory(menuItem)) {
+                    processSeriesVODList(index, menuItem, UltilService.getVodCategoryId(menuItem));
+                } else {
+                    processVODList(menuItem, index);
                 }
-                $scope.homeCategoryNameList = homeCategoryNameList;
-                for (var index = 1; index < menus[0].children.length; index++) {
-                    var menuItem = menus[0].children[index];
-                    if (UltilService.isSeriesCategory(menuItem)) {
-                        processSeriesVODList(index, menuItem, UltilService.getVodCategoryId(menuItem));
-                    } else {
-                        processVODList(menuItem, index);
-                    }
-                }
-                $scope.focusedMenu = menus[0];
-            }, function() {
-                console.log('menus retrieval failed.');
-            });
-            processSpotlightVodList();
-        }, CONSTANT.EFFECT_DELAY_TIME);
-    });
+            }
+            $scope.focusedMenu = menus[0];
+        }, function() {
+            console.log('menus retrieval failed.');
+        });
+        processSpotlightVodList();
+    }, CONSTANT.EFFECT_DELAY_TIME);
+    // });
 
     function processSpotlightVodList() {
         var vodIdList = '';
@@ -185,7 +189,7 @@ app.controller('controller', ['$rootScope', '$scope', '$state', '$timeout', '$do
         updateOverview();
     };
     $scope.toggleIsPlaying = function(isPlaying) { // Change button shape by '$scope.isPlaying' ('Play' <-> 'Pause')
-        // console.log("toggleIsPlaying...");
+        console.log("toggleIsPlaying...", isPlaying);
         $scope.$applyAsync(function() {
             $scope.isPlaying = isPlaying;
         });
@@ -461,7 +465,8 @@ app.controller('controller', ['$rootScope', '$scope', '$state', '$timeout', '$do
             lastFocusedGroup = FocusUtil.getData($event.currentTarget).group;
         } else {
             $scope.overview = null;
-            $scope.sidebarCategories = data.item.children.slice(1, data.item.children.length - 1);
+            $scope.sidebarCategories = data.item.children;
+            // $scope.sidebarCategories = data.item.children.slice(1, data.item.children.length);
             $scope.selectedCategoryMenu = data.item.this.name[0].text;
             $scope.selectedCategoryMenuIndex = $index;
             $scope.vodListByCategory = [];
@@ -1041,6 +1046,7 @@ app.controller('controller', ['$rootScope', '$scope', '$state', '$timeout', '$do
     };
 
     focusController.addBeforeKeydownHandler(function(context) {
+        $scope.isChannel = false;
         console.log('keycode $scope.DEPTH.DETAIL: ', context.event.keyCode);
         if ($scope.isInitCompleted === false) return;
         if ($scope.currentDepth === $scope.DEPTH.PLAYER && !$scope.overview.channel) {
@@ -1282,6 +1288,8 @@ app.controller('controller', ['$rootScope', '$scope', '$state', '$timeout', '$do
             case $scope.DEPTH.PLAYER:
                 // getPlayerControls().pause();
                 // $scope.isMediaLoaderHidden = false;
+                $scope.showMediaController = false;
+                mediaControllerTimer = null;
                 VideoService.stopStream(video);
                 targetDepth = lastDepth;
                 $timeout(function() {
@@ -1293,6 +1301,7 @@ app.controller('controller', ['$rootScope', '$scope', '$state', '$timeout', '$do
                 break;
             case $scope.DEPTH.LOGIN:
                 LoginService.closeLoginPage();
+
                 targetDepth = lastDepth;
                 focusClass = '.btn-resume';
                 $timeout(function() {

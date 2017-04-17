@@ -183,12 +183,12 @@
 
             RestService.getPrepareChannel(param).then(
                 function success(response) {
-                    if (typeof(response.glbAddress) !== 'undefined' && response.glbAddress.length > 0) {
+                    if (typeof(response.data.glbAddress) !== 'undefined' && response.data.glbAddress.length > 0) {
                         var src = [];
                         var abc = 0;
-                        if (response.glbAddress.length > 0) {
-                            for (var i = 0; i < response.glbAddress.length; i++) {
-                                var stream = 'http://' + response.glbAddress[i] + '/' + param.assetId + ".m3u8" + '?AdaptiveType=HLS&VOD_RequestID=' + response.requestId;
+                        if (response.data.glbAddress.length > 0) {
+                            for (var i = 0; i < response.data.glbAddress.length; i++) {
+                                var stream = 'http://' + response.data.glbAddress[i] + '/' + param.assetId + ".m3u8" + '?AdaptiveType=HLS&VOD_RequestID=' + response.data.requestId;
                             }
 
                             playStream(stream, video, def);
@@ -227,11 +227,11 @@
                 RestService.getVodURL(vod.program.id, vod.singleProductId, vod.isFreeNoPair).then(
                     function success(response) {
                         console.log('getVodURL success ', response);
-                        var vodRequestId = response.gsdm.vod_request_id;
+                        var vodRequestId = response.data.gsdm.vod_request_id;
                         var stream = '';
-                        if (response.gsdm.glb_addresses.length > 0) {
-                            for (i = 0; i < response.gsdm.glb_addresses.length; i++) {
-                                stream = 'http://' + response.gsdm.glb_addresses[i] + '/' + vod.vodLocator + '?AdaptiveType=HLS&VOD_RequestID=' + vodRequestId;
+                        if (response.data.gsdm.glb_addresses.length > 0) {
+                            for (var i = 0; i < response.data.gsdm.glb_addresses.length; i++) {
+                                stream = 'http://' + response.data.gsdm.glb_addresses[i] + '/' + vod.vodLocator + '?AdaptiveType=HLS&VOD_RequestID=' + vodRequestId;
                             }
                         }
 

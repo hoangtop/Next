@@ -4,57 +4,18 @@
 <head>
     <meta charset="utf-8">
     <title>Viettel TV</title>
-    <!-- build:css -->
-    <link rel="stylesheet" href="css/w3.css">
-    <link href="lib/caph/caph.min.css" rel="stylesheet" type="text/stylesheet">
-    <link rel="stylesheet" href="lib/smarttv-keyboard-1.0.1/css/smart-tv-keyboard-light.min.css">
-    <link rel="stylesheet" href="lib/toaster-2.1.0/toaster.min.css">
-    <link rel="stylesheet" href="styles/main.css">
-
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
     <!-- endbuild -->
 
-    <!-- Include js file for popular js libraries  -->
-    <script type="text/javascript" src="lib/jquery/jquery.js"></script>
-    <script type="text/javascript" src="lib/angular/angular.js"></script>
-    <script type="text/javascript" src="lib/angular/angular-resource.min.js"></script>
-    <script type="text/javascript" src="lib/angular-sanitize/angular-sanitize.js"></script>
-    <script type="text/javascript" src="lib/angular/angular-animate.min.js"></script>
-    <script type="text/javascript" src="lib/caph/caph-angular.min.js"></script>
-    <script type="text/javascript" src="lib/angular-local-storage-0.5.2/angular-local-storage.min.js"></script>
-    <script type="text/javascript" src="lib/crypto-js/crypto-js.js"></script>
-    <script type="text/javascript" src="lib/fingerprintjs2-1.5.0/fingerprint2.min.js"></script>
-    <script type="text/javascript" src="lib/js-storage-1.0.2/js.storage.min.js"></script>
-    <script type="text/javascript" src="lib/angular-ui-router-0.3.0/angular-ui-router.min.js"></script>
-    <script type="text/javascript" src="lib/http-auth-interceptor/http-auth-interceptor.min.js"></script>
-    <script type="text/javascript" src="lib/ng-infinite-scroll-1.3.0/ng-infinite-scroll.min.js"></script>
-    <script type="text/javascript" src="lib/smarttv-keyboard-1.0.1/layouts/en-boxed.js"></script>
-    <script type="text/javascript" src="lib/smarttv-keyboard-1.0.1/smartTvKeyboard.js"></script>
-    <script type="text/javascript" src="lib/toaster-2.1.0/toaster.js"></script>
-
-    <script src="lib/hls/hls.min.js"></script>
-
-    <!--Include js file for Touch Event -->
-    <script type="text/javascript" src="lib/hammer.min.js"></script>
-
-
-    <!-- Include js file for app -->
-    <script type="text/javascript" src="scripts/app.js"></script>
-
-    <script type="text/javascript" src="scripts/directives/list.js"></script>
-    <script type="text/javascript" src="scripts/directives/caphMedia.js"></script>
-    <script type="text/javascript" src="scripts/utils/constant.js"></script>
-    <script type="text/javascript" src="scripts/service/rest.service.js"></script>
-    <script type="text/javascript" src="scripts/service/ultil.service.js"></script>
-    <script type="text/javascript" src="scripts/service/video.service.js"></script>
-    <script type="text/javascript" src="scripts/service/account.service.js"></script>
-    <script type="text/javascript" src="scripts/service/auth.alti.service.js"></script>
-    <script type="text/javascript" src="scripts/service/auth.service.js"></script>
-    <script type="text/javascript" src="scripts/service/login.service.js"></script>
-    <script type="text/javascript" src="scripts/service/principal.service.js"></script>
-    <script type="text/javascript" src="scripts/interceptor/auth.interceptor.js"></script>
-    <script type="text/javascript" src="scripts/controller.js"></script>
-
-
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/w3.css">
+    <link rel="stylesheet" href="styles/caph.min.css">
+    <link rel="stylesheet" href="styles/smart-tv-keyboard-light.css">
+    <link rel="stylesheet" href="styles/toaster.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
 
 </head>
 
@@ -63,7 +24,7 @@
 
     <!-- Welcome : It will disappear when '$scope.isInitCompleted' become 'false'. -->
     <div class="welcome" ng-class="{'fade-out': isInitCompleted}">
-        <span class="caph">Viettel TV</span><br/>Truyền hình theo yêu cầu số 1 Việt Nam.
+        <span class="caph">Viettel TV</span><br/>Xem truyền hình và nội dung theo yêu cầu.
     </div>
 
     <div ng-style="{'border-color': overview.color,'background-size':bgSize,'background-image': bgGradient1 + ', '+ bgGradient2 + ', url(' + bgImgUrl + ')'}" class="wrapper wrapper-spotlight" ng-include="'views/main.html'"></div>
@@ -166,35 +127,48 @@
 
         </div>
     </div>
-    <script type="text/javascript">
-        $('document').ready(function() {
-            $('.login-input').smartTvKeyboard({
-                title: null, // Window title
-                defLang: null, // Default language (layout key name)
-                defMode: null, // Default mode (depends on layout, usually: 'shift', 'unshift' or 'symb')
-                layouts: {
-                    en: smartTvKeyboardLayouts.enBoxed
-                }, // Will enable all loaded layouts
-                type: 'inline', // Keyboard type: 'inline' or 'modal'
-                openOn: 'click focus', // Space-separated list of events to display the keyborad, defaults to 'click focus' 
-                onEnter: null, // On enter callback, passes entered value as first param
-                onCancel: null, // On cancel callback, passes entered value as first param
-                useDirectEdit: true, // Allow direct input with physical keyboard
-                useNavKeys: true, // Allow using nav keys (remote control) to select and enter values
-                navKeys: { // List of custom key codes, requires if useNavKeys option enabled (usually it's remote control keycodes)
-                    LEFT: 37,
-                    UP: 38,
-                    RIGHT: 39,
-                    DOWN: 40,
-                    ENTER: 13, // Enter
-                    EXIT: 8, // ESC
-                    RETURN: 10009
-                }
-            });
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+    <script src="bower_components/crypto-js/crypto-js.js"></script>
+    <script src="bower_components/fingerprintjs2/fingerprint2.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/hls.js/dist/hls.js"></script>
+    <!-- endbower -->
+    <script src="bower_components/mdo-http-auth-interceptor/http-auth-interceptor.js"></script>
+    <!-- endbuild -->
+    <script type="text/javascript" src="scripts/custom/smarttv-keyboard-1.0.1/en-boxed.js"></script>
 
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script type="text/javascript" src="scripts/custom/caph/caph-angular.min.js"></script>
+    <script type="text/javascript" src="scripts/custom/smarttv-keyboard-1.0.1/smartTvKeyboard.js"></script>
+    <script type="text/javascript" src="scripts/custom/toaster-2.1.0/toaster.js"></script>
+    <script type="text/javascript" src="scripts/app.js"></script>
+    <script type="text/javascript" src="scripts/directives/list.js"></script>
+    <script type="text/javascript" src="scripts/directives/caphMedia.js"></script>
+    <script type="text/javascript" src="scripts/utils/constant.js"></script>
+    <script type="text/javascript" src="scripts/service/rest.service.js"></script>
+    <script type="text/javascript" src="scripts/service/ultil.service.js"></script>
+    <script type="text/javascript" src="scripts/service/video.service.js"></script>
+    <script type="text/javascript" src="scripts/service/account.service.js"></script>
+    <script type="text/javascript" src="scripts/service/auth.alti.service.js"></script>
+    <script type="text/javascript" src="scripts/service/auth.service.js"></script>
+    <script type="text/javascript" src="scripts/service/login.service.js"></script>
+    <script type="text/javascript" src="scripts/service/principal.service.js"></script>
+    <script type="text/javascript" src="scripts/interceptor/auth.interceptor.js"></script>
+    <script type="text/javascript" src="scripts/controller.js"></script>
+    <script type="text/javascript" src="scripts/utils/init.js"></script>
 
-        });
-    </script>
+    <!-- endbuild -->
+
 </body>
 
 </html>

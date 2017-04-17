@@ -29,6 +29,8 @@
         function closeLoginPage(callback) {
             var cb = callback || angular.noop;
             $('#login-page').removeClass('login-page-show');
+            $(".login-row").removeClass('focused');
+
 
             return cb();
 

@@ -62,16 +62,15 @@
             var seriesVodList = [];
             var def = $q.defer();
             $http.get(url)
-                .success(function(response) {
-                    if (response.data) {
-                        seriesVodList = UltilService.transformSeriesVODList(response.data);
+                .then(function(response) {
+                    if (response.data.data) {
+                        seriesVodList = UltilService.transformSeriesVODList(response.data.data);
                         def.resolve(seriesVodList);
                     } else {
                         def.resolve(seriesVodList);
                     }
 
-                })
-                .error(function(response) {
+                }, function(response) {
                     console.error(response);
                     def.resolve(seriesVodList);
                 });
@@ -99,17 +98,16 @@
             var def = $q.defer();
             var episodeVodList = [];
             $http.get(url)
-                .success(function(response) {
-                    if (response.data) {
-                        episodeVodList = UltilService.transformVODList(response.data);
+                .then(function(response) {
+                    if (response.data.data) {
+                        episodeVodList = UltilService.transformVODList(response.data.data);
                         def.resolve(episodeVodList);
                     } else {
                         // def.reject("Failed to get getEpisodesInSeries");
                         def.resolve(episodeVodList);
                     }
 
-                })
-                .error(function() {
+                }, function() {
                     // def.reject("Failed to get getEpisodesInSeries");
                     def.resolve(episodeVodList);
                 });
@@ -123,11 +121,10 @@
             var url = CONSTANT.API_HOST + '/api1/contents/programs/' + vodId + '?include=product&include=multilang&include=purchase&include=fpackage&format=long';
             var def = $q.defer();
             $http.get(url)
-                .success(function(response) {
-                    def.resolve(UltilService.transformVOD(response));
+                .then(function(response) {
+                    def.resolve(UltilService.transformVOD(response.data));
 
-                })
-                .error(function() {
+                }, function() {
                     def.reject("Failed to get getVodDetails");
                 });
 
@@ -147,11 +144,10 @@
 
             var def = $q.defer();
             $http.get(url)
-                .success(function(response) {
+                .then(function(response) {
                     def.resolve(response);
 
-                })
-                .error(function() {
+                }, function() {
                     def.reject("Failed to get getVodURL");
                 });
 
@@ -174,12 +170,11 @@
             var def = $q.defer();
 
             $http.get(url)
-                .success(function(response) {
-                    var episodeVodList = UltilService.transformVODList(response.data);
+                .then(function(response) {
+                    var episodeVodList = UltilService.transformVODList(response.data.data);
                     def.resolve(episodeVodList);
 
-                })
-                .error(function() {
+                }, function() {
                     def.reject("Failed to get getEpisodeListInSeries");
                 });
             return def.promise;
@@ -197,12 +192,11 @@
             var def = $q.defer();
 
             $http.get(url)
-                .success(function(response) {
-                    var episodeVodList = response.data;
+                .then(function(response) {
+                    var episodeVodList = response.data.data;
                     def.resolve(episodeVodList);
 
-                })
-                .error(function() {
+                }, function() {
                     def.reject("Failed to get getEpisodeListInSeries");
                 });
             return def.promise;
@@ -217,11 +211,11 @@
             var def = $q.defer();
             var relatedVodList = [];
             $http.get(url)
-                .success(function(response) {
+                .then(function(response) {
                     // console.log("related response:", response);
-                    if (response.dp.status !== 'NoScenarioResult') {
+                    if (response.data.dp.status !== 'NoScenarioResult') {
                         var programIds = '';
-                        angular.forEach(response.dp.itemList.items, function(vodItem, key) {
+                        angular.forEach(response.data.dp.itemList.items, function(vodItem, key) {
                             programIds = programIds + vodItem.basisInfo.basisList[0].value + ',';
                         });
 
@@ -238,8 +232,7 @@
                         def.resolve(relatedVodList);
                     }
                     // console.log('vodList transformed returned to controller.', vodList);
-                })
-                .error(function(response) {
+                }, function(response) {
                     // def.reject("Failed to get getRelatedVodList");
                     console.error('error in getRelatedVodList .', response);
                     def.resolve(relatedVodList);
@@ -254,12 +247,11 @@
             var def = $q.defer();
 
             $http.get(url)
-                .success(function(response) {
-                    var vodList = UltilService.transformVODList(response.data);
+                .then(function(response) {
+                    var vodList = UltilService.transformVODList(response.data.data);
                     def.resolve(vodList);
 
-                })
-                .error(function() {
+                }, function() {
                     def.reject("Failed to get getVodByProgramIdList");
                 });
             return def.promise;
@@ -272,11 +264,11 @@
             var def = $q.defer();
 
             $http.get(url)
-                .success(function(response) {
-                    var vodList = new Array(response.data.length);
+                .then(function(response) {
+                    var vodList = new Array(response.data.data.length);
                     var index1 = 0;
                     var index2 = 0;
-                    angular.forEach(response.data, function(vod, key) {
+                    angular.forEach(response.data.data, function(vod, key) {
                         vodList[key] = UltilService.transformVOD(vod);
                         vodList[key].episodes = [];
 
@@ -310,8 +302,7 @@
 
                     def.resolve(vodList);
 
-                })
-                .error(function() {
+                }, function() {
                     def.reject("Failed to get getVodByProgramIdList");
                 });
             return def.promise;
@@ -351,10 +342,10 @@
             var def = $q.defer();
 
             $http.get(url)
-                .success(function(response) {
-                    var vodList = new Array(response.data.length);
+                .then(function(response) {
+                    var vodList = new Array(response.data.data.length);
                     var index = 0;
-                    angular.forEach(response.data, function(seriesVOD, key) {
+                    angular.forEach(response.data.data, function(seriesVOD, key) {
                         vodList[key] = seriesVOD;
                         getEpisodeListBySeriesId(seriesVOD.id).then(
                             function(episodeVodList) {
@@ -380,8 +371,7 @@
 
                     });
 
-                })
-                .error(function() {
+                }, function() {
                     def.reject("Failed to get albums");
                 });
             return def.promise;
@@ -393,8 +383,9 @@
             var def = $q.defer();
 
             $http.get(url)
-                .success(function(response) {
-                    service.channelList = response.data.map(function(item, index) {
+                .then(function(response) {
+                    console.log("channel lisst getting ....", response);
+                    service.channelList = response.data.data.map(function(item, index) {
                         var photoUrl = CONSTANT.API_HOST + '/api1/contents/pictures/' + item.channel.id + '?type=original';
                         item.photoUrl = photoUrl;
                         item.name = item.channel.name[0].text;
@@ -405,7 +396,7 @@
                     });
 
                     def.resolve(service.channelList);
-                }).error(function(error, status) {
+                }, function(error, status) {
                     console.error('Failed to get Channel list. status code:' + status);
                     console.error(error);
                     def.reject("Failed to get Channel list");
@@ -421,13 +412,13 @@
 
             var def = $q.defer();
 
-            $http.post(url, param).success(function(data, status, headers, config) {
+            $http.post(url, param).then(function(data, status, headers, config) {
                 // this callback will be called asynchronously
                 // when the response is available
                 console.log("getPrepareChannel service ................ ", data);
                 def.resolve(data);
                 // console.log('vodList transformed re
-            }).error(function(error, status) {
+            }, function(error, status) {
                 console.error('Failed to get getPrepareChannel. status code:' + status);
                 console.error(error);
                 def.reject("Failed to get getPrepareChannel");
@@ -462,11 +453,11 @@
 
 
             $http.get(url)
-                .success(function(response) {
-                    var vodList = new Array(response.data.length);
+                .then(function(response) {
+                    var vodList = new Array(response.data.data.length);
                     var index1 = 0;
                     var index2 = 0;
-                    angular.forEach(response.data, function(vod, key) {
+                    angular.forEach(response.data.data, function(vod, key) {
                         vodList[key] = UltilService.transformVOD(vod);
                         vodList[key].episodes = [];
 
@@ -498,8 +489,7 @@
 
                     });
 
-                })
-                .error(function(error, status) {
+                }, function(error, status) {
                     console.error('Failed to get getVodListByCategoryId. status code:' + status);
                     console.error(error);
                     def.reject("Failed to get getVodListByCategoryId");
@@ -528,12 +518,11 @@
 
 
             $http.get(url)
-                .success(function(response) {
-                    var vodList = UltilService.transformVODList(response.data);
+                .then(function(response) {
+                    var vodList = UltilService.transformVODList(response.data.data);
                     return def.resolve(vodList);
 
-                })
-                .error(function(error, status) {
+                }, function(error, status) {
                     console.error('Failed to get getVodListByCategoryId. status code:' + status);
                     console.error(error);
                     def.reject("Failed to get getVodListByCategoryId");
@@ -549,12 +538,12 @@
             var menuArray = [];
 
             $http.get(url)
-                .success(function(response) {
+                .then(function(response) {
                     var menuListLevel2 = [];
                     var menuListLevel3 = [];
                     var menuMap = {};
 
-                    angular.forEach(response.data, function(item, key) {
+                    angular.forEach(response.data.data, function(item, key) {
                         var isItemHidden = false;
                         angular.forEach(item.config, function(config, key) {
                             if (config.name === 'hidden' && config.value === 'true') {
@@ -619,7 +608,7 @@
                     });
                     def.resolve(menuArray);
                     console.log('albums (simple) returned to controller.', menuArray);
-                }).error(function(error, status) {
+                }, function(error, status) {
                     console.error('Failed to get getMenuCategories. status code:' + status);
                     console.error(error);
                     def.reject("Failed to get getMenuCategories");
