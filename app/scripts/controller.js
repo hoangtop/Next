@@ -26,7 +26,7 @@ app.controller('controller', ['$rootScope', '$scope', '$state', '$timeout', '$do
             CHANNEL: 8
         }
     };
-    /* Initial values are defined. */
+    /* Initial values are defined. new*/
     $scope.currentCategory = CONSTANT.CATEGORY.COLORS;
     $scope.currentDepth = $scope.DEPTH.INDEX;
     $scope.currentDepthZone = $scope.DEPTH_ZONE.INDEX.SPOTLIGHT;
