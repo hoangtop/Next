@@ -1115,6 +1115,7 @@ app.controller('controller', ['$rootScope', '$scope', '$state', '$timeout', '$do
                     }
                     break;
                 case CONSTANT.KEY_CODE.RETURN:
+                case CONSTANT.KEY_CODE.BACK:
                 case CONSTANT.KEY_CODE.ESC:
                     $scope.back();
                     break;
@@ -1132,6 +1133,7 @@ app.controller('controller', ['$rootScope', '$scope', '$state', '$timeout', '$do
                 case CONSTANT.KEY_CODE.DOWN:
                     break;
                 case CONSTANT.KEY_CODE.RETURN:
+                case CONSTANT.KEY_CODE.BACK:
                 case CONSTANT.KEY_CODE.ESC:
                     $scope.back();
                     break;
@@ -1144,6 +1146,7 @@ app.controller('controller', ['$rootScope', '$scope', '$state', '$timeout', '$do
                 case CONSTANT.KEY_CODE.DOWN:
                     break;
                 case CONSTANT.KEY_CODE.RETURN:
+                case CONSTANT.KEY_CODE.BACK:
                 case CONSTANT.KEY_CODE.ESC:
                     $scope.back();
                     break;

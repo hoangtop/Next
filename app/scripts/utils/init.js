@@ -1,4 +1,4 @@
-//develop
+//developl
 $('document').ready(function() {
     $('.login-input').smartTvKeyboard({
         title: null, // Window title

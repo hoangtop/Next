@@ -36,7 +36,8 @@ app.factory('CONSTANT', function() {
             RETURN: 10009,
             ESC: 27,
             UP: 38,
-            DOWN: 40
+            DOWN: 40,
+            BACK: 461 //for LG TV
         },
         SPOTLIGHT_BG_GRADIENT1: 'linear-gradient(to right, rgba(0, 0, 0, 1) 5%, transparent)',
         SPOTLIGHT_BG_GRADIENT2: 'linear-gradient(to top, rgba(0, 0, 0, 1) 5%, transparent)',
