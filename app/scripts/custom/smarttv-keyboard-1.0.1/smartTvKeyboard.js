@@ -5,7 +5,6 @@
     $.fn.smartTvKeyboard = function(opts) {
         var smartTvKeyboards = this;
         var noKeyBoard = smartTvKeyboards.length;
-        // console.log("smartTvKeyboards:::", smartTvKeyboards);
 
         return this.each(function(index) {
             var kbIndex = index;
@@ -78,7 +77,6 @@
                     // inputElement.removeAttr('placeholder');
                     that.parent().addClass('focused');
 
-                    console.log("current position of element:", that.offset());
                     inputElement.offset({
                         top: that.offset().top + 25,
                         left: that.offset().left
@@ -126,7 +124,6 @@
             }
 
             function bindInputKeydown() {
-                console.log("bindInputKeydown +++++++++++++++++");
                 document.addEventListener("keydown", processKeydown);
                 // inputElement.on("keydown", function(evt) {
                 //     evt = evt || window.event;
@@ -149,13 +146,10 @@
 
                 var y = 0;
                 var x;
-                console.log("render grid  ....");
-                console.log("language  ....", language);
                 for (var rowIndex in language[mode]) {
 
                     x = 0;
                     var rowValue = language[mode][rowIndex];
-                    console.log("rowValue  ....", rowValue);
                     var rowElement = $(rowTemplate);
                     for (var colIndex in rowValue) {
 
@@ -214,8 +208,6 @@
             }
 
             function bindBtnClick(btn, value) {
-                // console.log('.' + x + '-' + y);;
-
                 if (value && btn) {
                     btn.on('click', function() {
                         processKeyValue(value);
@@ -314,7 +306,6 @@
                         removeKeyboardListenerFunc = removeEventListener;
 
                         // removeEventListener();
-                        console.log(' login with keyboard .....');
                         $('.btn-login').click();
                         break;
                     case '&&close':
@@ -343,7 +334,6 @@
 
             function processKeyCode(code) {
                 var KEYS = options.navKeys;
-                console.log("processKeyCode:" + code);
                 switch (code) {
                     case KEYS.UP:
                         move('UP');
@@ -358,7 +348,6 @@
                         move('RIGHT');
                         break;
                     case KEYS.RETURN:
-                        console.log('Return key');
                         options.onCancel && options.onCancel(inputElement.val()); // jshint ignore:line
                         destroy();
                         smartTvKeyboards.removeClass('focused');
@@ -383,7 +372,6 @@
                 // that.hide();
 
                 var matrix = options.layouts[lang][mode];
-                console.log(":::matrix:::", matrix);
                 var maxY = matrix.length - 1;
                 var maxX = -1;
                 for (var index in matrix[y]) {
@@ -405,8 +393,6 @@
                         break;
                 }
 
-                console.log("move keyboardElement:", keyboardElement);
-                console.log("move x y:", '.' + x + '-' + y);
                 var newButtonElement = keyboardElement.find('.' + x + '-' + y);
                 if (newButtonElement.hasClass('smart-tv-keyboard-button-color-disabled') || (selectedButtonElement && selectedButtonElement.hasClass(x + '-' + y))) {
                     return move(direction);
@@ -494,7 +480,6 @@
             }
 
             function removeEventListener() {
-                console.log(' login with removeEventListener .....');
                 if (document.removeEventListener) {
                     document.removeEventListener("keydown", processKeydown);
                 } else if (document.detachEvent) {

@@ -2,11 +2,11 @@
     'use strict';
 
     app
-        .factory('RestService', RestService);
+        .factory('DataService', DataService);
 
-    RestService.inject = ['$http', '$q', 'CONSTANT', 'SETTINGS', 'UltilService'];
+    DataService.inject = ['$http', '$q', 'CONSTANT', 'SETTINGS', 'UltilService'];
 
-    function RestService($http, $q, CONSTANT, SETTINGS, UltilService) {
+    function DataService($http, $q, CONSTANT, SETTINGS, UltilService) {
         //interface
         var service = {
             vodList: [],

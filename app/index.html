@@ -19,7 +19,7 @@
 
 </head>
 
-<body ng-controller="controller">
+<body ng-controller="Controller">
     <toaster-container></toaster-container>
 
     <!-- Welcome : It will disappear when '$scope.isInitCompleted' become 'false'. -->
@@ -96,13 +96,13 @@
                 <div class="smarttv-keyboard-holder"></div>
                 <div class="login-form-wrapper">
                     <div class="login-form">
-
-                        <div class="login-row login-account-row" on-focused="onFocusedUsername($event, $originalEvent)" on-blurred="onBlurredUsername($event, $originalEvent)">
+                        <div class="login-row login-account-row">
                             <span class="login-input-lable password-label">Số điện thoại:</span>
+
                             <input id="username" readonly type="text" size="40" class="login-input login-account-input" title="Bước 1: Nhập Số điện thoại (vd 0988666888)" ng-model="login.username">
                             <div class="smart-tv-keyboard"></div>
                         </div>
-                        <div class="login-row login-pass-row" on-focused="onFocusedPassword($event, $originalEvent)" on-blurred="onBlurredPassword($event, $originalEvent)">
+                        <div class="login-row login-pass-row">
                             <span class="login-input-lable password-label">Mật khẩu     :</span>
                             <input id="password" readonly type="password" size="40" class="login-input login-password-input" title="Bước 2: Nhập Mật khẩu" ng-model="login.password">
                             <div class="smart-tv-keyboard"></div>
@@ -155,7 +155,7 @@
     <script type="text/javascript" src="scripts/directives/list.js"></script>
     <script type="text/javascript" src="scripts/directives/caphMedia.js"></script>
     <script type="text/javascript" src="scripts/utils/constant.js"></script>
-    <script type="text/javascript" src="scripts/service/rest.service.js"></script>
+    <script type="text/javascript" src="scripts/service/data.service.js"></script>
     <script type="text/javascript" src="scripts/service/ultil.service.js"></script>
     <script type="text/javascript" src="scripts/service/video.service.js"></script>
     <script type="text/javascript" src="scripts/service/account.service.js"></script>

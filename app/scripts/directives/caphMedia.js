@@ -84,7 +84,6 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                     var isChannel = false;
 
                     $scope.$watch($attrs.subtitle, function(subtitle) {
-                        console.log("$attrs.subtitle ....:", subtitle);
                         if (subtitle === true) {
                             this.subTitle(true);
                         } else {
@@ -93,7 +92,6 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                     }.bind(this));
 
                     $scope.$watch($attrs.ischannel, function(ischannel) {
-                        console.log("$attrs.ischannel ....:", ischannel);
                         isChannel = ischannel;
                     }.bind(this));
 
@@ -117,11 +115,8 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                                     isPlaying = true;
                                     break;
                                 case 'pause':
-                                    console.log("media on::", event);
-                                    console.log("media on::", event.type);
                                 case 'ended':
                                     isPlaying = false;
-                                    console.log("isChannel::::", isChannel);
 
 
                                     break;
@@ -162,11 +157,9 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
 
                     this.togglePlay = function(index) {
                         if (isChannel) {
-                            console.log("set isPlaying to false ...");
                             isPlaying = false;
                         }
 
-                        console.log("togglePlay ---------------", isPlaying);
                         var methodType = isPlaying ? 'pause' : 'play';
                         invokeMethod(media, index, methodType);
                         // isPlaying = true;

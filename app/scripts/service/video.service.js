@@ -4,9 +4,9 @@
     app
         .factory('VideoService', VideoService);
 
-    VideoService.inject = ['$timeout', '$http', '$q', 'CONSTANT', 'SETTINGS', 'RestService'];
+    VideoService.inject = ['$timeout', '$http', '$q', 'CONSTANT', 'SETTINGS', 'DataService'];
 
-    function VideoService($timeout, $http, $q, CONSTANT, SETTINGS, RestService) {
+    function VideoService($timeout, $http, $q, CONSTANT, SETTINGS, DataService) {
         //interface
         var hls;
 
@@ -181,7 +181,7 @@
 
             var def = $q.defer();
 
-            RestService.getPrepareChannel(param).then(
+            DataService.getPrepareChannel(param).then(
                 function success(response) {
                     if (typeof(response.data.glbAddress) !== 'undefined' && response.data.glbAddress.length > 0) {
                         var src = [];
@@ -224,7 +224,7 @@
             }
 
             if (playable) {
-                RestService.getVodURL(vod.program.id, vod.singleProductId, vod.isFreeNoPair).then(
+                DataService.getVodURL(vod.program.id, vod.singleProductId, vod.isFreeNoPair).then(
                     function success(response) {
                         console.log('getVodURL success ', response);
                         var vodRequestId = response.data.gsdm.vod_request_id;
