@@ -79,14 +79,14 @@
     </div>
 
     <!-- Setting dialog : It will be shown when the 'setting' button is clicked by user. -->
-    <!--<caph-dialog focus-option="setting.focusOption" center="true" show="setting.show" style="width:800px;">
-        <caph-dialog-title>Setting</caph-dialog-title>
+    <caph-dialog focus-option="dialog.focusOption" center="true" show="dialog.show" style="width:800px;">
+        <caph-dialog-title>{{dialog.title}}</caph-dialog-title>
         <caph-dialog-content>
-            <caph-checkbox focus-option="setting.focusOption" checked="setting.autoPlay" on-selected="setting.setAutoPlay($event, $checked, $originalEvent)"> Auto Play</caph-checkbox>
-            <caph-checkbox focus-option="setting.focusOption" checked="setting.subTitle" on-selected="setting.setSubTitle($event, $checked, $originalEvent)"> Show Sub-Title</caph-checkbox>
+            <div class="caph-dialog-message" ng-bind-html="dialog.message"></div>
         </caph-dialog-content>
-        <caph-dialog-buttons button-type="alert" on-select-button="setting.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>
-    </caph-dialog>-->
+        <caph-dialog-buttons ng-if="dialog.isConfirm" button-type="confirm" on-select-button="dialog.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>
+        <caph-dialog-buttons ng-if="!dialog.isConfirm" button-type="alert" on-select-button="dialog.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>
+    </caph-dialog>
     <div id="login-page" class="login-page-wrapper">
         <div class="login-page">
             <div class="logo login"></div>

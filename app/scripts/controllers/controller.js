@@ -66,7 +66,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         CATEGORY: 3,
         PLAYER: 4,
         LOGIN: 5,
-        SETTING: 6
+        DIALOG: 6
     };
     $scope.DEPTH_ZONE = {
         INDEX: {
@@ -132,13 +132,16 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     var currentSpotlight = null;
     var allChannelList = null;
     var noCategoryInHome = 0;
+    var isOnline = true;
 
     main();
 
     function main() {
+        // $scope.setting.show = true;
+        setInternetConnectionTimer();
         processKeydownEvent();
 
-        $timeout(function() { // Set 'focus' to specific element by 'focus' controller.
+        $timeout(function() {
             DataService.getChannelList().then(function success(channelList) {
                 allChannelList = channelList;
                 updateCategoryListData(channelList, 0, true);
@@ -157,6 +160,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                         'name': menuItem.this.name[0].text
                     });
                 }
+
                 $scope.homeCategoryNameList = homeCategoryNameList;
                 for (var index = 1; index < menus[0].children.length; index++) {
                     var menuItem = menus[0].children[index];
@@ -173,6 +177,29 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
             processSpotlightVodList();
         }, CONSTANT.EFFECT_DELAY_TIME);
     }
+
+    function setInternetConnectionTimer() {
+        setInterval(function() {
+            isOnline = navigator.onLine;
+            if (!isOnline) {
+                console.log("mat ket noi .....");
+                toaster.clear('*');
+                toaster.pop({
+                    type: 'warning',
+                    title: 'Mất kết nối',
+                    body: 'Mất kết nối. Vui lòng kiểm tra lại kết nối Internet để tiếp tục sử dụng ứng dụng!',
+                    timeout: 6000
+                });
+
+                // $scope.dialog.show = true;
+                // $scope.dialog.isConfirm = false;
+                // $scope.dialog.message = "Mất kết nối. Vui lòng kiểm tra lại kết nối Internet để tiếp tục sử dụng ứng dụng!";
+                // $scope.dialog.title = "Mất kết nối";
+            }
+
+        }, 1500);
+    }
+
 
     function processSpotlightVodList() {
         var vodIdList = '';
@@ -1038,8 +1065,9 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
 
     function processKeydownEvent() {
         focusController.addBeforeKeydownHandler(function(context) {
+            if (!isOnline) return;
+
             $scope.isChannel = false;
-            console.log('keycode $scope.DEPTH.DETAIL: ', context.event.keyCode);
             if ($scope.isInitCompleted === false) return;
             if ($scope.currentDepth === $scope.DEPTH.PLAYER && !$scope.overview.channel) {
                 console.log('not channel ... ');
@@ -1238,6 +1266,10 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
 
     function back() {
         if ($scope.currentDepth === $scope.DEPTH.INDEX) {
+            $scope.dialog.show = true;
+            $scope.dialog.isConfirm = true;
+            $scope.dialog.message = "Bạn có muốn thoát ứng dụng ViettelTV không?";
+            $scope.dialog.title = "Thoát ứng dụng";
             return;
         }
 
@@ -1318,23 +1350,28 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     function removeFadeoutUpClassToItem(item) {
         item.removeClass('list-fadeout-up');
     }
-    // $scope.setting = {
-    //     show: false,
-    //     center: true,
-    //     focusOption: {
-    //         depth: $scope.DEPTH.SETTING
-    //     },
-    //     onSelectButton: function(buttonIndex, $event) {
-    //         $scope.setting.show = false;
-    //     },
-    //     setSubTitle: function($event, $checked) {
-    //         $scope.setting.subTitle = $checked;
-    //     },
-    //     setAutoPlay: function($event, $checked) {
-    //         $scope.setting.autoPlay = $checked;
-    //     },
-    //     subTitle: true,
-    //     autoPlay: true
-    // };
+
+    $scope.dialog = {
+        show: false,
+        center: true,
+        isConfirm: true,
+        focusOption: {
+            depth: $scope.DEPTH.DIALOG
+        },
+        onSelectButton: function(buttonIndex, $event) {
+            if ($scope.dialog.isConfirm) {
+                if (buttonIndex === 0) {
+                    tizen.application.getCurrentApplication().exit();
+                } else {
+                    $scope.dialog.show = false;
+
+                }
+            } else {
+                $scope.dialog.show = false;
+            }
+
+        }
+
+    };
 
 }
