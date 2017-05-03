@@ -137,7 +137,6 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     main();
 
     function main() {
-        // $scope.setting.show = true;
         setInternetConnectionTimer();
         processKeydownEvent();
 
