@@ -15,6 +15,7 @@ app
             request: function(config) {
                 config.headers = config.headers || {};
                 var token = localStorageService.get('token');
+                $rootScope.token = token;
 
                 if (token) {
                     // console.log("token 1:", token);
@@ -22,14 +23,19 @@ app
                     // console.log("token 3:", new Date(token.expiration_date));
                     // console.log("token 3iso:", dateFromISO8601(token.expiration_date));
                     // console.log("token 3:", new Date(token.expiration_date) >= new Date());
-                    // console.log("token 4:", token && token.expiration_date && token.expiration_date > new Date().getTime());
+                    // console.log("config.url:", config.url.indexOf('watches\/fvod\/prepare'));
+                    // config.headers.Authorization = "Bearer " + token.access_token;
 
-                    config.headers.Authorization = "Bearer " + token.access_token;
+                    if (config.url.indexOf('watches\/fvod\/prepare') < 0) {
+                        config.headers.Authorization = "Bearer " + token.access_token;
+                    }
+                    // config.params.access_token = token.access_token;
                     return config;
 
                 } else {
                     // console.log("request with guest token .................................................");
                     config.headers.Authorization = "Bearer " + SETTINGS.guest_access_token;
+                    // config.params.access_token = SETTINGS.guest_access_token;
                     return config;
                 }
 
@@ -38,7 +44,7 @@ app
 
 
             responseError: function(response) {
-                // console.log("responseError with guest token .................................................", response);
+                console.log("responseError with guest token .................................................", response);
                 // token has expired
                 if (response.status === 401 && (response.data.error.code == 'C0202')) {
                     console.error("responseError becuase of token expired..............................................", response);

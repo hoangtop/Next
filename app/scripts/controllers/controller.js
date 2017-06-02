@@ -114,9 +114,9 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     }, 400);
 
     $scope.login = {
-        username: '',
-        password: ''
-            // password: 'qaz123'
+        username: '0868757566',
+        // password: ''
+        password: 'qaz123'
     };
 
     $scope.CATEGORY_MENU = CONSTANT.PREPARED_DATA.CATEGORY_MENUS;
@@ -137,7 +137,6 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     main();
 
     function main() {
-        // $scope.setting.show = true;
         setInternetConnectionTimer();
         processKeydownEvent();
 
@@ -182,19 +181,26 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         setInterval(function() {
             isOnline = navigator.onLine;
             if (!isOnline) {
-                console.log("mat ket noi .....");
-                toaster.clear('*');
-                toaster.pop({
-                    type: 'warning',
-                    title: 'Mất kết nối',
-                    body: 'Mất kết nối. Vui lòng kiểm tra lại kết nối Internet để tiếp tục sử dụng ứng dụng!',
-                    timeout: 6000
-                });
-
+                // console.log("mat ket noi .....");
+                // toaster.clear('*');
+                // toaster.pop({
+                //     type: 'warning',
+                //     title: 'Mất kết nối',
+                //     body: 'Mất kết nối. Vui lòng kiểm tra lại kết nối Internet để tiếp tục sử dụng ứng dụng!',
+                //     timeout: 6000
+                // });
+                showNetworkDisconnectedWarning();
                 // $scope.dialog.show = true;
                 // $scope.dialog.isConfirm = false;
                 // $scope.dialog.message = "Mất kết nối. Vui lòng kiểm tra lại kết nối Internet để tiếp tục sử dụng ứng dụng!";
                 // $scope.dialog.title = "Mất kết nối";
+            } else {
+                // console.log("mat ket noi .....");
+
+                $scope.dialog.show = false;
+                $timeout(function() {
+                    $scope.dialog.show = false;
+                }, 300);
             }
 
         }, 1500);
@@ -978,7 +984,10 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         }, 200);
     }
 
+    $scope.isPlayDisabled = false;
+
     function playVODStream(vod, video) {
+        $scope.isPlayDisabled = true;
         var playable = false;
         if (vod.isExclusivePackage) {
             if (vod.isPurchasedExclusive) {
@@ -995,7 +1004,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
             VideoService.playVODStream(vod, video).then(function success(response) {
                 $timeout(function() {
                     $scope.isMediaLoaderHidden = true;
-                }, 1000);
+                }, 500);
             }, function error(response) {
                 console.error('load  playVODStream error : ---- : ', response);
             });
@@ -1073,10 +1082,17 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 console.log('not channel ... ');
                 if (context.event.keyCode !== CONSTANT.KEY_CODE.RETURN) {
                     if ($scope.showMediaController === false) {
-                        $scope.setMediaControllerTimer();
+                        if ($scope.isMediaLoaderHidden) {
+                            $timeout(function() {
+                                $scope.setMediaControllerTimer();
+                            }, 500);
+
+                        }
                         return false;
                     } else {
-                        $scope.setMediaControllerTimer();
+                        // if ($scope.isMediaLoaderHidden) {
+                        //     $scope.setMediaControllerTimer();
+                        // }
                     }
                 }
 
@@ -1264,12 +1280,28 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         });
     }
 
-    function back() {
-        if ($scope.currentDepth === $scope.DEPTH.INDEX) {
+    function showExitConfirmDialog() {
+        $timeout(function() {
             $scope.dialog.show = true;
             $scope.dialog.isConfirm = true;
             $scope.dialog.message = "Bạn có muốn thoát ứng dụng ViettelTV không?";
             $scope.dialog.title = "Thoát ứng dụng";
+        }, CONSTANT.EFFECT_DELAY_TIME);
+    }
+
+    function showNetworkDisconnectedWarning() {
+        $timeout(function() {
+            $scope.dialog.show = true;
+            $scope.dialog.isConfirm = false;
+            $scope.dialog.message = "Mất kết nối Internet. Vui lòng kiểm tra lại kết nối";
+            $scope.dialog.title = "Mất kết nối";
+        }, CONSTANT.EFFECT_DELAY_TIME);
+    }
+
+    function back() {
+        if ($scope.currentDepth === $scope.DEPTH.INDEX) {
+            showExitConfirmDialog();
+
             return;
         }
 
@@ -1336,7 +1368,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         }
         $scope.currentDepth = targetDepth;
 
-        focusController.focus($(focusClass));
+        // focusController.focus($(focusClass));
     }
 
     function isCurrentItemOnChannel() {

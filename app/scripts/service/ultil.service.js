@@ -28,31 +28,18 @@
 
         //implementation
         function isSeriesCategory(menu) {
-            // var flag = false;
-            // if (menu.this.name[0].text) {
-            //     angular.forEach(CONSTANT.SERIES_CATEGORIES_BY_NAME, function(value, key2) {
-            //         if (menu.this.name[0].text.toUpperCase() === value.toUpperCase()) {
-            //             flag = true;
-            //             angular.break;
-            //         }
-
-
-            //     });
-            //     return flag;
-            // } else {
-            //     return false;
-            // }
 
             var isLeaf = true;
             if (menu.this.config && menu.this.config.length > 0) {
                 angular.forEach(menu.this.config, function(config, key2) {
-                    if (config.name === "__leaf_category") {
-                        isLeaf = config.value;
+                    if (config.name === "__leaf_category" && config.value === "false") {
+                        isLeaf = false;
                         angular.break;
                     }
 
 
                 });
+
 
                 if (menu.this.type === 'general' || !isLeaf) {
                     return true;
@@ -79,22 +66,22 @@
             }
         }
 
-        function isSeriesCategory(menu) {
-            var flag = false;
-            if (menu.this.name[0].text) {
-                angular.forEach(CONSTANT.SERIES_CATEGORIES_BY_NAME, function(value, key2) {
-                    if (menu.this.name[0].text.toUpperCase() === value.toUpperCase()) {
-                        flag = true;
-                        angular.break;
-                    }
+        // function isSeriesCategory(menu) {
+        //     var flag = false;
+        //     if (menu.this.name[0].text) {
+        //         angular.forEach(CONSTANT.SERIES_CATEGORIES_BY_NAME, function(value, key2) {
+        //             if (menu.this.name[0].text.toUpperCase() === value.toUpperCase()) {
+        //                 flag = true;
+        //                 angular.break;
+        //             }
 
 
-                });
-                return flag;
-            } else {
-                return false;
-            }
-        }
+        //         });
+        //         return flag;
+        //     } else {
+        //         return false;
+        //     }
+        // }
 
         function checkFreeProduct(product) {
             var temp = false;

@@ -4,9 +4,10 @@
     app
         .factory('DataService', DataService);
 
-    DataService.inject = ['$http', '$q', 'CONSTANT', 'SETTINGS', 'UltilService'];
+    DataService.inject = ['$rootScope', '$http', '$q', 'CONSTANT', 'SETTINGS', 'UltilService'];
 
-    function DataService($http, $q, CONSTANT, SETTINGS, UltilService) {
+    function DataService($rootScope, $http, $q, CONSTANT, SETTINGS, UltilService) {
+        $rootScope
         //interface
         var service = {
             vodList: [],
@@ -135,11 +136,15 @@
         function getVodURL(programId, productId, isFreeNoPair) {
             var url;
 
-
+            var token = $rootScope.token.access_token;
+            console.log("$rootScope.access_token");
+            console.log($rootScope.token.access_token);
+            console.log($rootScope);
             if (isFreeNoPair) {
-                url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?id=' + programId + '&product_id=' + productId;
+                // url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?id=' + programId + '&product_id=' + productId;
+                url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?access_token=' + SETTINGS.guest_access_token + '&id=' + programId + '&product_id=' + productId;
             } else {
-                url = CONSTANT.API_HOST + '/api1/watches/vod/prepare?id=' + programId + '&product_id=' + productId;
+                url = CONSTANT.API_HOST + '/api1/watches/vod/prepare?access_token=' + token + '&id=' + programId + '&product_id=' + productId;
             }
 
             var def = $q.defer();

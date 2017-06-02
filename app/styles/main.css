@@ -511,7 +511,7 @@ body {
     height: 1080px;
     z-index: 2000000000000;
     background-color: #000000;
-    transition: visibility 2s ease-out, opacity 6s ease-out, background-color 2s ease-out;
+    transition: visibility 2s ease-out, opacity 3s ease-out, background-color 2s ease-out;
     opacity: 0;
 }
 

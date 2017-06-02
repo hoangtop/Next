@@ -84,7 +84,7 @@
                 <div class="vod-actors" ng-show="currentDepth===DEPTH.DETAIL" ng-bind-html="overview.actors"></div>
                 <div class="vod-detail-btnGroup">
                     <div class="btn-wrapper vod-detail-play" ng-show="currentDepth===DEPTH.DETAIL">
-                        <div focusable="{depth: DEPTH.DETAIL, name: 'btnPlay'}" class="btn btn-gap" ng-class="{ 'btn-play':true, 'btn-resume': false}" on-focused="btnVodPlayFocusInDetail($event, $originalEvent)" on-selected="btnVodPlaySelected($event)">
+                        <div focusable="{depth: DEPTH.DETAIL, name: 'btnPlay'}" ng-disabled="isPlayDisabled" class="btn btn-gap" ng-class="{ 'btn-play':true, 'btn-resume': false}" on-focused="btnVodPlayFocusInDetail($event, $originalEvent)" on-selected="btnVodPlaySelected($event)">
                             <div class="btn-icon"></div>
                             <!--<div class="btn-icon icon-caph icon-caph-play"></div>-->
                         </div>
