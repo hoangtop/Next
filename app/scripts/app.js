@@ -28,7 +28,7 @@ app.run(['SETTINGS', 'localStorageService', 'Auth', '$rootScope',
 
 
     function(SETTINGS, localStorageService, Auth, $rootScope) {
-        localStorageService.clearAll();
+        // localStorageService.clearAll();
         Auth.authorize(true, function() {
             console.log("authorize finish ......");
             if (localStorageService.get('token')) { //already login

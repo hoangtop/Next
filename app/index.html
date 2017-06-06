@@ -24,7 +24,7 @@
 
     <!-- Welcome : It will disappear when '$scope.isInitCompleted' become 'false'. -->
     <div class="welcome" ng-class="{'fade-out': isInitCompleted}">
-        <span class="caph">Viettel TV</span><br/>Xem truyền hình và nội dung theo yêu cầu.
+        <span class="caph">Viettel TV</span><br/>Giải trí không giới hạn
     </div>
 
     <div ng-style="{'border-color': overview.color,'background-size':bgSize,'background-image': bgGradient1 + ', '+ bgGradient2 + ', url(' + bgImgUrl + ')'}" class="wrapper wrapper-spotlight" ng-include="'views/main.html'"></div>
@@ -85,6 +85,14 @@
             <div class="caph-dialog-message" ng-bind-html="dialog.message"></div>
         </caph-dialog-content>
         <caph-dialog-buttons ng-if="dialog.isConfirm" button-type="confirm" on-select-button="dialog.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>
+        <!--<caph-dialog-buttons ng-if="!dialog.isConfirm" button-type="alert" on-select-button="dialog.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>-->
+    </caph-dialog>
+    <caph-dialog focus-option="warning.focusOption" center="true" show="warning.show" style="width:800px;">
+        <caph-dialog-title>{{dialog.title}}</caph-dialog-title>warning
+        <caph-dialog-content>
+            <div class="caph-dialog-message" ng-bind-html="warning.message"></div>
+        </caph-dialog-content>
+        <!--<caph-dialog-buttons ng-if="dialog.isConfirm" button-type="confirm" on-select-button="dialog.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>-->
         <!--<caph-dialog-buttons ng-if="!dialog.isConfirm" button-type="alert" on-select-button="dialog.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>-->
     </caph-dialog>
     <div id="login-page" class="login-page-wrapper">
