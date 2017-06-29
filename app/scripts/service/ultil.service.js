@@ -163,7 +163,7 @@
                 des = des.substring(tm.length - 1, des.length - 1);
             }
 
-            svod.description = des.substring(0, 400);
+            svod.description = des.substring(0, 398);
             svod.shortDescription = des.substring(0, 300);
 
 
@@ -219,7 +219,10 @@
                         svod.secondTitle = '';
                     }
                 } else { //not series
-                    if (nameSplit.length === 2) { //have english title
+                    if (nameSplit.length === 3) { //have english title
+                        svod.firstTitle = nameSplit[1].trim() + ' : ' + nameSplit[2].trim();
+                        svod.secondTitle = nameSplit[0].trim();
+                    } else if (nameSplit.length === 2) { //have english title
                         svod.firstTitle = nameSplit[1].trim();;
                         svod.secondTitle = nameSplit[0].trim();;
                     } else {
@@ -273,7 +276,7 @@
             //check program.id for VOD
             if (typeof vod.program !== 'undefined') {
                 svod.program_id = vod.program.id;
-                svod.program_categories = vod.program.categories[0].path[0];
+                // svod.program_categories = vod.program.categories[0].path[0];
             }
 
             //check isVisiable
@@ -384,9 +387,11 @@
             var svod = seriesVod;
             svod.isSeries = true;
             svod.photoUrl = CONSTANT.API_HOST + '/api1/contents/categories/' + seriesVod.id + "/picture?width=215.000000&height=307.000000";
+            console.log("seriename:", seriesVod.name, seriesVod.name[0].text);
             svod.name = seriesVod.name[0].text;
-            svod.firstTitle = seriesVod.name;
+            svod.firstTitle = svod.name;
             svod.secondTitle = '';
+            if (svod.description) svod.description = svod.description[0].text;
 
             svod.isSeriesEnd = false;
             angular.forEach(seriesVod.config, function(config, key) {

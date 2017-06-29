@@ -20,19 +20,24 @@
 </head>
 
 <body ng-controller="Controller">
-    <toaster-container></toaster-container>
+    <toaster-container toaster-options="{'toaster-id': 1}"></toaster-container>
+    <toaster-container toaster-options="{'toaster-id': 2,'position-class': 'toast-center'}"></toaster-container>
 
     <!-- Welcome : It will disappear when '$scope.isInitCompleted' become 'false'. -->
     <div class="welcome" ng-class="{'fade-out': isInitCompleted}">
-        <span class="caph">Viettel TV</span><br/>Giải trí không giới hạn
+        <!--<span class="caph">Viettel TV</span><br/>Giải trí không giới hạn-->
     </div>
 
-    <div ng-style="{'border-color': overview.color,'background-size':bgSize,'background-image': bgGradient1 + ', '+ bgGradient2 + ', url(' + bgImgUrl + ')'}" class="wrapper wrapper-spotlight" ng-include="'views/main.html'"></div>
+    <div ng-style="{'border-color': overview.color,'background-image':  'url(' + bgSpotlightImgUrl + ')','background-size': bgSpotlightSize,'width':bgSpotlightWidth}" class="wrapper wrapper-spotlight background-layer background-mask spotlight-mask" ng-class="{'spotlight-fade-in':isSpotlightShown,'spotlight-fade-out':!isSpotlightShown}"></div>
+    <div ng-style="{'border-color': overview.color,'background-image':  'url(' + bgMenuImgUrl + ')','background-size': bgMenuSize,'width':bgMenuWidth}" class="wrapper wrapper-spotlight background-layer background-mask menu-mask" ng-class="{'menu-fade-in':isMenuShown,'menu-fade-out':!isMenuShown}"></div>
+    <div ng-style="{'border-color': overview.color,'background-image':  'url(' + bgImgUrl + ')','background-size': bgSize,'width':bgWidth}" class="wrapper wrapper-spotlight background-layer background-mask vod-mask" ng-class="{'vod-fade-in':isVodShown,'vod-fade-out':!isVodShown}"></div>
+    <div ng-style="{'border-color': overview.color,'background-image': bgGradient1 + ', '+ bgGradient2}" class="wrapper wrapper-spotlight background-layer"></div>
+    <div class="wrapper wrapper-spotlight wrapper-container" ng-include="'views/main.html'"></div>
     <!--<div ng-style="{'border-color': overview.color}" class="wrapper wrapper-spotlight" ng-include="'views/main.html'"></div>-->
 
     <!-- Video Player : It will be shown when '$scope.currentDepth' become 'DEPTH.PLAYER'. -->
     <caph-media id="player" class="player" ng-class="{'player-shown':isMediaLoaderHidden}" ischannel="isChannel" subtitle="setting.subTitle" on-play="toggleIsPlaying(true)" on-pause="toggleIsPlaying(false)" on-ended="toggleIsPlaying(false)">
-        <video id="videoMainPlay" class="videoMainPlay" autoplay style="width: 100%;height:100%" ng-class="{'player-shown':isMediaLoaderHidden}"></video>
+        <video id="videoMainPlay" class="videoMainPlay" autoplay style="width: 100%;height:100%"></video>
         <caph-media-controls class="controls-bar" ng-class="{'fade-out': !showMediaController}" ng-mouseover="setMediaControllerTimer()">
             <div class="opacity-panel">
                 <div class="operations">
@@ -61,8 +66,8 @@
         </caph-media-controls>
     </caph-media>
 
-    <div class="media-loader" ng-class="{'media-loader-show':currentDepth === DEPTH.PLAYER && isMediaLoaderHidden !== true,'media-loader-hide':isMediaLoaderHidden === true}">
-        <div class="overview">
+    <div class="media-loader" ng-class="{'media-loader-show':isMediaLoaderHidden !== true,'media-loader-hide':isMediaLoaderHidden === true}">
+        <!--<div class="overview">
             <div class="font-header" ng-bind-html="overview.firstTitle"></div>
             <div class="font-header-small" ng-bind-html="overview.secondTitle"></div>
             <ul class="short-info" ng-show="overview.contentFormat">
@@ -71,7 +76,7 @@
                 <li class="short-info-li short-info-3"><span class="short-info-3">{{overview.country}} | </span></li>
                 <li class="short-info-li short-info-3"><span class="short-info-3">{{overview.genres}}</span></li>
             </ul>
-        </div>
+        </div>-->
         <div class="loader"></div>
     </div>
     <div class="main-loader" ng-class="{'main-loader-show':isMainLoaderShown,'main-loader-hide':!isMainLoaderShown}">
@@ -94,6 +99,14 @@
         </caph-dialog-content>
         <!--<caph-dialog-buttons ng-if="dialog.isConfirm" button-type="confirm" on-select-button="dialog.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>-->
         <!--<caph-dialog-buttons ng-if="!dialog.isConfirm" button-type="alert" on-select-button="dialog.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>-->
+    </caph-dialog>
+    <caph-dialog focus-option="alert.focusOption" center="true" show="alert.show" style="width:800px;">
+        <caph-dialog-title>{{alert.title}}</caph-dialog-title>warning
+        <caph-dialog-content>
+            <div class="caph-dialog-message" ng-bind-html="alert.message"></div>
+        </caph-dialog-content>
+        <!--<caph-dialog-buttons ng-if="dialog.isConfirm" button-type="confirm" on-select-button="dialog.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>-->
+        <caph-dialog-buttons button-type="alert" on-select-button="alert.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>
     </caph-dialog>
     <div id="login-page" class="login-page-wrapper">
         <div class="login-page">
@@ -120,12 +133,12 @@
                 </div>
                 <div class="buttom-row-wrapper">
                     <div class="button-row">
-                        <div class="btn btn-gap" ng-class="{ 'btn-login-cancel':true, 'btn-resume': false}" ng-click="selectLoginCancelButton($event)">
+                        <div class="btn btn-gap" ng-class="{ 'btn-login-cancel':true, 'btn-resume': false}" ng-click="onLoginCancelButtonSelected($event)">
                             <div class="btn-icon"></div>
                             <!--<div class="btn-icon icon-caph icon-caph-play"></div>-->
                         </div>
 
-                        <div class="btn btn-gap" ng-class="{ 'btn-login':true, 'btn-resume': false}" ng-click="selectLoginButton($event)">
+                        <div class="btn btn-gap" ng-class="{ 'btn-login':true, 'btn-resume': false}" ng-click="onLoginButtonSelected($event)">
                             <div class="btn-icon"></div>
                         </div>
                     </div>
@@ -162,6 +175,7 @@
     <script type="text/javascript" src="scripts/app.js"></script>
     <script type="text/javascript" src="scripts/directives/list.js"></script>
     <script type="text/javascript" src="scripts/directives/caphMedia.js"></script>
+    <script type="text/javascript" src="scripts/directives/animation.js"></script>
     <script type="text/javascript" src="scripts/utils/constant.js"></script>
     <script type="text/javascript" src="scripts/service/data.service.js"></script>
     <script type="text/javascript" src="scripts/service/ultil.service.js"></script>

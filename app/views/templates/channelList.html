@@ -1,7 +1,7 @@
 <div class="list-area channel-list" ng-class="{'list-fadeout': currentCategory !== listCategory && currentDepthZone !== DEPTH_ZONE.INDEX.SPOTLIGHT}">
     <div class="title font-label" ng-class="{ 'title-opacity': currentCategory !== listCategory}">{{title}}</div>
     <caph-list id="list-{{listCategory}}" container-class="channel-list-container" wrapper-class="list-scroll-wrapper" items="item in dataCategory[listCategory]" on-scroll-start="onScrollStart($context)" on-scroll-finish="onScrollFinish($context)" mouse-scroll-area-size="40">
-        <div id="item-{{$index}}" class="item channel" focusable data-focusable-depth="1" on-focused="onChannelFocused($event, listCategory, this)" on-blurred="onChannelBlurred($event, listCategory, this)" on-selected="onChannelSelected($event, listCategory, this)">
+        <div id="item-{{$index}}" class="item channel" focusable data-focusable-depth="1" data-focusable-next-focus-up="btnView" on-focused="onChannelFocused($event, listCategory, this)" on-blurred="onChannelBlurred($event, listCategory, this)" on-selected="onChannelSelected($event, listCategory, this)">
             <div class="loader" ng-show="item.loaded===false"></div>
             <div class="content" ng-hide="item.loaded === false" style="background: url({{item.photoUrl || ''}});-webkit-background-size:100% 100%;">
 

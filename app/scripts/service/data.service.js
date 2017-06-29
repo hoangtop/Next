@@ -397,6 +397,7 @@
                         item.firstTitle = item.channel.name[0].text;
                         item.serviceId = item.service_id;
                         item.channelId = item.id;
+                        item.isChannel = true;
                         return item;
                     });
 

@@ -9,6 +9,11 @@
     function VideoService($timeout, $http, $q, CONSTANT, SETTINGS, DataService) {
         //interface
         var hls;
+        var errorData = {
+            name: '',
+            code: '',
+            description: ''
+        };
 
         var service = {
             vodList: [],
@@ -23,7 +28,10 @@
         return service;
 
         //implementation
+        var defferStream;
+
         function playStream(stream, video, def) {
+            defferStream = def;
             if (hls) {
                 console.log("destroy hls ++++++++++++++++++++++++++++++++++++++++++++++++++");
                 // hls.stopLoad();
@@ -47,11 +55,13 @@
             hls.attachMedia(video);
 
             hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                // def.resolve('load stream successfully')
+                console.log('load MANIFEST_PARSED successfully1');
+                // def.resolve('load MANIFEST_PARSED successfully1');
             });
 
             hls.on(Hls.Events.LEVEL_LOADED, function(event, data) {
-                def.resolve('load stream successfully');
+                console.log('load LEVEL_LOADED successfully2');
+                // def.resolve('load LEVEL_LOADED successfully2');
             });
 
             hls.on(Hls.Events.ERROR, function(event, data) {
@@ -98,9 +108,15 @@
                         break;
                     case Hls.ErrorDetails.KEY_LOAD_ERROR:
                         console.error("error while loading key " + data.frag.decryptdata.uri);
+                        errorData.name = "ENCRYPTED_CONTENT_ERROR";
+                        errorData.description = "error while loading key " + data.frag.decryptdata.uri;
+                        def.reject(errorData);
                         break;
                     case Hls.ErrorDetails.KEY_LOAD_TIMEOUT:
                         console.error("timeout while loading key " + data.frag.decryptdata.uri);
+                        errorData.name = "ENCRYPTED_CONTENT_ERROR";
+                        errorData.description = "error while loading key " + data.frag.decryptdata.uri;
+                        def.reject(errorData);
                         break;
                     case Hls.ErrorDetails.BUFFER_APPEND_ERROR:
                         console.error("Buffer Append Error");
@@ -234,6 +250,7 @@
                                 stream = 'http://' + response.data.gsdm.glb_addresses[i] + '/' + vod.vodLocator + '?AdaptiveType=HLS&VOD_RequestID=' + vodRequestId;
                             }
                         }
+                        // def.resolve("response");
 
                         playStream(stream, video, def);
                     },
@@ -261,6 +278,7 @@
         }
 
         function handleVideoEvent(evt) {
+            // var def = $q.defer();
             var data = '';
             switch (evt.type) {
                 case 'durationchange':
@@ -276,15 +294,27 @@
                     break;
                 case 'loadedmetadata':
                     //   data = 'duration:' + evt.target.duration + '/videoWidth:' + evt.target.videoWidth + '/videoHeight:' + evt.target.videoHeight;
-                    //  break;
+                    console.log("loadedmetadata ---");
+                    defferStream.resolve('PLAYING');
+                    break;
                 case 'loadeddata':
+                    console.log("loadeddata ---");
+                    // break;
                 case 'canplay':
+                    console.log("canplay ---");
+                    // break;
                 case 'canplaythrough':
+                    console.log("canplaythrough ---");
+                    // break;
                 case 'ended':
                 case 'seeking':
-                case 'seeked':
                 case 'play':
+                    // console.log("play ---");
+                    // break;
                 case 'playing':
+                    // console.log("play ---");
+
+                    break;
                     // lastStartPosition = evt.target.currentTime;
                 case 'pause':
                 case 'waiting':
@@ -306,6 +336,10 @@
                                 break;
                             case mediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
                                 errorTxt = "The video could not be loaded, either because the server or network failed or because the format is not supported";
+                                errorData.name = "ENCRYPTED_CONTENT_ERROR";
+                                errorData.description = errorTxt;
+                                defferStream.reject(errorData);
+
                                 break;
                         }
                         console.error(errorTxt);

@@ -1,4 +1,4 @@
-<div ng-style="{'opacity':bgImgCoverOpacity,'width':bgImgCoverWidth}" class="bg-img-cover" ng-hide="currentDepth===DEPTH.CATEGORY"></div>
+<!--<div ng-style="{'opacity':bgImgCoverOpacity,'width':bgImgCoverWidth}" class="bg-img-cover" ng-hide="currentDepth===DEPTH.CATEGORY"></div>-->
 
 <div id="menu-container" class="move-container menu-container" ng-show="currentDepth===DEPTH.INDEX">
     <div class="logo"></div>
@@ -13,19 +13,20 @@
     </div>
 </div>
 <div class="home-page">
-    <div id="move-container" class="move-container overview-container" ng-class="{ 'opacity-dark':isOverviewDark, 'opacity-light':!isOverviewDark,'reset-position':currentDepth===DEPTH.DETAIL}">
-        <div class="spotlight-page" ng-show="currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.SPOTLIGHT">
-            <div class="logo"></div>
+    <div id="move-container" class="move-container overview-container" ng-class="{'reset-position':currentDepth===DEPTH.DETAIL || currentDepth===DEPTH.PLAYER}">
+        <div class="spotlight-page" ng-show="currentDepth===DEPTH.INDEX" ng-hide="isForceSpotlightHide && isSpotlightShown !== true" ng-class="{'spotlight-page-fade-out': currentDepthZone!==DEPTH_ZONE.INDEX.SPOTLIGHT}" animate-on-change="overview.firstTitle">
+            <div class=" logo"></div>
             <!-- OVERVIEW -->
-            <div class="overview" ng-class="{ 'spotlight':currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.SPOTLIGHT}">
+            <div class="overview" ng-class="{ 'spotlight':currentDepth===DEPTH.INDEX}">
                 <div class="font-header" ng-bind-html="overview.firstTitle"></div>
                 <div class="font-header-small" ng-bind-html="overview.secondTitle"></div>
             </div>
 
             <!-- page: SPOTLIGHT  -->
-            <div class="overview desc font-body" ng-show="currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.SPOTLIGHT" ng-bind-html="overview.description"></div>
-            <div class="btn-wrapper" ng-show="currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.SPOTLIGHT">
-                <div focusable="{depth: DEPTH.INDEX,initialFocus: true, name: 'btnView'}" class="btn btn-gap" ng-class="{ 'btn-view':true, 'btn-resume': false}" on-selected="btnViewMoreSelected($event,overview)" on-focused="buttonFocusInSpotLight($event, $originalEvent)">
+            <div class="overview desc font-body" ng-show="currentDepth===DEPTH.INDEX " ng-bind-html="overview.description"></div>
+            <div class="btn-wrapper" ng-show="currentDepth===DEPTH.INDEX">
+                <div id="btnSpotlightView" focusable="{depth: DEPTH.INDEX,name: 'btnView'}" class="btn btn-gap" ng-class="{ 'btn-view':true, 'btn-resume': false}" on-selected="onBtnViewSpotlightSelected($event,overview)" on-focused="onBtnViewSpotlightFocused($event,
+            $originalEvent)">
                     <div class="btn-icon"></div>
                     <!--<div class="btn-icon icon-caph icon-caph-view"></div>-->
                 </div>
@@ -33,7 +34,7 @@
         </div>
 
 
-        <div class="channel-page" ng-show="currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CHANNEL">
+        <div class="channel-page" ng-show="currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CHANNEL || (isChannel && currentDepth===DEPTH.PLAYER && lastDepth !== DEPTH.CATEGORY)" animate-on-change="overview.name">
             <!--<div class="overview" ng-class="{ 'channel':currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CHANNEL}">-->
             <div class="overview channel-headline">
                 <div class="font-header" ng-bind-html="overview.name"></div>
@@ -52,16 +53,16 @@
             </div>
             <!--<div class="channel-prewatch-wraper">
             <div class="channel-prewatch">
-                <div class="loader" ng-show="channelWatchPreviewLoaded !== true"></div>
-                <video id="videoPrewatch" autoplay ng-hide="channelWatchPreviewLoaded !== true"></video>
+                <div class="loader" ng-show="channelWatchPreviewLoaded !==t rue"></div>
+                <video id="videoPrewatch" autoplay ng-hide="channelWatchPreviewLoaded !==t rue"></video>
             </div>
         </div>-->
         </div>
 
-        <div class="category-section" ng-show="(currentDepth===DEPTH.INDEX  &&  currentDepthZone===DEPTH_ZONE.INDEX.CATEGORY) || currentDepth===DEPTH.DETAIL">
+        <div class="category-section" ng-show="(currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CATEGORY) || (currentDepth===DEPTH.DETAIL && isInfoShownInPlayer) || (currentDepth===DEPTH.PLAYER && isInfoShownInPlayer) || isForceInfoShown" animate-on-change="overview.firstTitle">
             <!-- OVERVIEW -->
-            <div class="overview" ng-show="overview !== null">
-                <div class="font-header" ng-bind-html="overview.firstTitle"></div>
+            <div class="overview" ng-show="overview.duration">
+                <div class="font-header">{{overview.firstTitle}}</div>
                 <div class="font-header-small" ng-bind-html="overview.secondTitle"></div>
                 <ul class="short-info">
                     <li class="short-info-li short-info-1"><span class="short-info-1">{{overview.contentFormat}}</span></li>
@@ -72,26 +73,26 @@
             </div>
 
             <!-- page: INDEX (OVERVIEW) -->
-            <div class="page" ng-class="{ 'page-fade-in': currentDepth===DEPTH.INDEX}">
+            <div class="page" ng-class="{ 'page-fade-in': currentDepth===DEPTH.INDEX}" ng-show="overview.duration">
                 <div class="overview desc font-body" ng-bind-html="overview.description.substring(0,300)"></div>
 
             </div>
 
-            <div class="page" ng-class="{ 'page-fade-in': currentDepth===DEPTH.DETAIL}">
+            <div class="page" ng-class="{ 'page-fade-in': currentDepth===DEPTH.DETAIL}" ng-show="overview.duration">
                 <!-- page: DETAIL (OVERVIEW) -->
-                <div class="overview desc font-body" ng-show="currentDepth===DEPTH.DETAIL" ng-bind-html="overview.description"></div>
-                <div class="vod-directors" ng-show="currentDepth===DEPTH.DETAIL" ng-bind-html="overview.directors"></div>
-                <div class="vod-actors" ng-show="currentDepth===DEPTH.DETAIL" ng-bind-html="overview.actors"></div>
-                <div class="vod-detail-btnGroup">
-                    <div class="btn-wrapper vod-detail-play" ng-show="currentDepth===DEPTH.DETAIL">
-                        <div focusable="{depth: DEPTH.DETAIL, name: 'btnPlay'}" ng-disabled="isPlayDisabled" class="btn btn-gap" ng-class="{ 'btn-play':true, 'btn-resume': false}" on-focused="btnVodPlayFocusInDetail($event, $originalEvent)" on-selected="btnVodPlaySelected($event)">
+                <div class="overview desc font-body" ng-bind-html="overview.description"></div>
+                <div class="vod-directors" ng-bind-html="overview.directors"></div>
+                <div class="vod-actors" ng-bind-html="overview.actors"></div>
+                <div class="vod-detail-btnGroup" ng-show="currentDepth===DEPTH.DETAIL && isPlayDisabled !== true">
+                    <div class="btn-wrapper vod-detail-play" ng-show="currentDepth===DEPTH.DETAIL ">
+                        <div focusable="{depth: DEPTH.DETAIL, initialFocus: true,name: 'btnPlay'}" class="btn btn-gap" ng-class="{ 'btn-play':true, 'btn-resume': false}" on-focused="onBtnVodPlayFocusInDetail($event, $originalEvent)" on-selected="onBtnVodPlaySelected($event)">
                             <div class="btn-icon"></div>
                             <!--<div class="btn-icon icon-caph icon-caph-play"></div>-->
                         </div>
                     </div>
 
                     <div class="btn-wrapper vod-detail-episode" ng-show="currentDepth===DEPTH.DETAIL && (overview.isSeries || overview.isVodInSeries) && !isEpisodeBtnNotShown">
-                        <div focusable="{depth: DEPTH.DETAIL, name: 'btnEpisode'}" class="btn btn-gap" ng-class="{ 'btn-vod-episode':true, 'btn-resume': false}" on-focused="btnVodEpisodeFocusInDetail($event, $originalEvent)" on-selected="selectPlayButton()">
+                        <div focusable="{depth: DEPTH.DETAIL, name: 'btnEpisode'}" class="btn btn-gap" ng-class="{ 'btn-vod-episode':true, 'btn-resume': false}" on-focused="onBtnVodEpisodeFocusInDetail($event, $originalEvent)" on-selected="selectPlayButton()">
                             <div class="btn-icon"></div>
                             <!--<div class="btn-icon icon-caph icon-caph-play"></div>-->
                         </div>
@@ -103,10 +104,10 @@
             </div>
         </div>
     </div>
-    <div class="related-play-list" ng-class="{'related-show':isRelatedShown,'related-hide':!isRelatedShown}" ng-show="isRelatedShown">
+    <div class="related-play-list" ng-class="{ 'related-show':isRelatedShown, 'related-hide':!isRelatedShown}" ng-show="isRelatedShown  && isPlayDisabled !== true">
         <related-play-list ng-show="currentDepth===DEPTH.DETAIL" title="Nội dung liên quan"></related-play-list>
     </div>
-    <div class="episode-play-list" ng-class="{'episode-show':isEpisodeShown,'episode-hide':!isEpisodeShown}">
+    <div class="episode-play-list" ng-class="{ 'episode-show':isEpisodeShown, 'episode-hide':!isEpisodeShown}" ng-show="isPlayDisabled !== true">
         <episode-play-list ng-show="currentDepth===DEPTH.DETAIL" title="Danh sách tập phim"></episode-play-list>
     </div>
     <!-- page: INDEX (LIST)  -->
@@ -122,15 +123,15 @@
             <play-list id="5"></play-list>
             <play-list id="6"></play-list>
             <play-list id="7"></play-list>
-            <play-list id="8" ng-if="dataCategory.length <= 8"></play-list>
+            <!--<play-list id="8" ng-if="dataCategory.length <=8"></play-list>-->
 
             <!--<play-list-sm id="{{CATEGORY.NUMBERS}}" title="Numbers"></play-list-sm>-->
         </div>
     </div>
 </div>
-<div class="category-page" ng-show="currentDepth===DEPTH.CATEGORY">
+<div class="category-page" ng-cloak ng-show="currentDepth===DEPTH.CATEGORY">
     <div class="category-page-header">
-        <div class="overview" ng-show="overview && currentDepthZone === DEPTH_ZONE.CATEGORY.VOD">
+        <div class="overview" ng-show="overview && currentDepthZone===DEPTH_ZONE.CATEGORY.VOD">
             <div class="font-header" ng-bind-html="overview.firstTitle"></div>
             <div class="font-header-small" ng-bind-html="overview.secondTitle"></div>
             <ul class="short-info" ng-show="overview.contentFormat">
@@ -140,32 +141,31 @@
                 <li class="short-info-li short-info-3"><span class="short-info-3">{{overview.genres}}</span></li>
             </ul>
         </div>
-        <div class="overview channel" ng-show="overview && currentDepthZone === DEPTH_ZONE.CATEGORY.CHANNEL">
+        <div class="overview channel" ng-show="overview && currentDepthZone===DEPTH_ZONE.CATEGORY.CHANNEL">
             <div class="font-header" ng-bind-html="overview.firstTitle"></div>
             <div class="font-header-small" ng-bind-html="overview.secondTitle"></div>
 
         </div>
 
     </div>
-    <div class="w3-sidebar w3-bar-block w3-card-2 w3-animate-left category-sidebar" id="mySidebar" ng-class="{'collapsed':isVodCategoryOpened}">
+    <div ng-cloak class="w3-sidebar w3-bar-block w3-card-2 w3-animate-left category-sidebar" id="mySidebar" ng-class="{ 'collapsed':isVodCategoryOpened}">
         <!--<button class="w3-bar-item w3-button w3-large" onclick="w3_close()">Close &times;</button>-->
-        <a href="#" ng-if="currentDepthZone === DEPTH_ZONE.CATEGORY.CHANNEL" id="sidebar-category-item-{{$index}}" focusable="{depth: DEPTH.CATEGORY,initialFocus: {{$index === 0}},name:category-vod-item-{{$index}}}" data-focusable-group="SIDEBAR_CATEGORY" class="w3-bar-item w3-button"
+        <a href="#" ng-if="currentDepthZone===DEPTH_ZONE.CATEGORY.CHANNEL" id="sidebar-category-item-{{$index}}" focusable="{depth: DEPTH.CATEGORY,initialFocus: {{$index===0 }},name:category-vod-item-{{$index}}}" data-focusable-group="SIDEBAR_CATEGORY" class="w3-bar-item w3-button"
             ng-repeat="item in sidebarCategories" on-focused="onSidebarCategoryFocused($event,item, $index)" ng-bind-html="item.name"></a>
-        <a href="#" ng-if="currentDepthZone === DEPTH_ZONE.CATEGORY.VOD" id="sidebar-category-item-{{$index}}" focusable="{depth: DEPTH.CATEGORY,initialFocus: {{$index === 0}},name:category-vod-item-{{$index}}}" data-focusable-group="SIDEBAR_CATEGORY" class="w3-bar-item w3-button"
+        <a href="#" ng-if="currentDepthZone===DEPTH_ZONE.CATEGORY.VOD" id="sidebar-category-item-{{$index}}" focusable="{depth: DEPTH.CATEGORY,initialFocus: {{$index===0 }},name:category-vod-item-{{$index}}}" data-focusable-group="SIDEBAR_CATEGORY" class="w3-bar-item w3-button"
             ng-repeat="item in sidebarCategories" on-focused="onSidebarCategoryFocused($event,item, $index)" ng-bind-html="item.this.name[0].text"></a>
 
 
     </div>
-    <div id=" main" class="category-container-wrapper" ng-class="{ 'opened':isVodCategoryOpened}">
+    <div ng-cloak id="main" class="category-container-wrapper" ng-class="{ 'opened':isVodCategoryOpened}">
         <div class="nav-category-title">
             <div class="nav-category-icon"></div>
             <div class="category-title" ng-bind-html="selectedCategoryMenu"></div>
         </div>
         <div class="category-container">
-            <div id="category-vod-item-{{$index}}" class="item category-vod-item" ng-class="{ 'channel-item':currentDepthZone === DEPTH_ZONE.CATEGORY.CHANNEL}" ng-repeat="item in vodListByCategory track by $index" focusable="{depth: DEPTH.CATEGORY}
+            <div id="category-vod-item-{{$index}}" class="item category-vod-item" ng-class="{ 'channel-item':currentDepthZone===DEPTH_ZONE.CATEGORY.CHANNEL}" ng-repeat="item in vodListByCategory track by $index" focusable="{depth: DEPTH.CATEGORY}
            " data-focusable-group="VOD_LIST_CATEGORY" data-focusable-next-focus-left="{{$index%8===0? 'group:SIDEBAR_CATEGORY':null}}" on-focused="onCategoryVodFocused($event, item, this, $index)" on-blurred="onVodBlurred($event, listCategory, item)"
-                on-selected="onCategoryVodSelected($event, item,
-            $index)">
+                on-selected="onCategoryVodSelected($event, item, $index)">
                 <div class="loader" ng-show="item.loaded===false"></div>
                 <div class="content" ng-hide="item.loaded===false" style="background: url({{item.photoUrl || ''}});-webkit-background-size:100% 100%;">
 

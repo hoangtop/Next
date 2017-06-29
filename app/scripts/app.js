@@ -1,6 +1,7 @@
 'use strict';
 var app = angular.module('vietteltv', [
     'ngSanitize',
+    // 'ngAnimate',
     'caph.ui',
     'ui.router',
     'ngResource',
@@ -11,6 +12,7 @@ var app = angular.module('vietteltv', [
 ]).config(['focusControllerProvider', function(focusControllerProvider) {
     focusControllerProvider.setInitialDepth(1);
     focusControllerProvider.setInitialGroupOfDepth(3, 'SIDEBAR_CATEGORY');
+    // focusControllerProvider.setInitialGroupOfDepth(2, 'PLAY');
 }]);
 
 app.value('SETTINGS', {

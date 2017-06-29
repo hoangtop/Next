@@ -75,7 +75,7 @@ body {
     /*#13161E;*/
     background-size: 100% 100%;
     color: #FFFFFF;
-    z-index: 9;
+    z-index: 23;
     transition: opacity 1s ease-in;
     font-size: 80px;
     text-align: center;
@@ -110,7 +110,7 @@ body {
 .logo {
     position: absolute;
     top: 35px;
-    left: 112px;
+    left: 70px;
     height: 104px;
     width: 194px;
     z-index: 1;
@@ -137,7 +137,7 @@ body {
     position: relative;
     width: 1770px;
     /*margin: 166px 0 0 112px;*/
-    margin: 30px 0 12px 112px;
+    margin: 30px 0 12px 70px;
 }
 
 .overview.spotlight {
@@ -177,7 +177,7 @@ body {
 
 .overview.desc {
     font-size: 40px;
-    margin: 0 0 0 112px;
+    margin: 0 0 0 70px;
     width: 920px;
     color: rgb(148, 148, 148);
 }
@@ -196,7 +196,7 @@ body {
 
 .btn-wrapper {
     position: relative;
-    margin: 50px 0 0 88px;
+    margin: 50px 0 0 50px;
     /*64 112-24=88*/
     height: 92px;
 }
@@ -218,9 +218,11 @@ body {
     position: absolute;
     overflow: hidden;
     width: 1920px;
-    height: 682px;
+    /*height: 682px;*/
+    height: 1080px;
     /*498px;*/
-    top: 418px;
+    /*top: 418px;*/
+    top: 0px;
     /*582px;*/
     -webkit-transform: translateZ(0);
     -webkit-transform: translate3d(0, 0, 0);
@@ -254,7 +256,7 @@ body {
 .list-area .title {
     width: 1920px;
     height: 28px;
-    margin: 0 0 25px 112px;
+    margin: 0 0 25px 70px;
 }
 
 .list-area .title-opacity {
@@ -270,12 +272,29 @@ body {
 }
 
 .list-scroll-wrapper {
-    left: 112px;
+    left: 70px;
 }
 
 .list-category {
     position: absolute;
-    top: 145px;
+    /*top: 145px;*/
+    top: 563px;
+    /*top: 84px;*/
+    -webkit-transition: transform .5s ease-out;
+}
+
+
+/*
+.list-category {
+    position: absolute;
+    top: 563px;
+    -webkit-transition: transform .5s ease-out;
+}*/
+
+.list-category.enter {
+    position: absolute;
+    /*top: 145px;*/
+    top: 563px;
     /*top: 84px;*/
     -webkit-transition: transform .5s ease-out;
 }
@@ -330,6 +349,7 @@ body {
     -webkit-box-sizing: border-box;
     margin: 0 14px 0 0;
     /*0 24px 0 0;*/
+    border: 7px solid rgba(255, 255, 0, 0);
     padding: 0px;
 }
 
@@ -344,7 +364,7 @@ body {
     -webkit-box-sizing: border-box;
     margin: 0 14px 0 0;
     /*0 24px 0 0;*/
-    border: 7px solid rgba(38, 38, 38, 0.1);
+    border: 7px solid rgba(38, 38, 38, 00);
     display: inline-block;
     transition: opacity 0.5s ease-out;
 }
@@ -510,7 +530,7 @@ body {
     width: 1920px;
     height: 1080px;
     z-index: 2000000000000;
-    background-color: #000000;
+    background-color: rgba(0, 0, 0, 0);
     transition: visibility 2s ease-out, opacity 3s ease-out, background-color 2s ease-out;
     opacity: 0;
 }
@@ -530,7 +550,7 @@ body {
     width: 180px !important;
     height: 180px !important;
     border-radius: 100%;
-    margin: 250px auto;
+    margin: 400px auto;
     border: 15px solid rgba(255, 255, 255, .2);
     border-left-color: #FFF;
     -webkit-animation: load 1.5s infinite linear;
@@ -605,7 +625,7 @@ body {
     overflow: hidden;
     z-index: 9;
     opacity: 0;
-    transition: opacity 6s ease-out;
+    transition: opacity 2s ease-out;
 }
 
 .player .caption-middle {
@@ -841,13 +861,13 @@ body {
 }
 
 .btn-login:before {
-    content: 'Đăng nhập';
+    content: 'ĐĂNG NHẬP';
     line-height: 57px;
     margin: 0 0px 0 42px;
 }
 
 .btn-login-cancel:before {
-    content: 'Hủy';
+    content: 'HỦY';
     line-height: 57px;
     margin: 0 44px 0 42px;
 }
@@ -968,8 +988,8 @@ body {
     color: #ffffff;
     /* height: 500px; */
     /*background-image: linear-gradient(to right, rgba(0, 0, 0, 1) 5%, transparent), linear-gradient(to top, rgba(0, 0, 0, 1) 5%, transparent), url('https://ast.fimplus.io/images/banner-landscape-21x9-2048x878_1482745918155.jpg');*/
-    background-repeat: no-repeat, no-repeat, no-repeat;
-    background-position: left, right bottom, right top;
+    /*background-repeat: no-repeat, no-repeat, no-repeat;*/
+    /*background-position: left, right bottom, right top;*/
     /*background-size: 100% 100%, 60% 0%, 100% 100%;*/
     ;
     width: 100%;
@@ -986,7 +1006,8 @@ body {
 }
 
 .list-wrapper-spotlight {
-    top: 718px;
+    /*top: 718px;*/
+    transform: translate3d(0, 318px, 0);
 }
 
 .bg-img-cover {
@@ -1018,7 +1039,7 @@ body {
     width: 300px;
     max-height: 140px;
     margin-top: -95px;
-    margin-left: 112px;
+    margin-left: 70px;
 }
 
 .menu-container .list-container {
@@ -1026,7 +1047,7 @@ body {
 }
 
 h1.category-menu-header-h1 {
-    margin-left: 112px;
+    margin-left: 70px;
     margin-top: 422px;
     font-size: 44px;
     font-size: 84px;
@@ -1058,7 +1079,7 @@ h1.category-menu-header-h1 {
 }
 
 .headline-program {
-    margin-left: 112px;
+    margin-left: 70px;
     display: none;
 }
 
@@ -1176,7 +1197,7 @@ li.short-info-li.short-info-1 {
 .list-area-menu .title {
     width: 1920px;
     height: 28px;
-    margin: 0 0 25px 112px;
+    margin: 0 0 25px 70px;
 }
 
 .channel-list .loader {
@@ -1223,21 +1244,21 @@ li.short-info-li.short-info-1 {
 }
 
 .vod-actors {
-    padding: 10px 0px 0px 112px;
+    padding: 10px 0px 0px 70px;
     font-size: 29px;
     color: rgb(95, 94, 94);
     font-style: italic;
 }
 
 .vod-directors {
-    padding: 10px 0px 0px 112px;
+    padding: 10px 0px 0px 70px;
     font-size: 29px;
     color: rgb(95, 94, 94);
     font-style: italic;
 }
 
 .btn-vod-related:before {
-    content: 'LIÃƒÅ N QUAN';
+    content: 'LIÊN QUAN';
     line-height: 57px;
     margin: 0 44px 0 42px;
 }
@@ -1250,7 +1271,7 @@ li.short-info-li.short-info-1 {
 
 .vod-detail-btnGroup {
     display: block;
-    margin: 40px 0px 0px 104px;
+    margin: 40px 0px 0px 63px;
 }
 
 .vod-detail-btnGroup .btn {
@@ -1560,15 +1581,18 @@ span.login-input-lable {
     opacity: 1;
 }
 
-.videoMainPlay {
+
+/*.videoMainPlay {
     opacity: 0;
-    transition: opacity 6s ease-out;
+    transition: opacity 2s ease-out;
 }
 
 .videoMainPlay.player-shown {
     opacity: 1;
-    /*opacity: 1;*/
+
 }
+
+*/
 
 .caph-checkbox {
     width: 715px;
@@ -1601,7 +1625,7 @@ span.login-input-lable {
 }
 
 .toast-success {
-    background-color: rgba(81, 163, 81, 0.4);
+    background-color: rgba(81, 163, 81, 0.6);
 }
 
 .toast-warning {
@@ -1610,6 +1634,112 @@ span.login-input-lable {
 }
 
 .toast-error {
-    background-color: rgba(189, 54, 47, 0.39);
-    /*dsd*/
+    background-color: rgba(189, 54, 47, 0.8);
+}
+
+.spotlight-page-fade-out {
+    opacity: 0 !important;
+    /*transition: opacity 3s ease-out;*/
+}
+
+.spotlight-page .overview.desc {
+    /*height: 180px;*/
+}
+
+.category-section {
+    position: absolute;
+}
+
+.spotlight-page {
+    position: absolute;
+}
+
+.channel-page {
+    position: absolute;
+}
+
+.background-layer {
+    position: absolute;
+    /* height: 1080px; */
+    z-index: 21;
+    transition: opacity 3s ease, background-image 1s ease-in-out;
+    background-color: transparent;
+}
+
+.wrapper-container {
+    background-color: transparent;
+    z-index: 21;
+}
+
+.background-layer-fade-in {
+    opacity: 1;
+}
+
+.background-layer-fade-in {
+    opacity: 0;
+}
+
+.background-mask {
+    background-size: 40%;
+    background-position: 128% 0%;
+    width: 60%;
+    height: 100%;
+    right: 0px;
+}
+
+.spotlight-fade-in {
+    opacity: 1
+}
+
+.spotlight-fade-out {
+    opacity: 0
+}
+
+.spotlight-mask {
+    z-index: 21;
+}
+
+.menu-fade-in {
+    opacity: 1
+}
+
+.menu-fade-out {
+    opacity: 0
+}
+
+.menu-mask {
+    z-index: 21;
+}
+
+.vod-fade-in {
+    opacity: 1
+}
+
+.vod-fade-out {
+    opacity: 0
+}
+
+.vod-mask {
+    z-index: 21;
+}
+
+.font-header {
+    transition: opacity 1s;
+    opacity: 1;
+}
+
+.font-header[class*="-remove"] {
+    transition: none;
+}
+
+[animate-on-change] {
+    transition: all 2s ease-in-out;
+    -webkit-transition: all 2s ease-in-out;
+    opacity: 1;
+}
+
+[animate-on-change].changed {
+    transition: none;
+    -webkit-transition: none;
+    opacity: 0;
 }
