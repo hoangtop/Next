@@ -1474,8 +1474,8 @@ button.login-page-button.focused {
 }
 
 .category-page .w3-bar-block .w3-bar-item {
-    padding: 0px 10px 0px 20px;
-    margin: 10px 30px 10px 0px;
+    /*padding: 0px 10px 0px 20px;*/
+    margin: 0px 30px 0px 0px;
 }
 
 .category-page-header {
@@ -1662,7 +1662,7 @@ span.login-input-lable {
     position: absolute;
     /* height: 1080px; */
     z-index: 21;
-    transition: opacity 3s ease, background-image 1s ease-in-out;
+    transition: opacity 3s ease, background-image 2s ease-in-out;
     background-color: transparent;
 }
 
@@ -1733,8 +1733,8 @@ span.login-input-lable {
 }
 
 [animate-on-change] {
-    transition: all 2s ease-in-out;
-    -webkit-transition: all 2s ease-in-out;
+    transition: opacity 2.5s linear;
+    /*-webkit-transition: all 2s ease-in-out;*/
     opacity: 1;
 }
 

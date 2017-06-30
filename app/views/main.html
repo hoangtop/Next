@@ -148,12 +148,12 @@
         </div>
 
     </div>
-    <div ng-cloak class="w3-sidebar w3-bar-block w3-card-2 w3-animate-left category-sidebar" id="mySidebar" ng-class="{ 'collapsed':isVodCategoryOpened}">
+    <div ng-cloak class="w3-sidebar w3-bar-block w3-card-2 category-sidebar" id="mySidebar" ng-class="{ 'collapsed':isVodCategoryOpened}">
         <!--<button class="w3-bar-item w3-button w3-large" onclick="w3_close()">Close &times;</button>-->
-        <a href="#" ng-if="currentDepthZone===DEPTH_ZONE.CATEGORY.CHANNEL" id="sidebar-category-item-{{$index}}" focusable="{depth: DEPTH.CATEGORY,initialFocus: {{$index===0 }},name:category-vod-item-{{$index}}}" data-focusable-group="SIDEBAR_CATEGORY" class="w3-bar-item w3-button"
-            ng-repeat="item in sidebarCategories" on-focused="onSidebarCategoryFocused($event,item, $index)" ng-bind-html="item.name"></a>
-        <a href="#" ng-if="currentDepthZone===DEPTH_ZONE.CATEGORY.VOD" id="sidebar-category-item-{{$index}}" focusable="{depth: DEPTH.CATEGORY,initialFocus: {{$index===0 }},name:category-vod-item-{{$index}}}" data-focusable-group="SIDEBAR_CATEGORY" class="w3-bar-item w3-button"
-            ng-repeat="item in sidebarCategories" on-focused="onSidebarCategoryFocused($event,item, $index)" ng-bind-html="item.this.name[0].text"></a>
+        <!--<a href="#" ng-if="currentDepthZone===DEPTH_ZONE.CATEGORY.CHANNEL" id="sidebar-category-item-{{$index}}" focusable="{depth: DEPTH.CATEGORY,initialFocus: {{$index===0 }},name:category-vod-item-{{$index}}}" data-focusable-group="SIDEBAR_CATEGORY" class="w3-bar-item w3-button"
+            ng-repeat="item in sidebarCategories" on-focused="onSidebarCategoryFocused($event,item, $index)" ng-bind-html="item.name"></a>-->
+        <a href="#" id="sidebar-category-item-{{$index}}" focusable="{depth: DEPTH.CATEGORY,initialFocus: {{$index===0 }},name:category-vod-item-{{$index}}}" data-focusable-group="SIDEBAR_CATEGORY" class="w3-bar-item w3-button" ng-repeat="item in sidebarCategories"
+            on-focused="onSidebarCategoryFocused($event,item, $index)" ng-bind-html="item.name"></a>
 
 
     </div>
@@ -162,7 +162,7 @@
             <div class="nav-category-icon"></div>
             <div class="category-title" ng-bind-html="selectedCategoryMenu"></div>
         </div>
-        <div class="category-container">
+        <div class="category-container" ng-cloak>
             <div id="category-vod-item-{{$index}}" class="item category-vod-item" ng-class="{ 'channel-item':currentDepthZone===DEPTH_ZONE.CATEGORY.CHANNEL}" ng-repeat="item in vodListByCategory track by $index" focusable="{depth: DEPTH.CATEGORY}
            " data-focusable-group="VOD_LIST_CATEGORY" data-focusable-next-focus-left="{{$index%8===0? 'group:SIDEBAR_CATEGORY':null}}" on-focused="onCategoryVodFocused($event, item, this, $index)" on-blurred="onVodBlurred($event, listCategory, item)"
                 on-selected="onCategoryVodSelected($event, item, $index)">

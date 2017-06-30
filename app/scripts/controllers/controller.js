@@ -454,6 +454,8 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 ele.removeClass('item-fadeout');
             }
         }
+
+        $scope.isMenuShown = true;
         setMenuFocusedPackground('images/menu_bg_focused_' + $scope.selectedCategoryMenuIndex + '.jpg');
         lastFocusedGroup = FocusUtil.getData($event.currentTarget).group;
         categoryVodFocusedGroup = FocusUtil.getData($event.currentTarget).group;
@@ -501,6 +503,8 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
             }
             currentItemData = data.item;
             $scope.focusedMenu = currentItemData;
+            $scope.sidebarCategories = data.item.children;
+            console.log('sidebarCategories:', $scope.sidebarCategories);
             setMenuFocusedPackground('images/menu_bg_focused_' + $index + '.jpg');
             $scope.isSpotlightShown = false;
             $scope.isVodShown = false;
@@ -728,7 +732,10 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         if (item.vodListByCategory && item.vodListByCategory.length > 0) {
             $scope.vodListByCategory = item.vodListByCategory;
             $scope.overview = null;
-            $scope.isMainLoaderShown = false;
+            $timeout(function() {
+                $scope.isMainLoaderShown = false;
+            }, 500);
+
         } else {
             var offset = 0;
             var limit = 24;
@@ -748,7 +755,10 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                     });
                 }
                 $scope.overview = null;
-                $scope.isMainLoaderShown = false;
+                $timeout(function() {
+                    $scope.isMainLoaderShown = false;
+                }, 500);
+
             } else {
                 retrieveVodListInCategory($scope.selectedSidebarCategory, limit, offset);
             }
@@ -772,7 +782,10 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                     $scope.vodListByCategory = $scope.vodListByCategory.concat(seriesVodList);
                     sidebarCategory.vodListByCategory = $scope.vodListByCategory;
                     $scope.overview = null;
-                    $scope.isMainLoaderShown = false;
+                    $timeout(function() {
+                        $scope.isMainLoaderShown = false;
+                    }, 500);
+
                     return cb();
                 }
             }, function error(response) {
@@ -789,7 +802,10 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                     $scope.vodListByCategory = $scope.vodListByCategory.concat(vodList);
                     sidebarCategory.vodListByCategory = $scope.vodListByCategory;
                     $scope.overview = null;
-                    $scope.isMainLoaderShown = false;
+                    $timeout(function() {
+                        $scope.isMainLoaderShown = false;
+                    }, 500);
+
                     return cb();
                 }
             }, function error(response) {
@@ -1004,7 +1020,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         }
 
         $scope.isMainLoaderShown = false;
-
+        $scope.isMenuShown = false;
 
         $timeout(function() {
             $('#list-related-vod').trigger('reload');
@@ -1156,7 +1172,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 console.log(" $scope.lastDepth:", $scope.lastDepth);
                 $scope.lastDepth = $scope.currentDepth;
                 // console.log(" $scope.lastDepth:", $scope.lastDepth);
-
+                setVodDetailPackground('');
                 processPlayerTimer = $timeout(function() {
                     changeDepth($scope.DEPTH.PLAYER);
                     detailSectionTimmer = $timeout(function() {
@@ -1165,7 +1181,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                     }, 8000);
                     $scope.isMediaLoaderHidden = true;
                     // $scope.isBackgroundShown = false;
-                    setVodDetailPackground('');
+
                     $(".background-layer").fadeOut(3000, "linear");
 
                 }, 500);
@@ -1301,9 +1317,9 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 $scope.currentFocusItem = focusController.getCurrentFocusItem();
                 switch (context.event.keyCode) {
                     case CONSTANT.KEY_CODE.UP:
-                        if ($scope.currentFocusItem.id === 'sidebar-category-item-0') {
-                            $scope.back();
-                        }
+                        // if ($scope.currentFocusItem.id === 'sidebar-category-item-0') {
+                        //     $scope.back();
+                        // }
                         break;
                     case CONSTANT.KEY_CODE.DOWN:
                         break;
@@ -1545,7 +1561,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 } else {
                     targetDepth = $scope.DEPTH.INDEX;
                     $timeout(function() {
-                        focusController.setDepth(targetDepth, categoryMenuFocusedGroup);
+                        focusController.setDepth(targetDepth, 'MENU');
                     }, CONSTANT.EFFECT_DELAY_TIME);
                 }
                 focusClass = '.btn-resume';

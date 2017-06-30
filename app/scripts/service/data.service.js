@@ -562,7 +562,7 @@
                             // console.log(item);
 
                             if ((item.path_id.match(/\//g) || []).length === 1) {
-                                var menuitem = { this: item, children: [] };
+                                var menuitem = { name: item.name[0].text, this: item, children: [] };
                                 menuArray.push(menuitem);
 
                                 menuMap[item.id] = menuitem;
@@ -573,7 +573,7 @@
                                 angular.forEach(menuArray, function(menu1, key) {
                                     //                                    console.log(item.path_id.indexOf(menu2.key.path_id + '/'));
                                     if (item.path_id.indexOf(menu1.this.path_id + '/') !== -1) {
-                                        var menuitem = { this: item, children: [] };
+                                        var menuitem = { name: item.name[0].text, this: item, children: [] };
                                         //                                        var menuitem = {this: item,isProBannerCat:isProBannerCat, children: []};
                                         menu1.children.push(menuitem);
                                         menuListLevel2.push(menuitem);
@@ -586,7 +586,7 @@
                             if ((item.path_id.match(/\//g) || []).length === 3) {
                                 angular.forEach(menuListLevel2, function(menu2, key) {
                                     if (item.path_id.indexOf(menu2.this.path_id + '/') !== -1) {
-                                        var menuitem = { this: item, children: [] };
+                                        var menuitem = { name: item.name[0].text, this: item, children: [] };
                                         //                                        var menuitem = {this: item,isProBannerCat:isProBannerCat, children: []};
                                         menu2.children.push(menuitem);
                                         menuListLevel3.push(menuitem);
@@ -600,7 +600,7 @@
                                 //                                console.log(' series....++++++++++++ ' +item.path_id );
                                 angular.forEach(menuListLevel3, function(menu3, key) {
                                     if (item.path_id.indexOf(menu3.this.path_id + '/') !== -1) {
-                                        var menuitem = { this: item, children: [] };
+                                        var menuitem = { name: item.name[0].text, this: item, children: [] };
                                         //                                        var menuitem = {this: item,isProBannerCat:isProBannerCat, children: []};
                                         menu3.children.push(menuitem);
 
