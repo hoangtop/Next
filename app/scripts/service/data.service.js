@@ -27,12 +27,89 @@
             getEpisodesInSeries: getEpisodesInSeries,
             getCategorySeriesVodListByCategoryId: getCategorySeriesVodListByCategoryId,
             getVodByProgramIdList: getVodByProgramIdList,
-            getVodMoreInfoByProgramIdList: getVodMoreInfoByProgramIdList
+            getVodMoreInfoByProgramIdList: getVodMoreInfoByProgramIdList,
+            getSpotlightContents: getSpotlightContents
         };
 
         return service;
 
         //implementation
+        function getSpotlightContents() {
+            var url = CONSTANT.API_HOST + "/api1/contents/campaigns/campaigns?pid=package.campaign://OTT.MAIN.PROMO.SMARTTV";
+            var def = $q.defer();
+
+            $http.get(url)
+                .then(function(response) {
+                    console.log('getPromotionContents:', response);
+                    var spotlightVodList = [];
+                    var ids = [];
+
+                    if (response.data.data) {
+                        var programIds = '';
+                        var tenpArray = [];
+                        angular.forEach(response.data.data[0].data[0].campaigns, function(vodItem, key) {
+                            programIds = programIds + vodItem.action_url + ',';
+                            // ids.push(vodItem.id);
+                            tenpArray.push({ programId: vodItem.action_url, id: vodItem.id });
+                        });
+
+                        getVodByProgramIdList(programIds).then(
+                            function success(response) {
+                                spotlightVodList = response;
+                                console.log('spotlightVodList:', spotlightVodList);
+                                var index1 = 0;
+                                angular.forEach(spotlightVodList, function(vodItem, key) {
+                                    var id = 0;
+                                    angular.forEach(tenpArray, function(item, key) {
+                                        if (item.programId === vodItem.program.id) {
+                                            id = item.id;
+                                        }
+                                    });
+
+                                    vodItem.bigPhotoUrl = CONSTANT.API_HOST + "/api1/contents/pictures/" + id;
+
+                                    getRelatedVodList(vodItem.program.id).then(
+
+                                        function(res) {
+                                            console.log("relate ...", res);
+
+                                            index1++;
+                                            if (res) {
+                                                spotlightVodList[key].relateds = res;
+                                            } else {
+                                                spotlightVodList[key].relateds = [];
+                                            }
+                                            // spotlightVodList[key].relateds = res;
+                                            spotlightVodList[key].episodes = [];
+                                            if (index1 === spotlightVodList.length) {
+                                                return def.resolve(spotlightVodList);
+                                            }
+
+                                        });
+                                });
+
+
+
+                            },
+                            function error(response) {
+                                console.log('Failed to get getRelatedVodList".', response);
+                                def.resolve(spotlightVodList);
+                            });
+
+
+
+                    } else {
+                        def.resolve(spotlightVodList);
+                    }
+
+                }, function(response) {
+                    console.error(response);
+                    // def.resolve(seriesVodList);
+                });
+
+            return def.promise;
+
+        }
 
         function getCategorySeriesVodListByCategoryId(categoryId, limit, offset, shortBy) {
 

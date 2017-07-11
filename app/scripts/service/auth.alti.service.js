@@ -87,8 +87,8 @@
                     console.log(result); //a hash, representing your device fingerprint
                     console.log(components); // an array of FP components
                     deviceObject.id = localStorageService.get('deviceUdid');
-                    deviceObject.model = 'PC_WINDOWS';
-                    deviceObject.model_no = 'PC_WINDOWS';
+                    deviceObject.model = 'SMARTTV';
+                    deviceObject.model_no = 'SMARTTV';
                     deviceObject.type = 'others';
 
                     requestObj.device = deviceObject;
@@ -104,8 +104,8 @@
                 });
             } else {
                 deviceObject.id = localStorageService.get('deviceUdid');
-                deviceObject.model = 'PC_WINDOWS';
-                deviceObject.model_no = 'PC_WINDOWS';
+                deviceObject.model = 'SMARTTV';
+                deviceObject.model_no = 'SMARTTV';
                 deviceObject.type = 'others';
 
                 requestObj.device = deviceObject;

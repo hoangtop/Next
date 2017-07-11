@@ -28,10 +28,24 @@
         <!--<span class="caph">Viettel TV</span><br/>Giải trí không giới hạn-->
     </div>
 
-    <div ng-style="{'border-color': overview.color,'background-image':  'url(' + bgSpotlightImgUrl + ')','background-size': bgSpotlightSize,'width':bgSpotlightWidth}" class="wrapper wrapper-spotlight background-layer background-mask spotlight-mask" ng-class="{'spotlight-fade-in':isSpotlightShown,'spotlight-fade-out':!isSpotlightShown}"></div>
-    <div ng-style="{'border-color': overview.color,'background-image':  'url(' + bgMenuImgUrl + ')','background-size': bgMenuSize,'width':bgMenuWidth}" class="wrapper wrapper-spotlight background-layer background-mask menu-mask" ng-class="{'menu-fade-in':isMenuShown,'menu-fade-out':!isMenuShown}"></div>
-    <div ng-style="{'border-color': overview.color,'background-image':  'url(' + bgImgUrl + ')','background-size': bgSize,'width':bgWidth}" class="wrapper wrapper-spotlight background-layer background-mask vod-mask" ng-class="{'vod-fade-in':isVodShown,'vod-fade-out':!isVodShown}"></div>
-    <div ng-style="{'border-color': overview.color,'background-image': bgGradient1 + ', '+ bgGradient2}" class="wrapper wrapper-spotlight background-layer"></div>
+    <div class="wrapper wrapper-spotlight background-layer background-mask spotlight-mask" ng-class="{'spotlight-fade-in':isSpotlightShown,'spotlight-fade-out':!isSpotlightShown}" img-change="bgSpotlightImgUrl">
+        <img alt="" class="bk-img bk-img-bottom spotlight-img spotlight-img-bottom">
+        <img alt="" class="bk-img bk-img-top spotlight-img spotlight-img-top">
+        <div ng-style="{'border-color': overview.color,'background-image': 'linear-gradient(to right, rgba(0, 0, 0, 1) 0%, transparent),linear-gradient(to top, rgba(0, 0, 0, 0) 5%, transparent)'}" class="gradient-mask spotlight-gradient-mask"></div>
+    </div>
+    <div class="wrapper wrapper-spotlight background-layer background-mask menu-mask" ng-class="{'menu-fade-in':isMenuShown,'menu-fade-out':!isMenuShown}" img-change="bgMenuImgUrl">
+        <img alt="" class="bk-img bk-img-bottom menu-img menu-img-bottom">
+        <img alt="" class="bk-img bk-img-top menu-img menu-img-top">
+        <div ng-style="{'border-color': overview.color,'background-image': 'linear-gradient(to right, rgba(0, 0, 0, 1) 0%, transparent),linear-gradient(to top, rgba(0, 0, 0, 0) 0%, transparent)'}" class="gradient-mask menu-gradient-mask"></div>
+    </div>
+    <div class="wrapper wrapper-spotlight background-layer background-mask vod-mask" ng-class="{'vod-fade-in':isVodShown,'vod-fade-out':!isVodShown,'vod-gradient-mask-slow':isVodMaskSlow}" img-change="bgImgUrl">
+        <img alt="" class="bk-img bk-img-bottom vod-img vod-img-bottom">
+        <img alt="" class="bk-img bk-img-top vod-img vod-img-top">
+        <div ng-style="{'border-color': overview.color,'background-image': 'linear-gradient(to right, rgba(0, 0, 0, 1) 40%, transparent),linear-gradient(to top, rgba(0, 0, 0, 1) 0%, transparent)'}" class="gradient-mask vod-gradient-mask"></div>
+    </div>
+
+
+
     <div class="wrapper wrapper-spotlight wrapper-container" ng-include="'views/main.html'"></div>
     <!--<div ng-style="{'border-color': overview.color}" class="wrapper wrapper-spotlight" ng-include="'views/main.html'"></div>-->
 

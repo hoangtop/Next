@@ -14,18 +14,18 @@
 </div>
 <div class="home-page">
     <div id="move-container" class="move-container overview-container" ng-class="{'reset-position':currentDepth===DEPTH.DETAIL || currentDepth===DEPTH.PLAYER}">
-        <div class="spotlight-page" ng-show="currentDepth===DEPTH.INDEX" ng-hide="isForceSpotlightHide && isSpotlightShown !== true" ng-class="{'spotlight-page-fade-out': currentDepthZone!==DEPTH_ZONE.INDEX.SPOTLIGHT}" animate-on-change="overview.firstTitle">
+        <div class="spotlight-page" ng-show="currentDepth===DEPTH.INDEX" ng-hide="isForceSpotlightHide && isSpotlightShown !== true" ng-class="{'spotlight-page-fade-out': currentDepthZone!==DEPTH_ZONE.INDEX.SPOTLIGHT}" animate-on-change="spotlightOverview.firstTitle">
             <div class=" logo"></div>
             <!-- OVERVIEW -->
             <div class="overview" ng-class="{ 'spotlight':currentDepth===DEPTH.INDEX}">
-                <div class="font-header" ng-bind-html="overview.firstTitle"></div>
-                <div class="font-header-small" ng-bind-html="overview.secondTitle"></div>
+                <div class="font-header" ng-bind-html="spotlightOverview.firstTitle"></div>
+                <div class="font-header-small" ng-bind-html="spotlightOverview.secondTitle"></div>
             </div>
 
             <!-- page: SPOTLIGHT  -->
-            <div class="overview desc font-body" ng-show="currentDepth===DEPTH.INDEX " ng-bind-html="overview.description"></div>
+            <div class="overview desc font-body" ng-show="currentDepth===DEPTH.INDEX " ng-bind-html="spotlightOverview.description"></div>
             <div class="btn-wrapper" ng-show="currentDepth===DEPTH.INDEX">
-                <div id="btnSpotlightView" focusable="{depth: DEPTH.INDEX,name: 'btnView'}" class="btn btn-gap" ng-class="{ 'btn-view':true, 'btn-resume': false}" on-selected="onBtnViewSpotlightSelected($event,overview)" on-focused="onBtnViewSpotlightFocused($event,
+                <div id="btnSpotlightView" focusable="{depth: DEPTH.INDEX,name: 'btnView'}" class="btn btn-gap" ng-class="{ 'btn-view':true, 'btn-resume': false}" on-selected="onBtnViewSpotlightSelected($event,spotlightOverview)" on-focused="onBtnViewSpotlightFocused($event,
             $originalEvent)">
                     <div class="btn-icon"></div>
                     <!--<div class="btn-icon icon-caph icon-caph-view"></div>-->
@@ -34,10 +34,10 @@
         </div>
 
 
-        <div class="channel-page" ng-show="currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CHANNEL || (isChannel && currentDepth===DEPTH.PLAYER && lastDepth !== DEPTH.CATEGORY)" animate-on-change="overview.name">
+        <div class="channel-page" ng-show="currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CHANNEL || (isChannel && currentDepth===DEPTH.PLAYER && lastDepth !== DEPTH.CATEGORY)" animate-on-change="channelOverview.name">
             <!--<div class="overview" ng-class="{ 'channel':currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CHANNEL}">-->
             <div class="overview channel-headline">
-                <div class="font-header" ng-bind-html="overview.name"></div>
+                <div class="font-header" ng-bind-html="channelOverview.name"></div>
             </div>
             <div class="headline-program">
                 <ul class="headline-program-ul">

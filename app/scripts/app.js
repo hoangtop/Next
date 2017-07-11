@@ -131,33 +131,24 @@ var removeKeyboardListenerFunc;
 // /**
 //  * Register keys used in this application
 //  */
-// function registerKeys() {
-//     var usedKeys = ['0', 'ChannelUp', 'ChannelDown'];
+function registerKeys() {
+    var usedKeys = ['0', 'ChannelUp', 'ChannelDown'];
 
-//     usedKeys.forEach(
-//         function(keyName) {
-//             tizen.tvinputdevice.registerKey(keyName);
-//         }
-//     );
-// }
+    usedKeys.forEach(
+        function(keyName) {
+            tizen.tvinputdevice.registerKey(keyName);
+        }
+    );
+}
 
-// $(document).ready(function() {
-//     if (window.tizen === undefined) {
-//         console.log('This application needs to be run on Tizen device');
-//         return;
-//     }
+$(document).ready(function() {
+    if (window.tizen === undefined) {
+        console.log('This application needs to be run on Tizen device');
+        return;
+    }
 
-//     registerKeys();
-//     registerKeyHandler();
+    registerKeys();;
 
-//     $("#username").bind("focus", function(e) {
-//         console.log("The INPUT element is focused and ready to get user’s input");
-//     });
+    // $("#playerPanel").hide();
 
-//     $("#password").bind("focus", function(e) {
-//         console.log("The INPUT element is focused and ready to get user’s input");
-//     });
-
-//     // $("#playerPanel").hide();
-
-// });
+});

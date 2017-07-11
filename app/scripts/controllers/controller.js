@@ -3,7 +3,7 @@ angular
     .module('vietteltv')
     .controller('Controller', Controller);
 
-Controller.$inject = ['$rootScope', '$scope', '$state', '$timeout', '$document', 'FocusUtil', 'FocusConstant', 'focusController', 'CONSTANT', 'DataService', '$http', 'UltilService', 'VideoService', 'Principal', 'LoginService', 'Auth', 'toaster'];
+Controller.$inject = ['$rootScope', '$scope', '$state', '$timeout', '$document', 'FocusUtil', 'FocusConstant', 'focusController', 'CONSTANT', 'DataService', '$http', 'UltilService', 'VideoService', 'Principal', 'LoginService', 'Auth', 'toaster', '$interval'];
 /**
  * Controller
  * @author HoangCH
@@ -26,7 +26,7 @@ Controller.$inject = ['$rootScope', '$scope', '$state', '$timeout', '$document',
  * @param {any} Auth 
  * @param {any} toaster 
  */
-function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, FocusConstant, focusController, CONSTANT, DataService, $http, UltilService, VideoService, Principal, LoginService, Auth, toaster) {
+function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, FocusConstant, focusController, CONSTANT, DataService, $http, UltilService, VideoService, Principal, LoginService, Auth, toaster, $interval) {
 
     /*function declaration*/
     $scope.onScrollFinish = onScrollFinish;
@@ -141,6 +141,12 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     main();
 
     function main() {
+        // $scope.$watch('bgImgUrl', function(newValue, oldValue) {
+        //     if (newValue === oldValue) return;
+        //     $('.vod-img').hide();
+        //     $('.vod-img').fadeIn("slow", function() {});
+        // });
+
         setInternetConnectionTimer();
         processKeydownEvent();
 
@@ -213,30 +219,97 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         if (isGotSpotlight) return;
 
         console.log("processSpotlightVodList -->");
-        var vodIdList = '';
-        angular.forEach(CONSTANT.SPOTLIGHT_VOD_LIST, function(item, key) {
-            vodIdList = vodIdList + item.vodId + ',';
-        });
-        vodIdList = vodIdList.substr(0, vodIdList.length - 1);
-        DataService.getVodMoreInfoByProgramIdList(vodIdList).then(function success(spotlightVodList) {
-            // $timeout(function() { // Set 'focus' to specific element by 'focus' controller.
-            // $scope.isInitCompleted = true; // 'Welcome' page will be disappear by this line.
-            $scope.isOverviewDark = false;
-            spotlightVodList[0].bigPhotoUrl = CONSTANT.SPOTLIGHT_VOD_LIST[0].img;
-            spotlightVodList[0].photoUrl = CONSTANT.SPOTLIGHT_VOD_LIST[0].img;
+        // var vodIdList = '';
+        // angular.forEach(CONSTANT.SPOTLIGHT_VOD_LIST, function(item, key) {
+        //     vodIdList = vodIdList + item.vodId + ',';
+        // });
+        // vodIdList = vodIdList.substr(0, vodIdList.length - 1);
+
+
+        DataService.getSpotlightContents().then(function success(spotlightVodList) {
+            var intervalIndex = 0;
+            // console.log('spotlightVodList:', spotlightVodList);
             spotlightVodList[0].isSpotlight = true;
             currentSpotlight = spotlightVodList[0];
-            console.log("");
-            $scope.overview = spotlightVodList[0];
-            $scope.lastOverview = $scope.overview;
+            // console.log('intervalIndex:', 0);
+            setSpotlightPackground(spotlightVodList[0].bigPhotoUrl);
+            $scope.spotlightOverview = spotlightVodList[0];
+            $scope.lastOverview = $scope.spotlightOverview;
+
+            intervalIndex++;
+
+
+            console.log('111111');
+            $interval(function() {
+                // console.log('intervalIndex:', intervalIndex);
+                // console.log(' CONSTANT.SPOTLIGHT_VOD_LIST[intervalIndex]:', CONSTANT.SPOTLIGHT_VOD_LIST[intervalIndex]);
+                // spotlightVodList[intervalIndex].bigPhotoUrl = CONSTANT.SPOTLIGHT_VOD_LIST[intervalIndex].img;
+
+                if ($scope.currentDepthZone === $scope.DEPTH_ZONE.INDEX.SPOTLIGHT) {
+                    // spotlightVodList[intervalIndex].photoUrl = CONSTANT.SPOTLIGHT_VOD_LIST[intervalIndex].img;
+                    $timeout(function() { // Set 'focus' to specific element by 'focus' controller.
+
+
+                        spotlightVodList[intervalIndex].isSpotlight = true;
+                        currentSpotlight = spotlightVodList[intervalIndex];
+                        // console.log('intervalIndex:', intervalIndex);
+                        setSpotlightPackground(spotlightVodList[intervalIndex].bigPhotoUrl);
+                        $scope.spotlightOverview = spotlightVodList[intervalIndex];
+                        $scope.lastOverview = $scope.spotlightOverview;
+
+                        if (intervalIndex < spotlightVodList.length - 1) {
+                            intervalIndex++;
+                        } else {
+                            intervalIndex = 0;
+                        }
+                    }, 400);
+                }
+
+
+            }, 10000);
+            console.log('33333');
             focusController.focus('btnView');
             isGotSpotlight = true;
-
-            // $scope.bgSpotlightWidth = CONSTANT.SPOTLIGHT_BG_WIDTH;
-            // $scope.bgSpotlightSize = CONSTANT.SPOTLIGHT_BG_SIZE;
-
-            // }, 4000);
         }, function error() {});
+
+
+        // DataService.getVodMoreInfoByProgramIdList(vodIdList).then(function success(spotlightVodList) {
+        //     // $timeout(function() { // Set 'focus' to specific element by 'focus' controller.
+        //     // $scope.isInitCompleted = true; // 'Welcome' page will be disappear by this line.
+        //     // $scope.isOverviewDark = false;
+        //     var intervalIndex = 0;
+        //     console.log('111111');
+        //     $interval(function() {
+        //         console.log('intervalIndex:', intervalIndex);
+        //         console.log(' CONSTANT.SPOTLIGHT_VOD_LIST[intervalIndex]:', CONSTANT.SPOTLIGHT_VOD_LIST[intervalIndex]);
+        //         spotlightVodList[intervalIndex].bigPhotoUrl = CONSTANT.SPOTLIGHT_VOD_LIST[intervalIndex].img;
+        //         spotlightVodList[intervalIndex].photoUrl = CONSTANT.SPOTLIGHT_VOD_LIST[intervalIndex].img;
+        //         spotlightVodList[intervalIndex].isSpotlight = true;
+        //         currentSpotlight = spotlightVodList[intervalIndex];
+        //         console.log('intervalIndex:', intervalIndex);
+        //         $scope.overview = spotlightVodList[intervalIndex];
+        //         $scope.lastOverview = $scope.overview;
+
+        //         if ($scope.currentDepthZone === $scope.DEPTH_ZONE.INDEX.SPOTLIGHT) {
+        //             setSpotlightPackground($scope.overview.bigPhotoUrl);
+        //             if (intervalIndex < spotlightVodList.length - 1) {
+        //                 intervalIndex++;
+        //             } else {
+        //                 intervalIndex = 0;
+        //             }
+        //         }
+
+
+        //     }, 10000);
+        //     console.log('33333');
+        //     focusController.focus('btnView');
+        //     isGotSpotlight = true;
+
+        //     // $scope.bgSpotlightWidth = CONSTANT.SPOTLIGHT_BG_WIDTH;
+        //     // $scope.bgSpotlightSize = CONSTANT.SPOTLIGHT_BG_SIZE;
+
+        //     // }, 4000);
+        // }, function error() {});
 
     }
 
@@ -275,7 +348,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         if ($scope.dataCategory[1][0]) {
             setVodDetailPackground($scope.dataCategory[1][0].bigPhotoUrl);
         }
-        setSpotlightPackground();
+        // setSpotlightPackground();
     }
 
     function processSeriesVODList(index, menuItem, categoryId) {
@@ -324,7 +397,8 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
 
     // The callback function which is called when each list component get the 'focus'.
     function onVodFocused($event, category, data, $index) {
-        $scope.isVodShown = false;
+        // $('.vod-gradient-mask').removeClass('vod-gradient-mask-slow');
+        // $scope.isVodShown = false;
         currentCategoryInHome = category;
         if ($scope.currentDepth === $scope.DEPTH.INDEX) {
             $scope.episodePlaylist = [];
@@ -341,9 +415,9 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
 
             $scope.isForceSpotlightHide = true;
 
-            $timeout(function() {
-                $scope.isVodShown = true;
-            }, 100);
+            // $timeout(function() {
+            //     $scope.isVodShown = true;
+            // }, 100);
 
 
             if (!data || !data || data.loaded === false) {
@@ -353,6 +427,8 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
             currentItemData = data;
             if (typeof $scope.currentDetailOverview === 'undefined' || $scope.currentDetailOverview === null || (typeof $scope.currentDetailOverview !== 'undefined' && data.program.id !== $scope.currentDetailOverview.program.id)) { //not update UI when focus after return back from detail page
                 console.log("comong ....");
+                $scope.isVodShown = true;
+                $scope.isVodMaskSlow = false;
                 setVodDetailPackground(currentItemData.bigPhotoUrl);
                 $scope.isSpotlightShown = false;
             }
@@ -368,14 +444,20 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         $scope.bgGradient2 = CONSTANT.CATEGORY_BG_GRADIENT2;
         $scope.bgSize = CONSTANT.CATEGORY_BG_SIZE;
         currentItemData = data;
-        $timeout(function() { // Set 'focus' to specific element by 'focus' controller.
-            $scope.bgImgCoverOpacity = 0;
-            $scope.bgImgUrl = currentItemData.photoUrl;
-        }, 400);
+        // $timeout(function() { // Set 'focus' to specific element by 'focus' controller.
+        //     $scope.bgImgCoverOpacity = 0;
+        //     $scope.bgImgUrl = currentItemData.photoUrl;
+        // }, 400);
+
+        setVodDetailPackground(currentItemData.bigPhotoUrl);
+        $scope.isSpotlightShown = false;
+        $scope.isVodShown = true;
+
         isScrolling === false && updateOverview();
     }
 
     function onCategoryVodFocused($event, data, element, $index) {
+        // $('.vod-gradient-mask').removeClass('vod-gradient-mask-slow');
         if (!data || !data || data.loaded === false) {
             return;
         }
@@ -455,8 +537,26 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
             }
         }
 
+
+        // if (!currentItemData.isChannel) {
+        //     $scope.isMenuShown = false;
+        //     $scope.isVodShown = true;
+        //     $scope.currentDepthZone = $scope.DEPTH_ZONE.CATEGORY.VOD;
+        //     $scope.isVodMaskSlow = false;
+        //     console.log('category vod focused set backgrond ...', currentItemData);
+        //     setVodDetailPackground(currentItemData.bigPhotoUrl);
+        //     // setMenuFocusedPackground('images/menu_bg_focused_' + $scope.selectedCategoryMenuIndex + '.jpg');
+
+        // }
+        // if ($scope.isFromVodDetail === true) {
+        //     $scope.isFromVodDetail = false;
+        // }
+
         $scope.isMenuShown = true;
+        $scope.isVodShown = false;
+        // $scope.isVodMaskSlow = true;
         setMenuFocusedPackground('images/menu_bg_focused_' + $scope.selectedCategoryMenuIndex + '.jpg');
+
         lastFocusedGroup = FocusUtil.getData($event.currentTarget).group;
         categoryVodFocusedGroup = FocusUtil.getData($event.currentTarget).group;
     }
@@ -493,6 +593,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     }
 
     function onCategoryMenuFocused($event, category, data, $index) {
+        // $('.vod-gradient-mask').addClass('vod-gradient-mask-slow');
         if ($scope.currentDepth === $scope.DEPTH.INDEX) {
             $scope.currentDepthZone = $scope.DEPTH_ZONE.INDEX.CATEGORY;
             // Translate each list component to up or down.
@@ -510,6 +611,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
             $scope.isVodShown = false;
             $scope.isMenuShown = true;
             $scope.isForceSpotlightHide = false;
+            $scope.isVodMaskSlow = true;
 
             categoryVodFocusedGroup = ''; //reset category vod focus
             // isScrolling === false && updateOverview();
@@ -519,17 +621,14 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     }
 
     function onChannelFocused($event, category, data, $index) {
+        // $('.vod-gradient-mask').addClass('vod-gradient-mask-slow');
+
         if ($scope.currentDepth === $scope.DEPTH.INDEX) {
-            $scope.isOverviewDark = false;
-            $scope.bgImgCoverOpacity = 0.3;
-            $scope.bgImgCoverWidth = '100%';
             $scope.currentDepthZone = $scope.DEPTH_ZONE.INDEX.CHANNEL;
             var scrollCount = category;
 
             removeFadeoutUpClassToCurrentSlider();
-            $scope.isSpotlightShown = true;
-            $scope.isVodShown = false;
-            $scope.isMenuShown = false;
+
             $scope.isForceSpotlightHide = false;
 
 
@@ -541,12 +640,18 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
 
             currentItemData = data.item;
 
-            isScrolling === false && updateOverview();
-            // $scope.bgImgUrl = CONSTANT.SPOTLIGHT_BG_IMG_URL;
-            // $scope.bgGradient1 = CONSTANT.SPOTLIGHT_BG_GRADIENT1;
-            // $scope.bgGradient2 = CONSTANT.SPOTLIGHT_BG_GRADIENT2;
-            // $scope.bgSize = CONSTANT.SPOTLIGHT_BG_SIZE;
-            // $scope.bgWidth = CONSTANT.SPOTLIGHT_BG_WIDTH;
+            // isScrolling === false && $scope.overview = currentItemData;
+            // if (isScrolling === false) {
+            //     $scope.channelOverview = currentItemData;
+            //     // $sope.
+            // }
+
+            $scope.channelOverview = currentItemData;
+            $scope.spotlightOverview = null;
+            $scope.overview = null;
+
+            $scope.isVodMaskSlow = true;
+            setSpotlightPackground();
 
         }
     }
@@ -609,19 +714,26 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     }
 
     function setSpotlightPackground(bgrUrl, callback) {
-        $scope.bgImgCoverOpacity = 1;
-        $scope.bgImgCoverWidth = '100%';
-        // $timeout(function() { // Set 'focus' to specific element by 'focus' controller.
+
         $scope.bgGradient1 = CONSTANT.SPOTLIGHT_BG_GRADIENT1;
         $scope.bgGradient2 = CONSTANT.SPOTLIGHT_BG_GRADIENT2;
         $scope.bgSpotlightSize = CONSTANT.SPOTLIGHT_BG_SIZE;
         $scope.bgSpotlightWidth = CONSTANT.SPOTLIGHT_BG_WIDTH;
 
+        $scope.isVodShown = false;
+        $scope.isMenuShown = false;
+        $scope.isSpotlightShown = true;
+
+        // $scope.bgGradient1 = CONSTANT.SPOTLIGHT_BG_GRADIENT1;
+        // $scope.bgGradient2 = CONSTANT.SPOTLIGHT_BG_GRADIENT2;
+        // $scope.bgSpotlightSize = CONSTANT.SPOTLIGHT_BG_SIZE;
+        // $scope.bgSpotlightWidth = CONSTANT.SPOTLIGHT_BG_WIDTH;
+
         $scope.bgImgCoverOpacity = 0;
         if (bgrUrl) {
             $scope.bgSpotlightImgUrl = bgrUrl;
         } else {
-            $scope.bgSpotlightImgUrl = CONSTANT.SPOTLIGHT_BG_IMG_URL;
+            // $scope.bgSpotlightImgUrl = CONSTANT.SPOTLIGHT_BG_IMG_URL;
         }
         callback && callback();
         // }, CONSTANT.EFFECT_DELAY_TIME);
@@ -710,6 +822,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         $scope.bgMenuWidth = CONSTANT.MENU_BG_WIDTH;
         // $scope.bgImgCoverOpacity = 1;
         // $scope.bgImgCoverWidth = '100%';
+        console.log('setMenuFocusedPackground ...', bgrUrl);
         if (bgrUrl) {
             $scope.bgMenuImgUrl = bgrUrl;
         } else {
@@ -840,6 +953,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 $timeout(function() {
                     changeDepth($scope.DEPTH.PLAYER);
                     $(".channel-page").fadeOut(2000, "linear");
+                    $(".category-section").fadeOut(4000, "linear");
                 }, 2000);
                 $scope.isMediaLoaderHidden = true;
                 // $scope.isBackgroundShown = false;
@@ -934,6 +1048,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         var depth;
         depth = $scope.DEPTH.DETAIL;
         depth && changeDepth(depth);
+        $scope.currentDepthZone = 0;
         $scope.isInfoShownInPlayer = true;
         // $scope.lastDepth = $scope.DEPTH.DETAIL;
         detailPlayFocusedGroup = FocusUtil.getData($event.currentTarget).group;
@@ -1015,12 +1130,16 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
             setVodDetailPackground(vod.bigPhotoUrl);
         }
 
-        if (vod.isSpotlight === true && $scope.lastDepthZone !== $scope.DEPTH_ZONE.INDEX.SPOTLIGHT) {
-            setSpotlightPackground(vod.bigPhotoUrl);
+        if (vod.isSpotlight === true) {
+            // setSpotlightPackground(vod.bigPhotoUrl);
+            $scope.isVodShown = false;
+            $scope.isSpotlightShown = true;
+
         }
 
         $scope.isMainLoaderShown = false;
         $scope.isMenuShown = false;
+
 
         $timeout(function() {
             $('#list-related-vod').trigger('reload');
@@ -1030,7 +1149,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     $scope.isRelatedShown = false;
 
     function onBtnVodPlayFocusInDetail($event, $originalEvent) {
-        $scope.isOverviewDark = false;
+        $scope.isFromVodDetail = true;
         if ($scope.currentDetailOverview) {
             $scope.overview = $scope.currentDetailOverview;
         }
@@ -1080,7 +1199,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
             VideoService.stopStream(video);
             $scope.lastDepthZone = $scope.currentDepthZone;
             $scope.currentDepthZone = $scope.DEPTH_ZONE.INDEX.SPOTLIGHT;
-            $scope.overview = $scope.lastOverview;
+            $scope.spotlightOverview = $scope.lastOverview;
             //change background on spotlight
             // setSpotlightPackground(currentSpotlight.bigPhotoUrl, function() {
             //     // focusController.focus('btnView');
@@ -1089,7 +1208,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 transform: 'translate3d(0, 0px, 0)'
             });
         } else {
-            $scope.overview = currentSpotlight;
+            $scope.spotlightOverview = currentSpotlight;
             console.log("2222");
             $scope.bgImgCoverOpacity = 1;
             //change background on spotlight
@@ -1172,7 +1291,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 console.log(" $scope.lastDepth:", $scope.lastDepth);
                 $scope.lastDepth = $scope.currentDepth;
                 // console.log(" $scope.lastDepth:", $scope.lastDepth);
-                setVodDetailPackground('');
+                // setVodDetailPackground('');
                 processPlayerTimer = $timeout(function() {
                     changeDepth($scope.DEPTH.PLAYER);
                     detailSectionTimmer = $timeout(function() {
@@ -1275,6 +1394,10 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
 
     function processKeydownEvent() {
         focusController.addBeforeKeydownHandler(function(context) {
+            console.log('channel ... key ', context.event.keyCode);
+            console.log(' $scope.currentDepth ...  ', $scope.currentDepth);
+            console.log(' $scope.channelOverview ...  ', $scope.channelOverview);
+            // $scope.currentDepth === $scope.DEPTH.PLAYER && $scope.channelOverview && $scope.channelOverview.channel
             // var e = context.event;
             // end = new Date().getTime();
             // if ((end - start) < 200) {
@@ -1289,7 +1412,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
 
             $scope.isChannel = false;
             if ($scope.isInitCompleted === false) return;
-            if ($scope.currentDepth === $scope.DEPTH.PLAYER && !$scope.overview.channel) {
+            if ($scope.currentDepth === $scope.DEPTH.PLAYER && !$scope.channelOverview.channel) {
                 console.log('not channel ... ');
                 if (context.event.keyCode !== CONSTANT.KEY_CODE.RETURN) {
                     if ($scope.showMediaController === false) {
@@ -1308,7 +1431,84 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 }
 
                 $scope.isChannel = false;
-            } else if ($scope.overview && $scope.overview.channel) {
+            } else if ($scope.currentDepth === $scope.DEPTH.PLAYER && $scope.channelOverview.isChannel) {
+                console.log('channel ... key ', context.event.keyCode);
+                switch (context.event.keyCode) {
+                    case CONSTANT.KEY_CODE.CHANNEL_UP:
+                        $scope.channelOverview.serviceId++;
+                        $scope.isMediaLoaderHidden = false;
+                        VideoService.stopStream(video);
+                        video = $('#videoMainPlay')[0];
+                        VideoService.playChannelStream($scope.channelOverview, video).then(function success(response) {
+                            $timeout(function() {
+                                $scope.lastDepth = $scope.currentDepth;
+                                $timeout(function() {
+                                    // changeDepth($scope.DEPTH.PLAYER);
+                                    $(".channel-page").fadeOut(2000, "linear");
+                                }, 2000);
+                                $scope.isMediaLoaderHidden = true;
+                                // $scope.isBackgroundShown = false;
+                                $(".background-layer").fadeOut(2000, "linear");
+                            }, 300);
+                        }, function error(errorData) {
+                            if (errorData.name === "ENCRYPTED_CONTENT_ERROR") {
+                                $scope.isMediaLoaderHidden = true;
+
+                                $scope.back();
+                                toaster.clear('*');
+                                toaster.pop({
+                                    type: 'error',
+                                    title: 'Nội dung không hỗ trợ',
+                                    body: 'Nội dung chưa được hỗ trợ trên TV. Vui lòng xem nội dung trên Set-Top-Box hoặc ứng dụng Viettel trên điện thoại!',
+                                    timeout: 10000,
+                                    toasterId: 1
+                                });
+                                toaster.clear(toastInstance);
+
+                            }
+                            console.error('load  playVODStream error :', errorData.description);
+                        });
+                        // if ($scope.currentFocusItem.id === 'sidebar-category-item-0') {
+                        //     $scope.back();
+                        // }
+                        break;
+                    case CONSTANT.KEY_CODE.CHANNEL_DOWN:
+                        $scope.channelOverview.serviceId--;
+                        $scope.isMediaLoaderHidden = false;
+                        VideoService.stopStream(video);
+                        video = $('#videoMainPlay')[0];
+                        VideoService.playChannelStream($scope.channelOverview, video).then(function success(response) {
+                            $timeout(function() {
+                                $scope.lastDepth = $scope.currentDepth;
+                                $timeout(function() {
+                                    // changeDepth($scope.DEPTH.PLAYER);
+                                    $(".channel-page").fadeOut(2000, "linear");
+                                }, 2000);
+                                $scope.isMediaLoaderHidden = true;
+                                // $scope.isBackgroundShown = false;
+                                $(".background-layer").fadeOut(2000, "linear");
+                            }, 300);
+                        }, function error(errorData) {
+                            if (errorData.name === "ENCRYPTED_CONTENT_ERROR") {
+                                $scope.isMediaLoaderHidden = true;
+
+                                $scope.back();
+                                toaster.clear('*');
+                                toaster.pop({
+                                    type: 'error',
+                                    title: 'Nội dung không hỗ trợ',
+                                    body: 'Nội dung chưa được hỗ trợ trên TV. Vui lòng xem nội dung trên Set-Top-Box hoặc ứng dụng Viettel trên điện thoại!',
+                                    timeout: 10000,
+                                    toasterId: 1
+                                });
+                                toaster.clear(toastInstance);
+
+                            }
+                            console.error('load  playVODStream error :', errorData.description);
+                        });
+                        break;
+                }
+
                 $scope.isChannel = true;
                 $scope.setting.channel = true;
             }
@@ -1525,16 +1725,21 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 targetDepth = $scope.lastDepth;
                 $scope.isPlayDisabled = false;
                 $scope.isForceInfoShown = true;
-
+                setVodDetailPackground($scope.overview.bigPhotoUrl);
                 // targetDepth = $scope.DEPTH.DETAIL;
                 $timeout(function() {
                     // $('.background-layer').css('opacity', 1);
                     $(".background-layer").fadeIn(100, "linear");
-                    $(".category-section").fadeIn(500, "linear");
+                    // $(".category-section").fadeIn(500, "linear");
                     $(".channel-page").fadeIn(1000, "linear");
+
+                    if (!$scope.overview.channel) {
+                        $(".category-section").fadeIn(500, "linear");
+                    }
+
                     $scope.isInfoShownInPlayer = true;
                     $scope.isForceInfoShown = true;
-                    setVodDetailPackground($scope.overview.bigPhotoUrl);
+
                     console.log("return to detail ...", targetDepth, lastFocusedGroup);
                     focusController.setDepth(targetDepth, lastFocusedGroup);
 

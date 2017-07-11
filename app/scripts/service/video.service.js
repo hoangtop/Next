@@ -248,6 +248,7 @@
                         if (response.data.gsdm.glb_addresses.length > 0) {
                             for (var i = 0; i < response.data.gsdm.glb_addresses.length; i++) {
                                 stream = 'http://' + response.data.gsdm.glb_addresses[i] + '/' + vod.vodLocator + '?AdaptiveType=HLS&VOD_RequestID=' + vodRequestId;
+                                // stream = 'http://192.168.1.149:8080//MissionImpossible2015_stereoavc/MissionImpossible2015_stereoavc.m3u8';
                             }
                         }
                         // def.resolve("response");

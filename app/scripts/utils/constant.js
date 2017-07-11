@@ -37,8 +37,11 @@ app.factory('CONSTANT', function() {
             ESC: 27,
             UP: 38,
             DOWN: 40,
-            BACK: 461 //for LG TV
+            BACK: 461, //for LG TV,
+            CHANNEL_UP: 427,
+            CHANNEL_DOWN: 428
         },
+
         SPOTLIGHT_BG_GRADIENT1: 'linear-gradient(to right, rgba(0, 0, 0, 1) 0%, transparent)',
         SPOTLIGHT_BG_GRADIENT2: 'linear-gradient(to top, rgba(0, 0, 0, 1) 5%, transparent)',
         // SPOTLIGHT_BG_SIZE: '80% 100%, 60% 0%, 100% 100%',
@@ -95,8 +98,9 @@ app.factory('CONSTANT', function() {
             { name: 'Địa phương', CONFIG_SERVICES: '136,128,84,78,126,92,131,111,123,124,121,118,125,137,77,107,116,115,86,127,132,112,76,97,10,103,93,94,138,100,96,102,140,110,85,119,83,88,129,98,114,99,117,90,122,104,108,109,81,82,105,139,87,120,95,80,101,106,130,135,79,91,134,89' },
         ],
         SPOTLIGHT_VOD_LIST: [
-            { img: 'images/spotlight/spotlight_0.jpg', vodId: '592cc930718c10cd8bc9f5be' },
-            { img: 'images/spotlight/spotlight_1.jpg', vodId: '58268148718c8a23a4b3645a' },
+            { img: 'images/spotlight/spotlight_0.jpg', vodId: '58b132c3718cde303c411b8a' },
+            { img: 'images/spotlight/spotlight_1.jpg', vodId: '556fa737718c0e0711f2289f' },
+            { img: 'images/spotlight/spotlight_2.jpg', vodId: '571986dd718c03ef5c3bc177' },
         ],
         /*
         CLASS_NAMES: {
