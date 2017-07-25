@@ -55,7 +55,7 @@
 
         function identity(force) {
             var deferred = $q.defer();
-
+            // console.log("localStorageService.get('token'):", localStorageService.get('token'));
             if (force === true) {
                 _identity = undefined;
             }
@@ -72,8 +72,9 @@
             // Account.get().$promise
             //     .then(getAccountThen)
             //     .catch(getAccountCatch);
-
+            // console.log("localStorageService.get('token'):", localStorageService.get('token'));
             if (localStorageService.get('token')) {
+                // console.log("localStorageService.get('token'):", localStorageService.get('token'));
                 _identity = 'LOGIN_SUCCESS';
                 _authenticated = true;
             } else {

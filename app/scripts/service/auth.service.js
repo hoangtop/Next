@@ -16,8 +16,11 @@
         return service;
 
         function authorize(force, callback) {
+            // alert(force);
+            console.log('auth.authorize ..........................');
             var cb = callback || angular.noop;
             var authReturn = Principal.identity(force).then(authThen);
+            // console.log('auth.authorize ..........................');
 
             return authReturn;
 
@@ -57,7 +60,7 @@
             AuthServerProvider.renewToken()
                 .then(renewTokenThen)
                 .catch(function(err) {
-                    this.logout();
+                    // this.logout();
                     deferred.reject(err);
                     return cb(err);
                 }.bind(this));
@@ -73,6 +76,7 @@
         function logout() {
             AuthServerProvider.logout();
             Principal.authenticate(null);
+            localStorageService.set('token', null);
         }
 
     }

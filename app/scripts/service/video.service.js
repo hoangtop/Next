@@ -9,6 +9,7 @@
     function VideoService($timeout, $http, $q, CONSTANT, SETTINGS, DataService) {
         //interface
         var hls;
+        var cb;
         var errorData = {
             name: '',
             code: '',
@@ -31,6 +32,7 @@
         var defferStream;
 
         function playStream(stream, video, def) {
+
             defferStream = def;
             if (hls) {
                 console.log("destroy hls ++++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -62,6 +64,10 @@
             hls.on(Hls.Events.LEVEL_LOADED, function(event, data) {
                 console.log('load LEVEL_LOADED successfully2');
                 // def.resolve('load LEVEL_LOADED successfully2');
+            });
+
+            hls.on(Hls.Events.MEDIA_DETACHED, function() {
+                console.log('MEDIA_DETACHED ........................');
             });
 
             hls.on(Hls.Events.ERROR, function(event, data) {
@@ -139,13 +145,22 @@
                         case Hls.ErrorTypes.NETWORK_ERROR:
                             console.error("network error ...");
                             hls.destroy();
-                            $timeout(function(params) {
-                                playStream(param, video);
-                            }, 100);
+                            // $timeout(function(params) {
+                            //     playStream(stream, video, def);
+                            //     return;
+                            // }, 100);
+                            var errorTxt = "Nội dung này hiện tại không xem được. Xin vui lòng thử lại sau. Xin lỗi quý khách vì sự bất tiện này!";
+                            errorData.name = "NETWORK_ERROR";
+                            errorData.description = errorTxt;
+                            defferStream.reject(errorData);
                             break;
                         default:
                             console.error("unrecoverable error");
                             hls.destroy();
+                            var errorTxt = "Nội dung này hiện tại không xem được. Xin vui lòng thử lại sau. Xin lỗi quý khách vì sự bất tiện này!";
+                            errorData.name = "UNRECOVERABLE_ERROR";
+                            errorData.description = errorTxt;
+                            defferStream.reject(errorData);
                             break;
                     }
                     // console.error(console.error());
@@ -189,9 +204,13 @@
                 version: 1,
                 regionId: "GUEST",
                 assetId: channel.serviceId,
+                channelId: channel.serviceId,
                 filename: channel.serviceId + ".m3u8",
                 clientIP: "220.231.127.1",
                 manifestType: "HLS",
+                bwProfile: 5,
+                serviceProvider: 'SmartTV',
+                category_id: "VC_OTT",
                 userId: ""
             };
 
@@ -204,7 +223,7 @@
                         var abc = 0;
                         if (response.data.glbAddress.length > 0) {
                             for (var i = 0; i < response.data.glbAddress.length; i++) {
-                                var stream = 'http://' + response.data.glbAddress[i] + '/' + param.assetId + ".m3u8" + '?AdaptiveType=HLS&VOD_RequestID=' + response.data.requestId;
+                                var stream = 'http://' + response.data.glbAddress[i] + '/' + param.assetId + ".m3u8" + '?AdaptiveType=HLS&VOD_RequestID=' + encodeURI(response.data.requestId);
                             }
 
                             playStream(stream, video, def);
@@ -221,7 +240,8 @@
             return def.promise;
         }
 
-        function playVODStream(vod, video) {
+        function playVODStream(vod, video, callback) {
+            cb = callback;
             console.log('playVODStream +++++++++++ ', vod);
             var def = $q.defer();
 
@@ -247,13 +267,13 @@
                         var stream = '';
                         if (response.data.gsdm.glb_addresses.length > 0) {
                             for (var i = 0; i < response.data.gsdm.glb_addresses.length; i++) {
-                                stream = 'http://' + response.data.gsdm.glb_addresses[i] + '/' + vod.vodLocator + '?AdaptiveType=HLS&VOD_RequestID=' + vodRequestId;
-                                // stream = 'http://192.168.1.149:8080//MissionImpossible2015_stereoavc/MissionImpossible2015_stereoavc.m3u8';
+                                stream = 'http://' + response.data.gsdm.glb_addresses[i] + '/' + vod.vodLocator + '?AdaptiveType=HLS&VOD_RequestID=' + encodeURI(vodRequestId);
+                                // stream = 'http://192.168.1.149:8080/amazon_hdr_[4k_hevc_ott_ts_webvtt]_HEVC/amazon_hdr_[4k_hevc_ott_ts_webvtt]_HEVC.m3u8';
                             }
                         }
                         // def.resolve("response");
 
-                        playStream(stream, video, def);
+                        playStream(stream, video, def, callback);
                     },
                     function error(response) {
                         console.error('playVODStream error while retrieving VOD URL', response);
@@ -308,6 +328,8 @@
                     console.log("canplaythrough ---");
                     // break;
                 case 'ended':
+                    console.log("ended ---");
+                    // cb();
                 case 'seeking':
                 case 'play':
                     // console.log("play ---");
@@ -320,6 +342,8 @@
                 case 'pause':
                 case 'waiting':
                 case 'stalled':
+                    console.log("stalled ---");
+                    cb();
                 case 'error':
                     data = Math.round(evt.target.currentTime * 1000);
                     if (evt.type === 'error') {

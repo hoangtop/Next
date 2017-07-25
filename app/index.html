@@ -52,6 +52,7 @@
     <!-- Video Player : It will be shown when '$scope.currentDepth' become 'DEPTH.PLAYER'. -->
     <caph-media id="player" class="player" ng-class="{'player-shown':isMediaLoaderHidden}" ischannel="isChannel" subtitle="setting.subTitle" on-play="toggleIsPlaying(true)" on-pause="toggleIsPlaying(false)" on-ended="toggleIsPlaying(false)">
         <video id="videoMainPlay" class="videoMainPlay" autoplay style="width: 100%;height:100%"></video>
+        <div class="logo-playback"><img class="logo-img" src="images/logo.png" alt=""></div>
         <caph-media-controls class="controls-bar" ng-class="{'fade-out': !showMediaController}" ng-mouseover="setMediaControllerTimer()">
             <div class="opacity-panel">
                 <div class="operations">
@@ -131,7 +132,7 @@
                 <div class="smarttv-keyboard-holder"></div>
                 <div class="login-form-wrapper">
                     <div class="login-form">
-                        <div class="login-row login-account-row">
+                        <div class="login-row login-account-row" focusable="{depth: DEPTH.LOGIN}">
                             <span class="login-input-lable password-label">Số điện thoại:</span>
 
                             <input id="username" readonly type="text" size="40" class="login-input login-account-input" title="Bước 1: Nhập Số điện thoại (vd 0988666888)" ng-model="login.username">

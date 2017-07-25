@@ -1,5 +1,4 @@
 (function() {
-    'use strict';
 
     app
         .factory('DataService', DataService);
@@ -28,12 +27,137 @@
             getCategorySeriesVodListByCategoryId: getCategorySeriesVodListByCategoryId,
             getVodByProgramIdList: getVodByProgramIdList,
             getVodMoreInfoByProgramIdList: getVodMoreInfoByProgramIdList,
-            getSpotlightContents: getSpotlightContents
+            getSpotlightContents: getSpotlightContents,
+            getChannelGuide: getChannelGuide,
+            getChannelProduct: getChannelProduct
         };
 
         return service;
 
         //implementation
+        function getChannelProduct(channelID) {
+            var url = CONSTANT.API_HOST + '/api1/contents/channels/' + channelID + '/?region=OTT&limit=1&format=long&include=product&include=multilang&include=purchase&include=fpackage';
+
+            var channelProduct;
+            //console.log(url);
+            var def = $q.defer();
+            $http.get(url)
+                .then(function(response) {
+                    if (response.data) {
+                        channelProduct = UltilService.transformVOD(response.data);
+                        def.resolve(channelProduct);
+                    } else {
+                        def.resolve(channelProduct);
+                    }
+
+                }, function(response) {
+                    console.error(response);
+                    def.resolve(channelProduct);
+                });
+
+            return def.promise;
+        }
+
+        function getChannelGuide(channelItem, date) {
+            var id = channelItem.channelId;
+            var def = $q.defer();
+
+            var dd, mm, yyyy;
+            if (typeof date === "undefined") {
+                var date = new Date();
+                dd = date.getDate();
+                mm = date.getMonth(); //January is 0!
+                yyyy = date.getFullYear();
+            } else {
+                var dates = date.split("-");
+                dd = dates[0];
+                mm = dates[1] - 1; //January is 0!
+                yyyy = dates[2];
+            }
+
+            var since = (new Date(yyyy, mm, dd, 03, 00, 00, 00)).getTime();
+            var until = (new Date(yyyy, mm, dd, 23, 59, 59, 99)).getTime();
+            var url = CONSTANT.API_HOST + '/api1/contents/channels/schedules?region=OTT&id=' + id + '&include=product&since=' + since + '&until=' + until;
+            $http.get(url)
+                .then(function(response) {
+                    // console.log(response);
+                    var data = response.data.data;
+                    var item = {};
+                    var temp, start_time, end_time, end_time_temp;
+                    if (data.length > 0) {
+                        angular.forEach(data, function(value, key) {
+                            temp = value.title[0].text.split(":");
+                            item.org = value;
+                            item.program1 = temp[0];
+                            item.program2 = temp[1];
+                            item.program = item.program1 + ' : ' + item.program2;
+
+
+                            start_time = value.start_time.split(":");
+                            end_time = value.end_time.split(":");
+                            // item.time = start_time[0].substr(11, 2) + ":" + start_time[1] + " - " + end_time[0].substr(11, 2) + ":" + end_time[1];
+                            item.time = start_time[0].substr(11, 2) + ":" + start_time[1] + " - " + end_time[0].substr(11, 2) + ":" + end_time[1];
+                            item.channelid = value.channel.id;
+                            item.id = value.id;
+                            item.service_id = value.service_id;
+                            //check tvod
+                            var end_time = UltilService.strToTime(value.end_time);
+                            if (UltilService.addHours(end_time, 2) <= new Date()) {
+                                item.is_tvod = 1;
+                                item.catchup_id = UltilService.getCatchupId(new Date(value.start_time), value.channel.pid, value.pid);
+                            } else {
+                                item.is_tvod = 0;
+                            }
+                            //check current program
+                            var parts = value.start_time.match(/\d+/g);
+                            start_time = new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
+                            // start_time = UltilService.strToTime(value.start_time);
+                            // end_time = UltilService.strToTime(value.end_time);
+
+                            parts = value.end_time.match(/\d+/g);
+                            end_time = new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
+
+                            if (end_time >= new Date() && start_time <= new Date()) {
+                                item.is_playing = "now";
+                            }
+
+                            var duration = end_time.getTime() - start_time.getTime();
+                            item.duration = duration;
+                            item.startTime = start_time;
+                            item.endTime = end_time;
+
+
+
+                            // console.log("end_time ....", end_time.getTime());
+                            // console.log("start_time ....", start_time.getTime());
+                            // console.log("fdfsdfds ....", item);
+
+                            channelItem.guides.push(item);
+                            item = {};
+                        });
+                    } else {
+                        item.program1 = "Lịch phát sóng chưa được cập nhật";
+                        channelItem.guides.push(item);
+                    }
+
+                    // console.log("channel guide ....", channelItem);
+
+
+
+                    // console.log("channel currentProgram  1....", channelItem.currentProgram);
+                    // console.log("channel currentProgram  2....", channelItem.currentProgram());
+
+                    def.resolve(channelItem);
+
+                }, function(response) {
+                    console.error(response);
+                    // def.resolve(seriesVodList);
+                });
+
+            return def.promise;
+
+        }
+
         function getSpotlightContents() {
             var url = CONSTANT.API_HOST + "/api1/contents/campaigns/campaigns?pid=package.campaign://OTT.MAIN.PROMO.SMARTTV";
             var def = $q.defer();
@@ -68,27 +192,27 @@
 
                                     vodItem.bigPhotoUrl = CONSTANT.API_HOST + "/api1/contents/pictures/" + id;
 
-                                    getRelatedVodList(vodItem.program.id).then(
+                                    // getRelatedVodList(vodItem.program.id).then(
 
-                                        function(res) {
-                                            console.log("relate ...", res);
+                                    //     function(res) {
+                                    //         console.log("relate ...", res);
 
-                                            index1++;
-                                            if (res) {
-                                                spotlightVodList[key].relateds = res;
-                                            } else {
-                                                spotlightVodList[key].relateds = [];
-                                            }
-                                            // spotlightVodList[key].relateds = res;
-                                            spotlightVodList[key].episodes = [];
-                                            if (index1 === spotlightVodList.length) {
-                                                return def.resolve(spotlightVodList);
-                                            }
+                                    //         index1++;
+                                    //         if (res) {
+                                    //             spotlightVodList[key].relateds = res;
+                                    //         } else {
+                                    //             spotlightVodList[key].relateds = [];
+                                    //         }
+                                    //         // spotlightVodList[key].relateds = res;
+                                    //         spotlightVodList[key].episodes = [];
+                                    //         if (index1 === spotlightVodList.length) {
+                                    //             return def.resolve(spotlightVodList);
+                                    //         }
 
-                                        });
+                                    //     });
                                 });
 
-
+                                return def.resolve(spotlightVodList);
 
                             },
                             function error(response) {
@@ -134,7 +258,7 @@
                     }
                 }
             } else {
-                url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/categories?offset=0&limit=16';
+                url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/categories?offset=0&limit=' + CONSTANT.N0_VOD_ITEM;
             }
 
             var seriesVodList = [];
@@ -214,14 +338,14 @@
             var url;
 
             var token = $rootScope.token.access_token;
-            console.log("$rootScope.access_token");
-            console.log($rootScope.token.access_token);
-            console.log($rootScope);
+            // console.log("$rootScope.access_token");
+            // console.log($rootScope.token.access_token);
+            // console.log($rootScope);
             if (isFreeNoPair) {
                 // url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?id=' + programId + '&product_id=' + productId;
-                url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?access_token=' + SETTINGS.guest_access_token + '&id=' + programId + '&product_id=' + productId;
+                url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?access_token=' + SETTINGS.guest_access_token + '&id=' + programId + '&product_id=' + productId + '&bw_profile=5&category_id=VC_OTT&service_provider=SmartTV';
             } else {
-                url = CONSTANT.API_HOST + '/api1/watches/vod/prepare?id=' + programId + '&product_id=' + productId;
+                url = CONSTANT.API_HOST + '/api1/watches/vod/prepare?id=' + programId + '&product_id=' + productId + '&bw_profile=5&category_id=VC_OTT&service_provider=SmartTV';
             }
 
             var def = $q.defer();
@@ -434,14 +558,15 @@
                                 vodList[key] = episodeVodList[0];
                                 vodList[key].episodes = episodeVodList;
                                 vodList[key] = UltilService.transformVOD(vodList[key]);
-                                getRelatedVodList(vodList[key].program.id).then(
-                                    function(res) {
-                                        index++;
-                                        vodList[key].relateds = res;
-                                        if (index === vodList.length) {
-                                            def.resolve(vodList);
-                                        }
-                                    });
+                                def.resolve(vodList);
+                                // getRelatedVodList(vodList[key].program.id).then(
+                                //     function(res) {
+                                //         index++;
+                                //         vodList[key].relateds = res;
+                                //         if (index === vodList.length) {
+                                //             def.resolve(vodList);
+                                //         }
+                                //     });
 
 
                             },
@@ -473,14 +598,22 @@
                         item.name = item.channel.name[0].text;
                         item.firstTitle = item.channel.name[0].text;
                         item.serviceId = item.service_id;
-                        item.channelId = item.id;
+                        item.channelId = item.service_id;
                         item.isChannel = true;
+                        item.guides = [];
+                        item.currentProgram = function() {
+
+                        };
+
+                        // var today = new Date();
+                        // var todayDate = today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
+                        getChannelGuide(item);
                         return item;
                     });
 
                     def.resolve(service.channelList);
-                }, function(error, status) {
-                    console.error('Failed to get Channel list. status code:' + status);
+                }, function(error) {
+                    console.error('Failed to get Channel list. status code:');
                     console.error(error);
                     def.reject("Failed to get Channel list");
 
@@ -490,7 +623,7 @@
         }
 
         function getPrepareChannel(param) {
-            var url = 'http://otttv.viettel.com.vn/api1/watches/handheld/live/prepare';
+            var url = CONSTANT.API_HOST + '/api1/watches/handheld/live/preparechang';
             $http.defaults.headers.post["Content-Type"] = "application/json";
 
             var def = $q.defer();
@@ -501,8 +634,8 @@
                 console.log("getPrepareChannel service ................ ", data);
                 def.resolve(data);
                 // console.log('vodList transformed re
-            }, function(error, status) {
-                console.error('Failed to get getPrepareChannel. status code:' + status);
+            }, function(error) {
+                console.error('Failed to get getPrepareChannel. status code:');
                 console.error(error);
                 def.reject("Failed to get getPrepareChannel");
 
@@ -518,17 +651,17 @@
         }
 
         function getVodListByCategoryId(categoryId, offset, limit) {
-            var url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/programs?child=all&format=long&offset=0&include=product&include=purchase&include=fpackage&include=purchase&include=fpackage&until=now&limit=16';
+            var url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/programs?child=all&format=long&offset=0&include=product&include=purchase&include=fpackage&include=purchase&include=fpackage&until=now&limit=' + CONSTANT.N0_VOD_ITEM;
 
             if (offset || offset === 0) {
                 if (limit) {
                     url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/programs?child=all&format=long&offset=' + offset + '&include=product&include=purchase&include=fpackage&include=purchase&include=fpackage&until=now&limit=' + limit;
                 } else {
-                    url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/programs?child=all&format=long&offset=0&include=product&include=purchase&include=fpackage&include=purchase&include=fpackage&until=now&limit=16';
+                    url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/programs?child=all&format=long&offset=0&include=product&include=purchase&include=fpackage&include=purchase&include=fpackage&until=now&limit=' + CONSTANT.N0_VOD_ITEM;
                 }
 
             } else {
-                url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/programs?child=all&format=long&offset=0&include=product&include=purchase&include=fpackage&include=purchase&include=fpackage&until=now&limit=16';
+                url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/programs?child=all&format=long&offset=0&include=product&include=purchase&include=fpackage&include=purchase&include=fpackage&until=now&limit=' + CONSTANT.N0_VOD_ITEM;
 
             }
 
@@ -547,33 +680,33 @@
                         if (vod.program && vod.program.series) {
                             vod.program.series.episodeName = vod.program.series.episode.replace(/^0+/, '');
                             var seriesId = vod.program.series.id;
-                            getEpisodesInSeries(seriesId).then(
-                                function(episodeVodList) {
-                                    index2++;
-                                    vodList[key].episodes = episodeVodList;
-                                    if (index1 === vodList.length && index2 === vodList.length) {
-                                        return def.resolve(vodList);
-                                    }
-                                });
+                            // getEpisodesInSeries(seriesId).then(
+                            //     function(episodeVodList) {
+                            //         index2++;
+                            //         vodList[key].episodes = episodeVodList;
+                            //         if (index1 === vodList.length && index2 === vodList.length) {
+                            //             return def.resolve(vodList);
+                            //         }
+                            //     });
                         } else {
                             index2++;
                         }
 
 
-                        getRelatedVodList(vod.program.id).then(
-                            function(res) {
-                                index1++;
-                                vodList[key].relateds = res;
-                                if (index1 === vodList.length && index2 === vodList.length) {
-                                    return def.resolve(vodList);
-                                }
+                        // getRelatedVodList(vod.program.id).then(
+                        //     function(res) {
+                        //         index1++;
+                        //         vodList[key].relateds = res;
+                        //         if (index1 === vodList.length && index2 === vodList.length) {
+                        //             return def.resolve(vodList);
+                        //         }
 
-                            });
+                        //     });
 
                     });
-
-                }, function(error, status) {
-                    console.error('Failed to get getVodListByCategoryId. status code:' + status);
+                    return def.resolve(vodList);
+                }, function(error) {
+                    console.error('Failed to get getVodListByCategoryId. status code:');
                     console.error(error);
                     def.reject("Failed to get getVodListByCategoryId");
 
@@ -583,7 +716,7 @@
         }
 
         function getCategoryVodListByCategoryId(categoryId, limit, offset) {
-            var url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/programs?child=all&format=long&offset=0&include=product&include=purchase&include=fpackage&include=purchase&include=fpackage&until=now&limit=16';
+            var url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/programs?child=all&format=long&offset=0&include=product&include=purchase&include=fpackage&include=purchase&include=fpackage&until=now&limit=' + CONSTANT.N0_VOD_ITEM;
 
             if (typeof limit !== 'undefined' && limit > 0) {
                 if (typeof offset !== 'undefined') {
@@ -593,7 +726,7 @@
                 }
 
             } else {
-                url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/programs?child=all&format=long&offset=0&include=product&include=purchase&include=fpackage&include=purchase&include=fpackage&until=now&limit=16';
+                url = CONSTANT.API_HOST + '/api1/contents/categories/' + categoryId + '/programs?child=all&format=long&offset=0&include=product&include=purchase&include=fpackage&include=purchase&include=fpackage&until=now&limit=' + CONSTANT.N0_VOD_ITEM;
 
             }
 
@@ -605,8 +738,8 @@
                     var vodList = UltilService.transformVODList(response.data.data);
                     return def.resolve(vodList);
 
-                }, function(error, status) {
-                    console.error('Failed to get getVodListByCategoryId. status code:' + status);
+                }, function(error) {
+                    console.error('Failed to get getVodListByCategoryId. status code:');
                     console.error(error);
                     def.reject("Failed to get getVodListByCategoryId");
 
@@ -691,8 +824,8 @@
                     });
                     def.resolve(menuArray);
                     console.log('albums (simple) returned to controller.', menuArray);
-                }, function(error, status) {
-                    console.error('Failed to get getMenuCategories. status code:' + status);
+                }, function(error) {
+                    console.error('Failed to get getMenuCategories. status code:');
                     console.error(error);
                     def.reject("Failed to get getMenuCategories");
                     // def.reject("Failed to get albums");

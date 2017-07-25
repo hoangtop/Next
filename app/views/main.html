@@ -9,13 +9,14 @@
         <category-menu-list id="11" title="Thư mục"></category-menu-list>
     </div>
     <div class="spotlight-overview">
-        <img src="images/spotlight_movie.jpg" alt="" class="spotlight-overview-img">
+        <img ng-src="{{spotlightOverview.bigPhotoUrl}}" alt="" class="spotlight-overview-img">
     </div>
 </div>
 <div class="home-page">
     <div id="move-container" class="move-container overview-container" ng-class="{'reset-position':currentDepth===DEPTH.DETAIL || currentDepth===DEPTH.PLAYER}">
+        <div class="logo" ng-class="{'logo-fadeIn':currentDepth !== DEPTH.PLAYER && currentDepth !== DEPTH.DETAIL &&  currentDepthZone !== DEPTH_ZONE.INDEX.CATEGORY,'logo-fadeOut':currentDepth === DEPTH.PLAYER || currentDepth === DEPTH.DETAIL ||  currentDepthZone === DEPTH_ZONE.INDEX.CATEGORY}"></div>
         <div class="spotlight-page" ng-show="currentDepth===DEPTH.INDEX" ng-hide="isForceSpotlightHide && isSpotlightShown !== true" ng-class="{'spotlight-page-fade-out': currentDepthZone!==DEPTH_ZONE.INDEX.SPOTLIGHT}" animate-on-change="spotlightOverview.firstTitle">
-            <div class=" logo"></div>
+            <!-- <div class=" logo"></div> -->
             <!-- OVERVIEW -->
             <div class="overview" ng-class="{ 'spotlight':currentDepth===DEPTH.INDEX}">
                 <div class="font-header" ng-bind-html="spotlightOverview.firstTitle"></div>
@@ -34,32 +35,41 @@
         </div>
 
 
-        <div class="channel-page" ng-show="currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CHANNEL || (isChannel && currentDepth===DEPTH.PLAYER && lastDepth !== DEPTH.CATEGORY)" animate-on-change="channelOverview.name">
+        <div class="channel-page" ng-show="currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CHANNEL || (currentOverview.isChannel && currentDepth===DEPTH.PLAYER && lastDepth !== DEPTH.CATEGORY) || isForceChannelInfoShown">
             <!--<div class="overview" ng-class="{ 'channel':currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CHANNEL}">-->
-            <div class="overview channel-headline">
-                <div class="font-header" ng-bind-html="channelOverview.name"></div>
+            <div class="channel-header" ng-class="{'channel-header-fadein':isChannelHeaderShown,'channel-header-fadeout':!isChannelHeaderShown}">
+
+                <div class="overview channel-headline">
+                    <div class="font-header name" ng-bind-html="channelOverview.name"></div>
+                    <div class="font-header program1" ng-show="channelOverview.playingProgram.program1">{{channelOverview.playingProgram.program1}} </div>
+                    <div class="font-header program2" ng-show="channelOverview.playingProgram.program2">{{channelOverview.playingProgram.program2}} </div>
+                </div>
             </div>
-            <div class="headline-program">
-                <ul class="headline-program-ul">
-                    <li class="headline-program-li">
-                        <div class="live-label"><span class="live-label-span">Đang phát</span></div>
-                        <div class="live-program"><span class="live-program-span">Giọng hát Việt</span></div>
-                    </li>
-                    <li class="headline-program-li">
-                        <div class="next-label"><span class="next-label-span">Tiếp theo</span></div>
-                        <div class="next-program"><span class="next-program-span">Ơi giời cậu đây rồi</span></div>
-                    </li>
-                </ul>
-            </div>
+            <ul class="channel-quick-list" ng-class="{'channel-quick-list-fadein':isChannelQuicklistShown}">
+                <li ng-repeat="itemChannel in allChannelList">
+                    <div class="channel-quick-list-item" focusable="{depth: DEPTH.PLAYER}" id="channel-quick-list-item-{{itemChannel.channelId}}" on-focused="onQuickChannelFocused($event, listCategory, itemChannel)" on-selected="onQuickChannelSelected($event, listCategory, itemChannel)">
+                        <div class="channel-icon"><img ng-src="{{itemChannel.photoUrl}}" alt=""></div>
+                        <div class="channel-name">
+                            <div class="channel-name-container">
+                                <span class="title program1" ng-show="itemChannel.playingProgram.program1">{{itemChannel.playingProgram.program1}}</span>
+                                <span class="title program2" ng-show="itemChannel.playingProgram.program2">{{itemChannel.playingProgram.program2}}</span>
+                                <span class="duration">{{itemChannel.playingProgram.time}}</span>
+                                <track-progress-bar cur-val='{{itemChannel.playingProgram.passedDuration}}' max-val='{{itemChannel.playingProgram.duration}}'></track-progress-bar>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+
+            </ul>
             <!--<div class="channel-prewatch-wraper">
             <div class="channel-prewatch">
                 <div class="loader" ng-show="channelWatchPreviewLoaded !==t rue"></div>
                 <video id="videoPrewatch" autoplay ng-hide="channelWatchPreviewLoaded !==t rue"></video>
-            </div>
         </div>-->
         </div>
 
-        <div class="category-section" ng-show="(currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CATEGORY) || (currentDepth===DEPTH.DETAIL && isInfoShownInPlayer) || (currentDepth===DEPTH.PLAYER && isInfoShownInPlayer) || isForceInfoShown" animate-on-change="overview.firstTitle">
+        <div class="category-section" ng-show="(currentDepth===DEPTH.INDEX && currentDepthZone===DEPTH_ZONE.INDEX.CATEGORY) || (currentDepth===DEPTH.DETAIL && isInfoShownInPlayer) || (currentOverview.isChannel && currentDepth===DEPTH.PLAYER)|| (currentDepth===DEPTH.PLAYER && isInfoShownInPlayer) || isForceInfoShown">
             <!-- OVERVIEW -->
             <div class="overview" ng-show="overview.duration">
                 <div class="font-header">{{overview.firstTitle}}</div>
@@ -111,7 +121,7 @@
         <episode-play-list ng-show="currentDepth===DEPTH.DETAIL" title="Danh sách tập phim"></episode-play-list>
     </div>
     <!-- page: INDEX (LIST)  -->
-    <div class="list-wrapper page" ng-class="{ 'page-fade-in': currentDepth===DEPTH.INDEX, 'list-wrapper-spotlight': currentDepthZone===DEPTH_ZONE.INDEX.SPOTLIGHT}" ng-hide="currentDepth===DEPTH.DETAIL || currentDepth===DEPTH.PLAYER">
+    <div class="list-wrapper page" ng-class="{ 'page-fade-in': currentDepth===DEPTH.INDEX || (currentOverview.isChannel && currentDepth===DEPTH.PLAYER),'list-page-fadeOut':isListPageFadeOut , 'list-wrapper-spotlight': currentDepthZone===DEPTH_ZONE.INDEX.SPOTLIGHT}">
         <div id="list-category" class="list-category">
             <channel-list id="0" title="Kênh TV"></channel-list>
             <!--<play-list ng-repeat="category in homeCategoryList" id="{{category.index}}" title="{{category.name}}"></play-list>-->
@@ -129,7 +139,7 @@
         </div>
     </div>
 </div>
-<div class="category-page" ng-cloak ng-show="currentDepth===DEPTH.CATEGORY">
+<div class="category-page" ng-cloak ng-show="currentDepth===DEPTH.CATEGORY || (currentOverview.isChannel && currentDepth===DEPTH.PLAYER && lastDepth === DEPTH.CATEGORY) ">
     <div class="category-page-header">
         <div class="overview" ng-show="overview && currentDepthZone===DEPTH_ZONE.CATEGORY.VOD">
             <div class="font-header" ng-bind-html="overview.firstTitle"></div>
@@ -152,7 +162,7 @@
         <!--<button class="w3-bar-item w3-button w3-large" onclick="w3_close()">Close &times;</button>-->
         <!--<a href="#" ng-if="currentDepthZone===DEPTH_ZONE.CATEGORY.CHANNEL" id="sidebar-category-item-{{$index}}" focusable="{depth: DEPTH.CATEGORY,initialFocus: {{$index===0 }},name:category-vod-item-{{$index}}}" data-focusable-group="SIDEBAR_CATEGORY" class="w3-bar-item w3-button"
             ng-repeat="item in sidebarCategories" on-focused="onSidebarCategoryFocused($event,item, $index)" ng-bind-html="item.name"></a>-->
-        <a href="#" id="sidebar-category-item-{{$index}}" focusable="{depth: DEPTH.CATEGORY,initialFocus: {{$index===0 }},name:category-vod-item-{{$index}}}" data-focusable-group="SIDEBAR_CATEGORY" class="w3-bar-item w3-button" ng-repeat="item in sidebarCategories"
+        <a href="#" id="sidebar-category-item-{{$index}}" focusable="{depth: DEPTH.CATEGORY,initialFocus: {{$index===0 }},name:sidebar-category-item-{{$index}}}" data-focusable-group="SIDEBAR_CATEGORY" class="w3-bar-item w3-button" ng-repeat="item in sidebarCategories"
             on-focused="onSidebarCategoryFocused($event,item, $index)" ng-bind-html="item.name"></a>
 
 
@@ -164,8 +174,8 @@
         </div>
         <div class="category-container" ng-cloak>
             <div id="category-vod-item-{{$index}}" class="item category-vod-item" ng-class="{ 'channel-item':currentDepthZone===DEPTH_ZONE.CATEGORY.CHANNEL}" ng-repeat="item in vodListByCategory track by $index" focusable="{depth: DEPTH.CATEGORY}
-           " data-focusable-group="VOD_LIST_CATEGORY" data-focusable-next-focus-left="{{$index%8===0? 'group:SIDEBAR_CATEGORY':null}}" on-focused="onCategoryVodFocused($event, item, this, $index)" on-blurred="onVodBlurred($event, listCategory, item)"
-                on-selected="onCategoryVodSelected($event, item, $index)">
+           " data-focusable-group="VOD_LIST_CATEGORY" data-focusable-name="category-vod-item-{{currentDepthZone===DEPTH_ZONE.CATEGORY.CHANNEL?item.channelId:item.id}}" data-focusable-next-focus-left="{{$index%8===0? 'group:SIDEBAR_CATEGORY':null}}" on-focused="onCategoryVodFocused($event, item, this, $index)"
+                on-blurred="onVodBlurred($event, listCategory, item)" on-selected="onCategoryVodSelected($event, item, $index)">
                 <div class="loader" ng-show="item.loaded===false"></div>
                 <div class="content" ng-hide="item.loaded===false" style="background: url({{item.photoUrl || ''}});-webkit-background-size:100% 100%;">
 

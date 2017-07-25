@@ -2,7 +2,7 @@ app.directive('animateOnChange', function($timeout) {
     return function(scope, element, attr) {
         scope.$watch(attr.animateOnChange, function(nv, ov) {
             if (nv != ov) {
-                console.log('change ....');
+                // console.log('change ....');
 
                 // if (scope.currentDepthZone !== scope.DEPTH_ZONE.INDEX.SPOTLIGHT) {
                 element.addClass('changed');
@@ -22,59 +22,25 @@ app.directive('imgChange', function($timeout) {
     return function(scope, element, attr) {
         scope.$watch(attr.imgChange, function(nv, ov) {
             if (nv != ov) {
-                // if (imgChangeTimer) {
-                //     $timeout.cancel(imgChangeTimer);
-                // } else {
-
-                // }
-
                 imgChangeTimer = $timeout(function() {
-                    console.log('imgChange ....', nv, ov);
+                    // console.log('imgChange ....', nv, ov);
                     if (!element.find('.bk-img-top').attr('src') && !element.find('.bk-img-bottom').attr('src')) {
-                        console.log('imgChange start ....', nv);
                         element.find('.bk-img-top').attr('src', nv);
                         element.find('.bk-img-bottom').attr('src', nv);
                         return;
-                        // element.find(".bk-img-top").removeClass("transparent");
                     }
 
                     if (element.find('.bk-img-top').css('opacity') === '0') {
-                        console.log('top  ....', element.find('.bk-img-top'));
                         element.find('.bk-img-top').attr('src', nv);
-                        // $timeout(function() {
-                        //     element.find(".bk-img-top").removeClass("transparent");
-                        // }, 1000);
-
                         element.find(".bk-img-top").removeClass("transparent");
 
                     } else {
-                        console.log('bottom  ....', element.find('.bk-img-bottom'));
-
                         element.find('.bk-img-bottom').attr('src', nv);
-                        // $timeout(function() {
-                        //     element.find('.bk-img-bottom').attr('src', nv);
-                        //     element.find(".bk-img-top").addClass("transparent");
-                        // }, 1000);
-
-                        // element.find('.bk-img-bottom').attr('src', nv);
                         element.find(".bk-img-top").addClass("transparent");
 
                     }
 
-                    // if (scope.currentDepthZone !== scope.DEPTH_ZONE.INDEX.SPOTLIGHT) {
-                    // $(".vod-img-top").toggleClass("transparent");
-                    // if ($('.vod-img-top').css('opacity') === '0') {
-                    //     $('.vod-img-top').attr('src', nv);
-                    // }
-                    // }
-
                 }, 0); // Could be enhanced to take duration as a parameter
-                // }
-
-
-                // $timeout(function() {
-                //     $('.vod-img-top').attr('src', nv);
-                // }, 2000);
 
             } else {
                 return;
@@ -97,3 +63,50 @@ app.directive('fadeIn', function($timeout) {
         }
     };
 })
+
+
+// Directive that tracks playback progress. Usage in the player:
+// <track-progress-bar
+//   cur-val='{{playPosition}}'
+//   max-val='{{playDuration}}'></track-progress-bar>
+// adapted from http://codepen.io/marknalepka/pen/Ewzxc
+app.directive('trackProgressBar', [function() {
+
+    return {
+        restrict: 'E', // element
+        scope: {
+            curVal: '@', // bound to 'cur-val' attribute, playback progress
+            maxVal: '@' // bound to 'max-val' attribute, track duration
+        },
+        template: '<div class="progress-bar-bkgd"><div class="progress-bar-marker"></div></div>',
+
+        link: function($scope, element, attrs) {
+            // grab element references outside the update handler
+            var progressBarBkgdElement = angular.element(element[0].querySelector('.progress-bar-bkgd')),
+                progressBarMarkerElement = angular.element(element[0].querySelector('.progress-bar-marker'));
+
+            // set the progress-bar-marker width when called
+            function updateProgress() {
+                var progress = 0,
+                    currentValue = $scope.curVal,
+                    maxValue = $scope.maxVal,
+
+
+                    // recompute overall progress bar width inside the handler to adapt to viewport changes
+                    progressBarWidth = progressBarBkgdElement.width();
+
+                // if ($scope.maxVal) {
+                // determine the current progress marker's width in pixels
+                progress = Math.min(currentValue, maxValue) / maxValue * progressBarWidth;
+                // }
+                // set the marker's width
+                progressBarMarkerElement.css('width', progress + 'px');
+            }
+
+            // updateProgress();
+            // curVal changes constantly, maxVal only when a new track is loaded
+            $scope.$watch('curVal', updateProgress);
+            $scope.$watch('maxVal', updateProgress);
+        }
+    };
+}]);

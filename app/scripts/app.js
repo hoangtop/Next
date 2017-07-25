@@ -28,13 +28,14 @@ app.value('SETTINGS', {
 
 app.run(['SETTINGS', 'localStorageService', 'Auth', '$rootScope',
 
-
     function(SETTINGS, localStorageService, Auth, $rootScope) {
-        // localStorageService.clearAll();
+        localStorageService.clearAll();
+        // console.log("localStorageService token chek ......", localStorageService.get('token'));
+
         Auth.authorize(true, function() {
             console.log("authorize finish ......");
             if (localStorageService.get('token')) { //already login
-                var token = localStorageService.get('token')
+                var token = localStorageService.get('token');
                 console.log("access_token 12343453", localStorageService.get('token'));
                 SETTINGS.access_token = token.access_token;
                 SETTINGS.token_secret = token.token_secret;
@@ -55,6 +56,7 @@ app.run(['SETTINGS', 'localStorageService', 'Auth', '$rootScope',
         //get fingerprint for the device
         if (!localStorageService.get('deviceUdid')) {
             new Fingerprint2().get(function(result, components) {
+                console.log(" localStorageService localStorageService token chek ......", localStorageService.get('token'));
                 localStorageService.set('deviceUdid', result);
                 console.log(result); //a hash, representing your device fingerprint
                 console.log(components); // an array of FP components
@@ -89,7 +91,7 @@ app.config(function($httpProvider) {
     });
 
     $httpProvider.interceptors.push('authInterceptor');
-    $httpProvider.interceptors.push('tokenExpiredInterceptor');
+    // $httpProvider.interceptors.push('tokenExpiredInterceptor');
 });
 
 

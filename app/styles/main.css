@@ -118,6 +118,7 @@ body {
     background: url('../images/logo.png') no-repeat;
     color: #4984FC;
     text-shadow: 2px 2px white;
+    transition: opacity 0.2s ease-in-out;
 }
 
 .logo:before {
@@ -135,9 +136,12 @@ body {
 
 .overview {
     position: relative;
-    width: 1770px;
     /*margin: 166px 0 0 112px;*/
     margin: 30px 0 12px 70px;
+}
+
+.overview.channel-headline {
+    margin: 70px 0 12px 70px;
 }
 
 .overview.spotlight {
@@ -161,7 +165,6 @@ body {
 
 .overview .name {
     position: relative;
-    width: 850px;
     z-index: 1;
 }
 
@@ -1008,6 +1011,7 @@ body {
 .list-wrapper-spotlight {
     /*top: 718px;*/
     transform: translate3d(0, 318px, 0);
+    opacity: 1;
 }
 
 .bg-img-cover {
@@ -1027,6 +1031,7 @@ body {
 }
 
 .move-container.overview-container {
+    width: 100%;
     /*opacity: 0;*/
 }
 
@@ -1037,8 +1042,13 @@ body {
 
 .spotlight-overview-img {
     width: 300px;
-    max-height: 140px;
-    margin-top: -95px;
+    height: 169px;
+    margin-top: -115px;
+    margin-left: 70px;
+    margin-right: -54px;
+}
+
+.spotlight-overview-img:last-child {
     margin-left: 70px;
 }
 
@@ -1106,9 +1116,11 @@ h1.category-menu-header-h1 {
 }
 
 .channel-headline .font-header {
-    font-size: 156px !important;
+    font-size: 56px !important;
     font-weight: bold !important;
-    margin-top: 100px;
+    color: #000 !important;
+    background: linear-gradient(to right, #ffcc05 0%, transparent);
+    padding-left: 40px;
 }
 
 .item.channel {
@@ -1584,15 +1596,12 @@ span.login-input-lable {
 
 /*.videoMainPlay {
     opacity: 0;
-    transition: opacity 2s ease-out;
+    transition: opacity 2s ease-in-out;
 }
 
 .videoMainPlay.player-shown {
     opacity: 1;
-
-}
-
-*/
+}*/
 
 .caph-checkbox {
     width: 715px;
@@ -1625,16 +1634,16 @@ span.login-input-lable {
 }
 
 .toast-success {
-    background-color: rgba(81, 163, 81, 0.6);
+    background-color: rgba(15, 24, 38, 0.9);
 }
 
 .toast-warning {
     color: #ffffff;
-    background-color: rgba(248, 148, 6, 0.71);
+    background-color: rgba(15, 24, 38, 0.9);
 }
 
 .toast-error {
-    background-color: rgba(189, 54, 47, 0.8);
+    background-color: rgba(15, 24, 38, 0.9);
 }
 
 .spotlight-page-fade-out {
@@ -1656,6 +1665,7 @@ span.login-input-lable {
 
 .channel-page {
     position: absolute;
+    width: 1920px;
 }
 
 .background-layer {
@@ -1688,7 +1698,7 @@ span.login-input-lable {
 }
 
 .spotlight-fade-in {
-    opacity: 1
+    opacity: 1;
 }
 
 .spotlight-fade-out {
@@ -1800,5 +1810,192 @@ span.login-input-lable {
 }
 
 .bk-img.transparent {
+    opacity: 0;
+}
+
+.channel-quick-list {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0px;
+    width: 46%;
+    height: 1080px;
+    background-color: rgba(0, 0, 0, 0.2);
+    list-style: none;
+    padding: 10px 30px 10px 10px;
+    margin-top: 0px;
+    /* margin-left: 20px; */
+    margin-bottom: 20px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.channel-quick-list-item {
+    width: 100%;
+    vertical-align: middle;
+    background-color: rgba(0, 0, 0, 0.54);
+    margin: 13px 10px 0px 10px;
+    border: 6px solid transparent;
+    color: #e4e0e0;
+}
+
+.channel-quick-list-item.focused {
+    background-color: rgba(255, 204, 5, 0.58);
+    color: #000 !important;
+}
+
+.channel-quick-list-item .channel-icon {
+    display: inline-block;
+    position: relative;
+    padding: 0px 20px 0px 30px;
+    width: 195px;
+    vertical-align: middle;
+}
+
+.channel-quick-list-item .channel-icon img {
+    height: 55px;
+}
+
+.channel-quick-list-item .channel-separator {
+    display: none;
+    position: relative;
+    top: 25%;
+}
+
+.channel-quick-list-item .channel-name {
+    display: inline-block;
+    position: relative;
+    border-left: 3px solid rgba(216, 206, 206, 0);
+    padding-left: 18px;
+    vertical-align: middle;
+    text-align: center;
+    /* color: #c3c2c2; */
+}
+
+.channel-name .channel-name-container {
+    height: 90%;
+    padding-bottom: 10px;
+}
+
+.channel-quick-list-item .channel-name span {
+    position: relative;
+    top: 25%;
+    display: block;
+    text-align: left;
+}
+
+.channel-quick-list-item .channel-name span.title {
+    font-weight: bold;
+    width: 560px;
+    font-size: 28px;
+}
+
+.channel-quick-list-fadein {
+    opacity: 1;
+}
+
+.channel-quick-list-item .channel-name span.duration {
+    font-size: 25px;
+    padding-top: 5px;
+}
+
+.channel-headline .name {
+    background: linear-gradient(to right, #ffcc05 0%, transparent);
+    color: #000 !important;
+    font-weight: bold;
+    width: 60%;
+    font-style: italic !important;
+}
+
+.channel-headline .program2 {
+    width: 1300px;
+    margin-top: 10px;
+    font-size: 40px !important;
+}
+
+.channel-headline .program1 {
+    width: 900px;
+    position: relative;
+    margin-top: 10px;
+    font-size: 40px !important;
+}
+
+.channel-header-fadeout {
+    opacity: 0;
+}
+
+.channel-header-fadein {
+    opacity: 1;
+}
+
+.channel-name .title.program1 {}
+
+.channel-name .title.program2 {}
+
+
+/* dark background for example */
+
+.dark {
+    background-color: #333;
+    height: 40px;
+    padding: 30px 20px 0 20px;
+    text-align: center;
+}
+
+
+/* Styles for the track-progress-bar directive element */
+
+.progress-bar-bkgd {
+    width: 570px;
+    height: 2px;
+    border: none;
+    margin: 5px 2px 0 2px;
+    background-color: rgba(255, 255, 255, 0.45);
+}
+
+.progress-bar-marker {
+    width: 0px;
+    background-color: rgb(42, 193, 231);
+    height: 100%;
+    color: rgb(252, 252, 252);
+    font-weight: normal
+}
+
+.logo-playback {
+    position: absolute;
+    bottom: 30px;
+    right: 70px;
+    width: 179px;
+    /* height: 18px; */
+    z-index: 1;
+    font: bold 85px 'SamsungSVD_Latin Medium';
+    background: transparent;
+    /* color: #4984FC; */
+    text-shadow: 2px 2px white;
+    /* padding: 0px 00px 0px 30px; */
+}
+
+.logo-playback .logo-img {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+.list-page-fadeOut {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.videoMainPlay {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.logo-fadeIn {
+    opacity: 1;
+}
+
+.logo-fadeOut {
     opacity: 0;
 }

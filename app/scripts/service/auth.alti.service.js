@@ -34,25 +34,27 @@
                 .then(function(response) {
                     console.log("renew token response..");
                     console.log(response);
-                    if (typeof response.access_token !== "undefined" && typeof response.expiration_date !== "undefined" && typeof response.refresh_token !== "undefined" && typeof response.refresh_token_expiration_date !== "undefined") {
+                    if (typeof response.data.access_token !== "undefined" && typeof response.data.expiration_date !== "undefined" && typeof response.data.refresh_token !== "undefined" && typeof response.data.refresh_token_expiration_date !== "undefined") {
                         var token = {
-                            'access_token': response.access_token,
-                            'token_secret': response.token_secret,
-                            'login_access_token': response.access_token,
-                            'refresh_token': response.refresh_token,
-                            'expiration_date': response.expiration_date,
-                            'refresh_token_expiration_date': response.refresh_token_expiration_date,
-                            'temp_password': response.temp_password
+                            'access_token': response.data.access_token,
+                            'token_secret': response.data.token_secret,
+                            'login_access_token': response.data.access_token,
+                            'refresh_token': response.data.refresh_token,
+                            'expiration_date': response.data.expiration_date,
+                            'refresh_token_expiration_date': response.data.refresh_token_expiration_date,
+                            'temp_password': response.data.temp_password
                         };
                         console.log("renew token OK ....", token);
 
                         localStorageService.set('token', token);
+                        def.resolve(response);
                     } else {
                         console.error("Lỗi trong qua trình xác renew token");
-                        logout();
+                        def.reject("Failed to get renewToken");
+                        // logout();
                     }
 
-                    def.resolve(response);
+
 
                 }, function() {
                     def.reject("Failed to get renewToken");
@@ -87,8 +89,8 @@
                     console.log(result); //a hash, representing your device fingerprint
                     console.log(components); // an array of FP components
                     deviceObject.id = localStorageService.get('deviceUdid');
-                    deviceObject.model = 'SMARTTV';
-                    deviceObject.model_no = 'SMARTTV';
+                    deviceObject.model = 'PC_WINDOWS';
+                    deviceObject.model_no = 'PC_WINDOWS';
                     deviceObject.type = 'others';
 
                     requestObj.device = deviceObject;
@@ -104,8 +106,8 @@
                 });
             } else {
                 deviceObject.id = localStorageService.get('deviceUdid');
-                deviceObject.model = 'SMARTTV';
-                deviceObject.model_no = 'SMARTTV';
+                deviceObject.model = 'PC_WINDOWS';
+                deviceObject.model_no = 'PC_WINDOWS';
                 deviceObject.type = 'others';
 
                 requestObj.device = deviceObject;
@@ -151,7 +153,34 @@
 
 
         function logout() {
-            localStorageService.clearAll();
+            // localStorageService.clearAll();
+
+            console.log('LogOut....... ');
+            var url = CONSTANT.API_HOST + '/ott/accounts/logout';
+
+
+            var def = $q.defer();
+
+            $http.post(url).then(function(data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+                console.log("logout ................ ", data);
+                def.resolve(data);
+                // console.log('vodList transformed re
+            }, function(error, status) {
+                console.error('Failed to logout. status code:' + status);
+                console.error(error);
+                def.reject("Failed to  logout");
+
+                // def.reject("Failed to get albums");
+            });
+
+            // $http.defaults.headers.post["Content-Type"] = "application/json";
+            // var resource = $resource(url, {}, {
+            //     'getPrepareChannel': { method: 'POST' }
+            // });
+            // return resource.getPrepareChannel(param);
+            return def.promise;
         }
     }
 })();

@@ -20,13 +20,45 @@
             transformVODList: transformVODList,
             isSeriesCategory: isSeriesCategory,
             transformSeriesVOD: transformSeriesVOD,
-            transformSeriesVODList: transformSeriesVODList
+            transformSeriesVODList: transformSeriesVODList,
+            strToTime: strToTime,
+            addHours: addHours,
+            getCatchupId: getCatchupId
 
         };
 
         return service;
 
         //implementation
+        function getCatchupId(start_time, serviceId, pid) {
+            var yyyy = start_time.getFullYear();
+            var mm = start_time.getMonth() < 9 ? "0" + (start_time.getMonth() + 1) : (start_time.getMonth() + 1); // getMonth() is zero-based
+            var dd = start_time.getDate() < 10 ? "0" + start_time.getDate() : start_time.getDate();
+            var hh = start_time.getHours() < 10 ? "0" + start_time.getHours() : start_time.getHours();
+            var min = start_time.getMinutes() < 10 ? "0" + start_time.getMinutes() : start_time.getMinutes();
+            var ss = start_time.getSeconds() < 10 ? "0" + start_time.getSeconds() : start_time.getSeconds();
+            var str = "".concat(yyyy).concat(mm).concat(dd).concat(hh).concat(min).concat(ss);
+
+            return str + "_" + serviceId + "_" + pid;
+        }
+
+        function addHours(time, h) {
+            time.setTime(time.getTime() + (h * 60 * 60 * 1000));
+            return time;
+        }
+
+        function strToTime(str) {
+            var time_temp = str.split(":");
+            var time = new Date();
+            time.setYear(time_temp[0].substr(0, 4));
+            time.setMonth(time_temp[0].substr(5, 2) - 1);
+            time.setDate(time_temp[0].substr(8, 2));
+            time.setHours(time_temp[0].substr(11, 2));
+            time.setMinutes(time_temp[1]);
+            time.setSeconds(time_temp[2].substr(0, 2));
+            return time;
+        }
+
         function isSeriesCategory(menu) {
 
             var isLeaf = true;
@@ -151,127 +183,141 @@
             svod.purchased_products = [];
             svod.purchasable_products = [];
 
-            svod.photoUrl = CONSTANT.API_HOST + '/api1/contents/pictures/' + vod.program.id + '?width=215.000000&height=307.000000';
-            svod.bigPhotoUrl = CONSTANT.API_HOST + '/api1/contents/pictures/' + vod.program.id;
-
-
-            svod.name = vod.program.title[0].text;
-
-            var des = vod.program.synopsis[0].text;
-            var tm = 'Thuyết minh - ';
-            if (des.indexOf(tm) === 0) {
-                des = des.substring(tm.length - 1, des.length - 1);
-            }
-
-            svod.description = des.substring(0, 398);
-            svod.shortDescription = des.substring(0, 300);
+            if (svod.program) {
+                svod.photoUrl = CONSTANT.API_HOST + '/api1/contents/pictures/' + vod.program.id + '?width=215.000000&height=307.000000';
+                svod.bigPhotoUrl = CONSTANT.API_HOST + '/api1/contents/pictures/' + vod.program.id;
 
 
 
 
-            if (vod.program.series) {
-                svod.isVodInSeries = true;
-            } else {
-                svod.isVodInSeries = false;
-            }
+                svod.name = vod.program.title[0].text;
 
-            // console.log('VOD name +++++++++++++++: ' + svod.name);
-
-            svod.name = svod.name.replace('–', '-');
-
-            var nameSplit = [];
-            if (svod.name.indexOf(' - ') > 0) {
-                nameSplit = svod.name.split(' - ');
-            } else if (svod.name.indexOf(' – ') > 0) {
-                nameSplit = svod.name.split(' – ');
-            } else if (svod.name.indexOf('–') > 0) {
-                nameSplit = svod.name.split('–');
-            } else if (svod.name.indexOf('-') > 0) {
-                nameSplit = svod.name.split('-');
-            } else {
-                nameSplit = [svod.name];
-            }
-
-            if (nameSplit.length > 1) {
-                if (nameSplit[0].toUpperCase().indexOf('TẬP') >= 0) { // series
-                    if (nameSplit.length === 4) { //have englisht title
-                        svod.firstTitle = nameSplit[2].trim() + ' - ' + nameSplit[3].trim();
-                        svod.secondTitle = nameSplit[0].trim() + ' : ' + nameSplit[1].trim();
-                    } else if (nameSplit.length === 3) { //have englisht title
-                        svod.firstTitle = nameSplit[2].trim();
-                        svod.secondTitle = nameSplit[0].trim() + ' : ' + nameSplit[1].trim();
-                    } else if (nameSplit.length === 2) { //have englisht title
-                        svod.firstTitle = nameSplit[1].trim();
-                        svod.secondTitle = nameSplit[0].trim();
-                    } else { // dont have english title
-                        svod.firstTitle = nameSplit[1];
-                        svod.secondTitle = '';
-                    }
-                } else if (nameSplit[0].toUpperCase().indexOf('PHẦN') >= 0) { //series with seasion
-                    if (nameSplit.length === 3) { //have english title
-                        svod.firstTitle = nameSplit[2].trim();
-                        svod.secondTitle = nameSplit[0].trim() + ' : ' + nameSplit[1].trim();
-                    } else if (nameSplit.length === 2) {
-                        svod.firstTitle = nameSplit[1].trim();
-                        svod.secondTitle = nameSplit[0].trim();
-                    } else {
-                        svod.firstTitle = '';
-                        svod.secondTitle = '';
-                    }
-                } else { //not series
-                    if (nameSplit.length === 3) { //have english title
-                        svod.firstTitle = nameSplit[1].trim() + ' : ' + nameSplit[2].trim();
-                        svod.secondTitle = nameSplit[0].trim();
-                    } else if (nameSplit.length === 2) { //have english title
-                        svod.firstTitle = nameSplit[1].trim();;
-                        svod.secondTitle = nameSplit[0].trim();;
-                    } else {
-                        svod.firstTitle = '';
-                        svod.secondTitle = '';
-                    }
+                var des = vod.program.synopsis[0].text;
+                var tm = 'Thuyết minh - ';
+                if (des.indexOf(tm) === 0) {
+                    des = des.substring(tm.length - 1, des.length - 1);
                 }
-            } else {
-                svod.firstTitle = nameSplit[0].trim();;
-                svod.secondTitle = '';
-            }
 
 
-            if (typeof vod.program.directors_text !== 'undefined' && vod.program.directors_text.length > 0 && vod.program.directors_text[0].text !== '') {
-                svod.directors = vod.program.directors_text[0].text;
-            } else {
-                svod.directors = '';
-            }
+                tm = 'Phụ đề - ';
+                if (des.indexOf(tm) === 0) {
+                    des = des.substring(tm.length - 1, des.length - 1);
+                }
 
-            if (typeof vod.program.actors_text !== 'undefined' && vod.program.actors_text.length > 0 && vod.program.actors_text[0].text !== '') {
-                svod.actors = vod.program.actors_text[0].text;
-            } else {
-                svod.actors = '';
-            }
+                tm = 'Phụ đề- ';
+                if (des.indexOf(tm) === 0) {
+                    des = des.substring(tm.length - 1, des.length - 1);
+                }
 
-            svod.genres = '';
-            if (typeof vod.program.genres !== 'undefined' && vod.program.genres !== null) {
-                if (vod.program.genres.length > 1) {
-                    angular.forEach(vod.program.genres, function(genres, key) {
-                        if (key === vod.program.genres.length - 1) {
-                            svod.genres = svod.genres + genres;
-                        } else {
-                            svod.genres = svod.genres + genres + ',';
-                        }
-                    });
+
+
+                svod.description = des.substring(0, 398);
+                svod.shortDescription = des.substring(0, 300);
+
+
+                if (vod.program.series) {
+                    svod.isVodInSeries = true;
                 } else {
-                    svod.genres = vod.program.genres[0];
+                    svod.isVodInSeries = false;
                 }
-            } else {
+
+                // console.log('VOD name +++++++++++++++: ' + svod.name);
+
+                svod.name = svod.name.replace('–', '-');
+
+                var nameSplit = [];
+                if (svod.name.indexOf(' - ') > 0) {
+                    nameSplit = svod.name.split(' - ');
+                } else if (svod.name.indexOf(' – ') > 0) {
+                    nameSplit = svod.name.split(' – ');
+                } else if (svod.name.indexOf('–') > 0) {
+                    nameSplit = svod.name.split('–');
+                } else if (svod.name.indexOf('-') > 0) {
+                    nameSplit = svod.name.split('-');
+                } else {
+                    nameSplit = [svod.name];
+                }
+
+                if (nameSplit.length > 1) {
+                    if (nameSplit[0].toUpperCase().indexOf('TẬP') >= 0) { // series
+                        if (nameSplit.length === 4) { //have englisht title
+                            svod.firstTitle = nameSplit[2].trim() + ' - ' + nameSplit[3].trim();
+                            svod.secondTitle = nameSplit[0].trim() + ' : ' + nameSplit[1].trim();
+                        } else if (nameSplit.length === 3) { //have englisht title
+                            svod.firstTitle = nameSplit[2].trim();
+                            svod.secondTitle = nameSplit[0].trim() + ' : ' + nameSplit[1].trim();
+                        } else if (nameSplit.length === 2) { //have englisht title
+                            svod.firstTitle = nameSplit[1].trim();
+                            svod.secondTitle = nameSplit[0].trim();
+                        } else { // dont have english title
+                            svod.firstTitle = nameSplit[1];
+                            svod.secondTitle = '';
+                        }
+                    } else if (nameSplit[0].toUpperCase().indexOf('PHẦN') >= 0) { //series with seasion
+                        if (nameSplit.length === 3) { //have english title
+                            svod.firstTitle = nameSplit[2].trim();
+                            svod.secondTitle = nameSplit[0].trim() + ' : ' + nameSplit[1].trim();
+                        } else if (nameSplit.length === 2) {
+                            svod.firstTitle = nameSplit[1].trim();
+                            svod.secondTitle = nameSplit[0].trim();
+                        } else {
+                            svod.firstTitle = '';
+                            svod.secondTitle = '';
+                        }
+                    } else { //not series
+                        if (nameSplit.length === 3) { //have english title
+                            svod.firstTitle = nameSplit[1].trim() + ' : ' + nameSplit[2].trim();
+                            svod.secondTitle = nameSplit[0].trim();
+                        } else if (nameSplit.length === 2) { //have english title
+                            svod.firstTitle = nameSplit[1].trim();;
+                            svod.secondTitle = nameSplit[0].trim();;
+                        } else {
+                            svod.firstTitle = '';
+                            svod.secondTitle = '';
+                        }
+                    }
+                } else {
+                    svod.firstTitle = nameSplit[0].trim();;
+                    svod.secondTitle = '';
+                }
+
+
+                if (typeof vod.program.directors_text !== 'undefined' && vod.program.directors_text.length > 0 && vod.program.directors_text[0].text !== '') {
+                    svod.directors = vod.program.directors_text[0].text;
+                } else {
+                    svod.directors = '';
+                }
+
+                if (typeof vod.program.actors_text !== 'undefined' && vod.program.actors_text.length > 0 && vod.program.actors_text[0].text !== '') {
+                    svod.actors = vod.program.actors_text[0].text;
+                } else {
+                    svod.actors = '';
+                }
+
                 svod.genres = '';
+                if (typeof vod.program.genres !== 'undefined' && vod.program.genres !== null) {
+                    if (vod.program.genres.length > 1) {
+                        angular.forEach(vod.program.genres, function(genres, key) {
+                            if (key === vod.program.genres.length - 1) {
+                                svod.genres = svod.genres + genres;
+                            } else {
+                                svod.genres = svod.genres + genres + ',';
+                            }
+                        });
+                    } else {
+                        svod.genres = vod.program.genres[0];
+                    }
+                } else {
+                    svod.genres = '';
+                }
+
+                if (typeof vod.program.production_country !== 'undefined' && vod.program.production_country !== '') {
+                    svod.country = vod.program.production_country.substring(0, vod.program.production_country.length - 1);
+                } else {
+                    svod.country = '';
+                }
+
             }
-
-            if (typeof vod.program.production_country !== 'undefined' && vod.program.production_country !== '') {
-                svod.country = vod.program.production_country.substring(0, vod.program.production_country.length - 1);
-            } else {
-                svod.country = '';
-            }
-
-
 
             //check program.id for VOD
             if (typeof vod.program !== 'undefined') {
@@ -369,21 +415,24 @@
             });
 
 
-            var take = vod.program.display_runtime.split(':');
-            var minutes = 0;
-            if (take.length > 1) {
-                minutes = parseFloat(take[0]) * 60 + parseFloat(take[1]);
-            } else if (take.length === 1) {
-                minutes = parseFloat(take[0]);
+            if (svod.program) {
+                var take = vod.program.display_runtime.split(':');
+                var minutes = 0;
+                if (take.length > 1) {
+                    minutes = parseFloat(take[0]) * 60 + parseFloat(take[1]);
+                } else if (take.length === 1) {
+                    minutes = parseFloat(take[0]);
 
+                }
+
+                svod.duration = minutes;
             }
 
-            svod.duration = minutes;
             return svod;
         }
 
         function transformSeriesVOD(seriesVod) {
-            console.log('transform series vod : --- ', seriesVod);
+            // console.log('transform series vod : --- ', seriesVod);
             var svod = seriesVod;
             svod.isSeries = true;
             svod.photoUrl = CONSTANT.API_HOST + '/api1/contents/categories/' + seriesVod.id + "/picture?width=215.000000&height=307.000000";
