@@ -524,7 +524,7 @@ body {
     margin: 120px auto;
     border: 5px solid rgba(255, 255, 255, .2);
     border-left-color: #FFF;
-    -webkit-animation: load 1.5s infinite linear;
+    animation: load 1.5s infinite linear;
 }
 
 .media-loader {
@@ -556,7 +556,7 @@ body {
     margin: 400px auto;
     border: 15px solid rgba(255, 255, 255, .2);
     border-left-color: #FFF;
-    -webkit-animation: load 1.5s infinite linear;
+    animation: load 1.5s infinite linear;
 }
 
 .main-loader .loader {
@@ -566,7 +566,7 @@ body {
     margin: 25% auto;
     border: 15px solid rgba(255, 255, 255, .2);
     border-left-color: #FFF;
-    -webkit-animation: load 1.5s infinite linear;
+    animation: load 1.5s infinite linear;
 }
 
 .media-loader.media-loader-show {
@@ -581,7 +581,7 @@ body {
 
 .main-loader.main-loader-hide {}
 
-@-webkit-keyframes load {
+@keyframes load {
     from {
         transform: rotate(0deg);
     }
@@ -1946,11 +1946,31 @@ span.login-input-lable {
 
 /* Styles for the track-progress-bar directive element */
 
+.video-progress-bar-wrapper {
+    position: absolute;
+    display: inline-block;
+    bottom: 284px;
+    left: 0px;
+    width: 100%;
+    text-align: center;
+}
+
 .progress-bar-bkgd {
     width: 570px;
     height: 2px;
     border: none;
     margin: 5px 2px 0 2px;
+    background-color: rgba(255, 255, 255, 0.45);
+}
+
+.progress-bar-bkgd.video {
+    /* position: absolute; */
+    display: inline-block;
+    width: 75%;
+    height: 11px;
+    /* bottom: 280px; */
+    border: none;
+    margin: 0 auto;
     background-color: rgba(255, 255, 255, 0.45);
 }
 
@@ -1997,5 +2017,33 @@ span.login-input-lable {
 }
 
 .logo-fadeOut {
+    opacity: 0;
+}
+
+.play-position {
+    position: relative;
+    display: inline-block;
+    color: #fff;
+    top: 3px;
+    margin: 0 auto;
+    font-size: 25px;
+    margin-right: 17px;
+}
+
+.end-position {
+    position: relative;
+    display: inline-block;
+    /* float: right; */
+    color: #fff;
+    margin-left: 17px;
+    font-size: 25px;
+    top: 3px;
+}
+
+.category-section-fadeIn {
+    opacity: 1;
+}
+
+.category-section-fadeOut {
     opacity: 0;
 }

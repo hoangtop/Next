@@ -107,7 +107,7 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                         $element.append(clone);
 
                         media = $element.find('video, audio');
-                        media.on('abort error stalled suspend loadstart durationchange loadedmetadata loadeddata progress canplay canplaythrough ended pause play playing ratechange seeked seeking timeupdate volumechange waiting', function(event) {
+                        media.on('forward rewind next restart abort error stalled suspend loadstart durationchange loadedmetadata loadeddata progress canplay canplaythrough ended pause play playing ratechange seeked seeking timeupdate volumechange waiting', function(event) {
 
                             switch (event.type) {
                                 case 'play':
@@ -174,6 +174,8 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                                 setProperty(media, i, 'currentTime', media[i].currentTime - CONSTANT.FAST_FORWARD_INTERVAL);
                             });
                         }
+
+                        // invokeMethod(media, index, 'restart');
                     };
                     this.rewind = function(index) {
                         if (angular.isNumber(index)) {
@@ -183,6 +185,8 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                                 setProperty(media, i, 'currentTime', media[i].currentTime - CONSTANT.FORWARD_INTERVAL);
                             });
                         }
+
+                        // invokeMethod(media, index, 'rewind');
                     };
                     this.forward = function(index) {
                         if (angular.isNumber(index)) {
@@ -192,6 +196,8 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                                 setProperty(media, i, 'currentTime', media[i].currentTime + CONSTANT.FORWARD_INTERVAL);
                             });
                         }
+
+                        // invokeMethod(media, index, 'forward');
                     };
                     this.next = function(index) {
                         // if (angular.isNumber(index)) {
@@ -209,6 +215,7 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                                 setProperty(media, i, 'currentTime', media[i].currentTime + CONSTANT.FAST_FORWARD_INTERVAL);
                             });
                         }
+                        // invokeMethod(media, index, 'next');
                     };
 
                     ['autoplay', 'controls', 'currentTime', 'loop', 'mediaGroup', 'muted', 'playbackRate', 'preload', 'src', 'volume'].forEach(function(property) {

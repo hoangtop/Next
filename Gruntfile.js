@@ -402,6 +402,7 @@ module.exports = function(grunt) {
                         '*.xml',
                         'images/{,*/}*.{webp}',
                         'styles/fonts/{,*/}*.*',
+                        'styles/main.css',
                         'scripts/custom/smarttv-keyboard-1.0.1/en-boxed.js'
                     ]
                 }, {
@@ -421,7 +422,7 @@ module.exports = function(grunt) {
                 expand: true,
                 dest: 'production',
                 cwd: '<%= yeoman.dist %>',
-                src: ['{,*/}*.*', 'styles/fonts/{,*/}*.*', 'scripts/custom/smarttv-keyboard-1.0.1/{,*/}*.*', 'images/spotlight/{,*/}*.*']
+                src: ['{,*/}*.*', 'styles/fonts/{,*/}*.*', 'styles/main.css', 'scripts/custom/smarttv-keyboard-1.0.1/{,*/}*.*', 'images/spotlight/{,*/}*.*']
             }
         },
 

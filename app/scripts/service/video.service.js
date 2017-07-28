@@ -10,6 +10,8 @@
         //interface
         var hls;
         var cb;
+        // var isEnded = false;
+        // var isStalled = false;
         var errorData = {
             name: '',
             code: '',
@@ -329,6 +331,10 @@
                     // break;
                 case 'ended':
                     console.log("ended ---");
+                    // isEnded = true;
+                    // if (isEnded && isStalled) {
+                    //     cb();
+                    // }
                     // cb();
                 case 'seeking':
                 case 'play':
@@ -342,8 +348,11 @@
                 case 'pause':
                 case 'waiting':
                 case 'stalled':
-                    console.log("stalled ---");
-                    cb();
+                    // isStalled = true;
+                    // console.log("stalled ---");
+                    // if (isEnded && isStalled) {
+                    //     cb();
+                    // }
                 case 'error':
                     data = Math.round(evt.target.currentTime * 1000);
                     if (evt.type === 'error') {

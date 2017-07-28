@@ -103,10 +103,67 @@ app.directive('trackProgressBar', [function() {
                 progressBarMarkerElement.css('width', progress + 'px');
             }
 
+
             // updateProgress();
             // curVal changes constantly, maxVal only when a new track is loaded
             $scope.$watch('curVal', updateProgress);
             $scope.$watch('maxVal', updateProgress);
+        }
+    };
+}]);
+
+app.directive('videoTrackProgressBar', [function() {
+
+    return {
+        restrict: 'E', // element
+        scope: {
+            curVal: '@', // bound to 'cur-val' attribute, playback progress
+            maxVal: '@', // bound to 'max-val' attribute, track duration,
+            playPos: '@', // bound to 'cur-val' attribute, playback progress
+            endPos: '@' // bound to 'max-val' attribute, track duration
+        },
+        template: '<div class="video-progress-bar-wrapper"><div class="play-position"></div><div class="progress-bar-bkgd video"><div class="progress-bar-marker video"></div></div><div class="end-position"></div></div>',
+
+        link: function($scope, element, attrs) {
+            // grab element references outside the update handler
+            var progressBarBkgdElement = angular.element(element[0].querySelector('.progress-bar-bkgd')),
+                progressBarMarkerElement = angular.element(element[0].querySelector('.progress-bar-marker')),
+                playPosElement = angular.element(element[0].querySelector('.play-position')),
+                endPosElement = angular.element(element[0].querySelector('.end-position'));
+
+            // set the progress-bar-marker width when called
+            function updateProgress() {
+                var progress = 0,
+                    currentValue = $scope.curVal,
+                    maxValue = $scope.maxVal,
+
+
+                    // recompute overall progress bar width inside the handler to adapt to viewport changes
+                    progressBarWidth = progressBarBkgdElement.width();
+
+                // if ($scope.maxVal) {
+                // determine the current progress marker's width in pixels
+                progress = Math.min(currentValue, maxValue) / maxValue * progressBarWidth;
+                // }
+                // set the marker's width
+                progressBarMarkerElement.css('width', progress + 'px');
+            }
+
+            function updateDisplayPosition() {
+                var playPos = $scope.playPos,
+                    endPos = $scope.endPos;
+
+                playPosElement.html(playPos);
+                endPosElement.html(endPos);
+
+            }
+
+            // updateProgress();
+            // curVal changes constantly, maxVal only when a new track is loaded
+            $scope.$watch('curVal', updateProgress);
+            $scope.$watch('maxVal', updateProgress);
+            $scope.$watch('playPos', updateDisplayPosition);
+            $scope.$watch('endPos', updateDisplayPosition);
         }
     };
 }]);

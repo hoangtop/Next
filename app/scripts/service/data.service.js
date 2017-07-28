@@ -62,21 +62,30 @@
             var id = channelItem.channelId;
             var def = $q.defer();
 
-            var dd, mm, yyyy;
-            if (typeof date === "undefined") {
-                var date = new Date();
-                dd = date.getDate();
-                mm = date.getMonth(); //January is 0!
-                yyyy = date.getFullYear();
-            } else {
-                var dates = date.split("-");
-                dd = dates[0];
-                mm = dates[1] - 1; //January is 0!
-                yyyy = dates[2];
-            }
+            // var dd, mm, yyyy;
+            // if (typeof date === "undefined") {
+            //     var date = new Date();
+            //     dd = date.getDate();
+            //     mm = date.getMonth(); //January is 0!
+            //     yyyy = date.getFullYear();
+            // } else {
+            //     var dates = date.split("-");
+            //     dd = dates[0];
+            //     mm = dates[1] - 1; //January is 0!
+            //     yyyy = dates[2];
+            // }
 
-            var since = (new Date(yyyy, mm, dd, 03, 00, 00, 00)).getTime();
-            var until = (new Date(yyyy, mm, dd, 23, 59, 59, 99)).getTime();
+            var start = new Date();
+            start.setHours(0, 0, 0, 0);
+
+            var end = new Date();
+            end.setHours(23, 59, 59, 999);
+
+            // var sinceDate = new Date(yyyy, mm, dd, 03, 00, 00, 00);
+            // var ultilDate = new Date(yyyy, mm, dd, 23, 59, 59, 99);
+            // var start = new Date();
+            var since = start.getTime();
+            var until = end.getTime();
             var url = CONSTANT.API_HOST + '/api1/contents/channels/schedules?region=OTT&id=' + id + '&include=product&since=' + since + '&until=' + until;
             $http.get(url)
                 .then(function(response) {
@@ -558,7 +567,10 @@
                                 vodList[key] = episodeVodList[0];
                                 vodList[key].episodes = episodeVodList;
                                 vodList[key] = UltilService.transformVOD(vodList[key]);
-                                def.resolve(vodList);
+                                index++;
+                                if (index === vodList.length) {
+                                    def.resolve(vodList);
+                                }
                                 // getRelatedVodList(vodList[key].program.id).then(
                                 //     function(res) {
                                 //         index++;
@@ -573,6 +585,8 @@
                             function error(response) {
                                 console.error('Loi trong qua trinh goi RestService.getEpisodeListBySeriesId! Response = ');
                                 console.error(response);
+                                def.resolve(vodList);
+
                             });
 
 

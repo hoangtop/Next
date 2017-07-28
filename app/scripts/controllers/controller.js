@@ -29,7 +29,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
 
     /*function declaration*/
     $scope.onScrollFinish = onScrollFinish;
-    $scope.toggleIsPlaying = toggleIsPlaying;
+
     $scope.onVodFocused = onVodFocused;
     $scope.onScrollStart = onScrollStart;
     $scope.onRelatedVodFocused = onRelatedVodFocused;
@@ -59,6 +59,14 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     $scope.getCurrentChannelProgram = getCurrentChannelProgram;
     $scope.onQuickChannelSelected = onQuickChannelSelected;
     $scope.onQuickChannelFocused = onQuickChannelFocused;
+    $scope.mediaPause = mediaPause;
+    $scope.mediaForward = mediaForward;
+    $scope.mediaRewind = mediaRewind;
+    $scope.mediaNext = mediaNext;
+    $scope.mediaRestart = mediaRestart;
+    $scope.mediaTogglePlay = mediaTogglePlay;
+    $scope.mediaSeeked = mediaSeeked;
+    $scope.mediaSeeking = mediaSeeking;
 
     /* CONSTANT values definition */
     $scope.CATEGORY = CONSTANT.CATEGORY;
@@ -118,8 +126,8 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     }, 400);
 
     $scope.login = {
-        username: '01647937941',
-        password: '1'
+        username: '0988622336',
+        password: '8'
             // password: 'qaz123'
     };
 
@@ -443,12 +451,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         updateOverview();
     }
 
-    function toggleIsPlaying(isPlaying) { // Change button shape by '$scope.isPlaying' ('Play' <-> 'Pause')
-        $scope.$applyAsync(function() {
-            $scope.isPlaying = isPlaying;
-        });
 
-    }
 
     // The callback function which is called when each list component get the 'focus'.
     function onVodFocused($event, category, data, $index) {
@@ -1870,14 +1873,14 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
             if ($rootScope.isAppLoadedAfterLogin) {
                 // $scope.lastDepth = $scope.DEPTH.DETAIL;
                 playVODStream(vod, video, function streamEnded() {
-                    $scope.back();
+                    // $scope.back();
                 });
             } else {
                 DataService.getVodDetails($scope.overview.program.id).then(function success(responseVod) {
                     $scope.overview = responseVod;
                     // $scope.lastDepth = $scope.DEPTH.DETAIL;
                     playVODStream($scope.overview, video, function streamEnded() {
-                        $scope.back();
+                        // $scope.back();
                     });
                 }, function error(response) {
                     console.error('load  playVODStream error : ---- : ', response);
@@ -1914,8 +1917,11 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
     $scope.isInfoShownInPlayer = true;
     var detailSectionTimmer;
     var processPlayerTimer;
+    var videoProgressTrackTimer;
+    var playTime = 0;
 
     function playVODStream(vod, video, callback) {
+        console.log('playVodStream .... vod', vod);
         if ($scope.currentDepth === $scope.DEPTH.PLAYER) return;
 
         $scope.isPlayDisabled = true;
@@ -1932,7 +1938,41 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         if (playable) {
             $scope.isMediaLoaderHidden = false;
 
+
+
             VideoService.playVODStream(vod, video, callback).then(function success(response) {
+
+                video = $('#videoMainPlay')[0];
+                $scope.overview.durationInSeconds = video.duration;
+                console.log(' $scope.overview.durationInSeconds...', $scope.overview.durationInSeconds);
+                $scope.overview.endPosition = ($scope.overview.durationInSeconds + "").toHHMMSS();
+                $scope.overview.passedDuration = Math.ceil(video.currentTime);
+                playTime = Math.ceil(video.currentTime);
+
+                videoProgressTrackTimer = $interval(function() {
+                    if (video.currentTime) {
+                        $scope.overview.passedDuration = Math.ceil(video.currentTime);
+                        playTime += 1;
+                        if (playTime < $scope.overview.durationInSeconds) {
+                            console.log('1 $scope.overview.durationInSeconds...', $scope.overview.durationInSeconds);
+                            console.log('1 $scope.overview.passedDuration ...', $scope.overview.passedDuration);
+                            console.log('1 $scope.overview.playTime ...', playTime);
+                            $scope.overview.passedDuration = Math.ceil(video.currentTime);
+                            $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
+                            // console.log("playPosition:", $scope.overview.playPosition);
+                        } else {
+                            console.log('2 $scope.overview.durationInSeconds...', $scope.overview.durationInSeconds);
+                            console.log('2 $scope.overview.passedDuration ...', $scope.overview.passedDuration);
+                            console.log('2 $scope.overview.playTime ...', playTime);
+                            if ($scope.currentDepth === $scope.DEPTH.PLAYER) {
+                                $scope.back();
+                            }
+                            $interval.cancel(videoProgressTrackTimer);
+
+                        }
+                    }
+
+                }, 1000);
 
                 console.log(" $scope.lastDepth:", $scope.lastDepth);
                 $scope.lastDepth = $scope.currentDepth;
@@ -2259,27 +2299,160 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         });
     }
 
+    function mediaTogglePlay(isPlaying) { // Change button shape by '$scope.isPlaying' ('Play' <-> 'Pause')
+        $scope.overview.passedDuration = Math.ceil(video.currentTime);
+        playTime = Math.ceil(video.currentTime);
+
+        videoProgressTrackTimer = $interval(function() {
+
+            $scope.overview.passedDuration = Math.ceil(video.currentTime);
+            playTime += 1;
+            if (playTime < $scope.overview.durationInSeconds) {
+                console.log('1 $scope.overview.durationInSeconds...', $scope.overview.durationInSeconds);
+                console.log('1 $scope.overview.passedDuration ...', $scope.overview.passedDuration);
+                console.log('1 $scope.overview.playTime ...', playTime);
+                $scope.overview.passedDuration = Math.ceil(video.currentTime);
+                $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
+                // console.log("playPosition:", $scope.overview.playPosition);
+            } else {
+                console.log('2 $scope.overview.durationInSeconds...', $scope.overview.durationInSeconds);
+                console.log('2 $scope.overview.passedDuration ...', $scope.overview.passedDuration);
+                console.log('2 $scope.overview.playTime ...', playTime);
+                if ($scope.currentDepth === $scope.DEPTH.PLAYER) {
+                    $scope.back();
+                }
+                $interval.cancel(videoProgressTrackTimer);
+
+            }
+
+
+
+
+        }, 1000);
+
+        $scope.$applyAsync(function() {
+            $scope.isPlaying = isPlaying;
+        });
+
+    }
+
+    function mediaPause() {
+        console.log('pausepause .....');
+        if (!$scope.currentOverview.isChannel) {
+            $interval.cancel(videoProgressTrackTimer);
+
+            if (playTime > $scope.overview.durationInSeconds - 3) {
+                $scope.back();
+            }
+        }
+    }
+
+    function mediaForward() {
+        console.log('mediaForward .....');
+        if (!$scope.currentOverview.isChannel) {
+            $scope.overview.passedDuration += 15;
+            $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
+        }
+    }
+
+    function mediaRewind() {
+        console.log('mediaRewind .....');
+        if (!$scope.currentOverview.isChannel) {
+            $scope.overview.passedDuration -= 15;
+            $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
+        }
+    }
+
+    function mediaRestart() {
+        console.log('mediaRestart .....');
+        if (!$scope.currentOverview.isChannel) {
+            $scope.overview.passedDuration -= 120;
+            $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
+        }
+    }
+
+    function mediaNext() {
+        console.log('mediaNext .....');
+        if (!$scope.currentOverview.isChannel) {
+            $scope.overview.passedDuration += 120;
+            $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
+        }
+    }
+
+    function mediaSeeked() {
+        video = $('#videoMainPlay')[0];
+        if (!$scope.currentOverview.isChannel) {
+            $scope.overview.passedDuration = Math.ceil(video.currentTime);
+            playTime = Math.ceil(video.currentTime);
+            $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
+        }
+
+
+
+    }
+
+    function mediaSeeking() {
+        video = $('#videoMainPlay')[0];
+        console.log('mediaSeeked .....');
+        console.log('currentTime .....', video.currentTime);
+        console.log('time .....', video.time);
+        console.log('duration .....', video.duration);
+
+
+    }
+
     function getPlayerControls() {
         return {
             play: function() {
+                console.log('play .....');
                 $timeout(function() {
                     $('#player .icon-caph-play').parent().trigger('selected');
+                    if (!$scope.currentOverview.isChannel) {
+                        $interval.cancel(videoProgressTrackTimer);
+                        videoProgressTrackTimer = $interval(function() {
+                            if ($scope.overview.passedDuration < $scope.overview.durationInSeconds) {
+                                $scope.overview.passedDuration += 1;
+                                $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
+                                // console.log("playPosition:", $scope.overview.playPosition);
+                            } else {
+                                console.log('Ending progress bar.');
+                                $interval.cancel(videoProgressTrackTimer);
+                                if ($scope.currentDepth === $scope.DEPTH.PLAYER) {
+                                    $scope.back();
+                                }
+                            }
+                        }, 1000);
+                    }
                 }, 500);
             },
             pause: function() {
+                console.log('pause .....');
                 $('#player .icon-caph-pause').parent().trigger('selected');
+                if (!$scope.currentOverview.isChannel) {
+                    $interval.cancel(videoProgressTrackTimer);
+                }
             },
             restart: function() {
                 $('#player .icon-caph-prev').parent().trigger('selected');
+                $scope.overview.passedDuration -= 120;
+                $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
             },
             rewind: function() {
                 $('#player .icon-caph-rewind').parent().trigger('selected');
+                $scope.overview.passedDuration -= 15;
+                $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
             },
             forward: function() {
+                console.log('forward .....');
                 $('#player .icon-caph-forward').parent().trigger('selected');
+                $scope.overview.passedDuration += 15;
+                $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
             },
             next: function() {
                 $('#player .icon-caph-next').parent().trigger('selected');
+                $scope.overview.passedDuration += 120;
+                $scope.overview.playPosition = ($scope.overview.passedDuration + "").toHHMMSS();
+
             }
         };
     }
@@ -2400,6 +2573,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         console.log("back...", $scope.currentDepth);
         $timeout.cancel(detailSectionTimmer);
         $timeout.cancel(processPlayerTimer);
+        $interval.cancel(videoProgressTrackTimer);
         VideoService.stopStream(video);
         $scope.isPlayDisabled = false;
         $scope.isMediaLoaderHidden = true;
@@ -2489,7 +2663,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                             targetDepth = $scope.DEPTH.INDEX;
                             $(".channel-page").fadeIn(500, "linear");
                             $(".category-section").fadeIn(500, "linear");
-                            $(".list-wrapper.page").fadeIn(500, "linear");
+                            // $(".list-wrapper.page").fadeIn(500, "linear");
 
 
                             // focusController.setDepth(targetDepth, lastHomeChannelFocusedGroup);

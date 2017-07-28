@@ -50,10 +50,13 @@
     <!--<div ng-style="{'border-color': overview.color}" class="wrapper wrapper-spotlight" ng-include="'views/main.html'"></div>-->
 
     <!-- Video Player : It will be shown when '$scope.currentDepth' become 'DEPTH.PLAYER'. -->
-    <caph-media id="player" class="player" ng-class="{'player-shown':isMediaLoaderHidden}" ischannel="isChannel" subtitle="setting.subTitle" on-play="toggleIsPlaying(true)" on-pause="toggleIsPlaying(false)" on-ended="toggleIsPlaying(false)">
+    <caph-media id="player" class="player" ng-class="{'player-shown':isMediaLoaderHidden}" ischannel="isChannel" subtitle="setting.subTitle" on-play="mediaTogglePlay(true)" on-seeked="mediaSeeked()" on-pause="mediaPause()">
         <video id="videoMainPlay" class="videoMainPlay" autoplay style="width: 100%;height:100%"></video>
-        <div class="logo-playback"><img class="logo-img" src="images/logo.png" alt=""></div>
+        <!-- <div class="logo-playback"><img class="logo-img" src="images/logo.png" alt=""></div> -->
+
+
         <caph-media-controls class="controls-bar" ng-class="{'fade-out': !showMediaController}" ng-mouseover="setMediaControllerTimer()">
+            <video-track-progress-bar play-pos='{{overview.playPosition}}' end-pos='{{overview.endPosition}}' cur-val='{{overview.passedDuration}}' max-val='{{overview.durationInSeconds}}'></video-track-progress-bar>
             <div class="opacity-panel">
                 <div class="operations">
                     <div focusable="{depth: DEPTH.PLAYER, name: 'btnPlayerRestart'}" class="btn-player" on-selected="controls.restart()">
@@ -108,7 +111,7 @@
         <!--<caph-dialog-buttons ng-if="!dialog.isConfirm" button-type="alert" on-select-button="dialog.onSelectButton($buttonIndex, $event)"></caph-dialog-buttons>-->
     </caph-dialog>
     <caph-dialog focus-option="warning.focusOption" center="true" show="warning.show" style="width:800px;">
-        <caph-dialog-title>{{dialog.title}}</caph-dialog-title>warning
+        <caph-dialog-title>{{dialog.title}}</caph-dialog-title>
         <caph-dialog-content>
             <div class="caph-dialog-message" ng-bind-html="warning.message"></div>
         </caph-dialog-content>
@@ -135,7 +138,7 @@
                         <div class="login-row login-account-row" focusable="{depth: DEPTH.LOGIN}">
                             <span class="login-input-lable password-label">Số điện thoại:</span>
 
-                            <input id="username" readonly type="text" size="40" class="login-input login-account-input" title="Bước 1: Nhập Số điện thoại (vd 0988666888)" ng-model="login.username">
+                            <input id="username" readonly type="text" size="40" class="login-input login-account-input" title="Bước 1: Nhập Số điện thoại (vd 098xxxxxx)" ng-model="login.username">
                             <div class="smart-tv-keyboard"></div>
                         </div>
                         <div class="login-row login-pass-row">

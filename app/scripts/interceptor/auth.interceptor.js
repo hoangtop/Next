@@ -55,9 +55,10 @@ app
                     }
 
 
-                    // if (count > 4) {
-                    //     return $q.reject('');
-                    // }
+                    if (count > 4) {
+                        Auth.logout();
+                        return $q.reject('');
+                    }
 
                     // count++;
                     //  authService.loginConfirmed();   
