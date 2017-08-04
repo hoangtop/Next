@@ -1498,7 +1498,7 @@ button.login-page-button.focused {
 }
 
 .category-page .overview {
-    margin: 0px 0px 0px 95px;
+    margin: 0px 50px 0px 95px;
     top: 10px;
 }
 
@@ -2004,12 +2004,13 @@ span.login-input-lable {
 
 .list-page-fadeOut {
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
 }
 
-.videoMainPlay {
+video {
     width: 100% !important;
     height: auto !important;
+    max-height: 100% !important;
 }
 
 .logo-fadeIn {

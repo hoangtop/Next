@@ -14,7 +14,7 @@ app.factory('CONSTANT', function() {
         // API_HOST: 'http://10.60.70.209:18080',
         API_HOST: 'http://otttv.viettel.com.vn',
 
-        HTTPS_API_HOST: 'https://otttv.viettel.com.vn',
+        // HTTPS_API_HOST: 'https://otttv.viettel.com.vn',
         // RECOMMENDATION_API_HOST: 'http://10.60.70.209:18080',
         RECOMMENDATION_API_HOST: 'http://otttv.viettel.com.vn',
         N0_VOD_ITEM: 13,

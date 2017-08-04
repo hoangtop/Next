@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     app.factory('Auth', Auth);
@@ -36,14 +36,14 @@
 
             AuthServerProvider.login(credentials)
                 .then(loginThen)
-                .catch(function(err) {
+                .catch(function (err) {
                     this.logout();
                     deferred.reject(err);
                     return cb(err);
                 }.bind(this));
 
             function loginThen(data) {
-                Principal.identity(true).then(function(account) {
+                Principal.identity(true).then(function (account) {
                     deferred.resolve(data);
                 });
                 return cb();
@@ -59,7 +59,7 @@
 
             AuthServerProvider.renewToken()
                 .then(renewTokenThen)
-                .catch(function(err) {
+                .catch(function (err) {
                     // this.logout();
                     deferred.reject(err);
                     return cb(err);

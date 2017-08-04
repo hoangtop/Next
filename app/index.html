@@ -50,8 +50,8 @@
     <!--<div ng-style="{'border-color': overview.color}" class="wrapper wrapper-spotlight" ng-include="'views/main.html'"></div>-->
 
     <!-- Video Player : It will be shown when '$scope.currentDepth' become 'DEPTH.PLAYER'. -->
-    <caph-media id="player" class="player" ng-class="{'player-shown':isMediaLoaderHidden}" ischannel="isChannel" subtitle="setting.subTitle" on-play="mediaTogglePlay(true)" on-seeked="mediaSeeked()" on-pause="mediaPause()">
-        <video id="videoMainPlay" class="videoMainPlay" autoplay style="width: 100%;height:100%"></video>
+    <caph-media id="player" class="player" ng-class="{'player-shown':isMediaLoaderHidden}" ischannel="isChannel" subtitle="setting.subTitle" on-play="mediaTogglePlay(true)" on-seeked="mediaSeeked()" on-pause="mediaTogglePlay(false)" on-ended="mediaEnded()">
+        <video id="videoMainPlay" class="videoMainPlay" autoplay ></video>
         <!-- <div class="logo-playback"><img class="logo-img" src="images/logo.png" alt=""></div> -->
 
 

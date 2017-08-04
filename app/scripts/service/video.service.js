@@ -4,9 +4,9 @@
     app
         .factory('VideoService', VideoService);
 
-    VideoService.inject = ['$timeout', '$http', '$q', 'CONSTANT', 'SETTINGS', 'DataService'];
+    VideoService.inject = ['$timeout', '$http', '$q', 'CONSTANT', 'SETTINGS', 'DataService','UltilService'];
 
-    function VideoService($timeout, $http, $q, CONSTANT, SETTINGS, DataService) {
+    function VideoService($timeout, $http, $q, CONSTANT, SETTINGS, DataService,UltilService) {
         //interface
         var hls;
         var cb;
@@ -201,19 +201,18 @@
             video.addEventListener('durationchange', handleVideoEvent);
         }
 
-        function playChannelStream(channel, video) {
+        function playChannelStream(serviceId, video) {
             var param = {
-                version: 1,
+                version: 3,
                 regionId: "GUEST",
-                assetId: channel.serviceId,
-                channelId: channel.serviceId,
-                filename: channel.serviceId + ".m3u8",
+                assetId: serviceId,
+                channelId: serviceId,
+                filename: serviceId + ".m3u8",
                 clientIP: "220.231.127.1",
                 manifestType: "HLS",
                 bwProfile: 5,
-                serviceProvider: 'SmartTV',
-                category_id: "VC_OTT",
-                userId: ""
+                serviceProvider: "SmartTV",                
+                userId: UltilService.getLoginUserId()
             };
 
             var def = $q.defer();

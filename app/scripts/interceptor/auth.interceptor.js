@@ -1,5 +1,5 @@
 app
-    .factory('authInterceptor', function($rootScope, $q, $location, $injector, localStorageService, SETTINGS, CONSTANT) {
+    .factory('authInterceptor', function ($rootScope, $q, $location, $injector, localStorageService, SETTINGS, CONSTANT) {
         var inFlightAuthRequest = null;
         var count = 0;
 
@@ -10,7 +10,7 @@ app
 
         return {
             // Add authorization token to headers
-            request: function(config) {
+            request: function (config) {
                 config.headers = config.headers || {};
                 var token = localStorageService.get('token');
                 $rootScope.token = token;
@@ -41,24 +41,38 @@ app
             },
 
 
-            responseError: function(response) {
+            responseError: function (response) {
                 console.log("responseError with guest token .................................................", response);
+
+
                 // token has expired
                 if (response.data === null) { // response null load again
                     console.log(response);
                 } else if (response.data.error.code === "C0201" || response.data.error.code === "C0202" || response.data.error.code === "C0203") {
-                    console.error("responseError becuase of token expired..............................................", response);
                     var deferred = $q.defer();
-                    if (!inFlightAuthRequest) {
-                        var Auth = $injector.get('Auth');
-                        inFlightAuthRequest = Auth.renewToken();
+                    var token = localStorageService.get('token');
+                    if (token !== null && token.refresh_token === null) {
+                        if (!inFlightAuthRequest) {
+                            var Auth = $injector.get('Auth');
+                            inFlightAuthRequest = Auth.login({
+                                username: token.user_id,
+                                password: token.password
+                            })
+                        }
+                    }
+                    console.error("responseError becuase of token expired..............................................", response);
+                    if (token !== null && token.refresh_token !== null) {
+                        if (!inFlightAuthRequest) {
+                            var Auth = $injector.get('Auth');
+                            inFlightAuthRequest = Auth.renewToken();
+                        }
                     }
 
 
-                    if (count > 4) {
-                        Auth.logout();
-                        return $q.reject('');
-                    }
+                    // if (count > 4) {
+                    //     Auth.logout();
+                    //     return $q.reject('');
+                    // }
 
                     // count++;
                     //  authService.loginConfirmed();   
@@ -66,9 +80,9 @@ app
                         function success(r) {
                             inFlightAuthRequest = null;
 
-                            $injector.get("$http")(response.config).then(function(resp) {
+                            $injector.get("$http")(response.config).then(function (resp) {
                                 deferred.resolve(resp);
-                            }, function(resp) {
+                            }, function (resp) {
                                 deferred.reject();
                             });
 

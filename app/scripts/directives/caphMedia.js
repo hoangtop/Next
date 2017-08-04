@@ -160,6 +160,7 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                             isPlaying = false;
                         }
 
+                        // console.log('togglePlay .....>>>>', isPlaying);
                         var methodType = isPlaying ? 'pause' : 'play';
                         invokeMethod(media, index, methodType);
                         // isPlaying = true;

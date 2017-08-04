@@ -1,12 +1,12 @@
-(function() {
+(function () {
     'use strict';
 
     app
         .factory('UltilService', UltilService);
 
-    UltilService.inject = ['$http', '$q', 'CONSTANT', 'SETTINGS'];
+    UltilService.inject = ['$http', '$q', 'CONSTANT', 'SETTINGS', 'localStorageService'];
 
-    function UltilService($http, $q, CONSTANT, SETTINGS) {
+    function UltilService($http, $q, CONSTANT, SETTINGS, localStorageService) {
         //interface
 
 
@@ -23,13 +23,33 @@
             transformSeriesVODList: transformSeriesVODList,
             strToTime: strToTime,
             addHours: addHours,
-            getCatchupId: getCatchupId
+            getCatchupId: getCatchupId,
+            getLoginUserId: getLoginUserId,
+            getChannelByIndex: getChannelByIndex
 
         };
 
         return service;
 
         //implementation
+        function getChannelByIndex(channelList, index) {
+            var channel;
+            angular.forEach(channelList, function (channelItem, key) {
+                if (index === key) {
+                    channel = channelItem;
+                    angular.break;
+                }
+
+            });
+               console.log("getChannelByIndex3:", channel);
+            return channel;
+        }
+        function getLoginUserId() {
+            var token = localStorageService.get('token');
+            console.log('getLoginUserId:------:' + token.user_id);
+            return token.user_id;
+        }
+
         function getCatchupId(start_time, serviceId, pid) {
             var yyyy = start_time.getFullYear();
             var mm = start_time.getMonth() < 9 ? "0" + (start_time.getMonth() + 1) : (start_time.getMonth() + 1); // getMonth() is zero-based
@@ -63,7 +83,7 @@
 
             var isLeaf = true;
             if (menu.this.config && menu.this.config.length > 0) {
-                angular.forEach(menu.this.config, function(config, key2) {
+                angular.forEach(menu.this.config, function (config, key2) {
                     if (config.name === "__leaf_category" && config.value === "false") {
                         isLeaf = false;
                         angular.break;
@@ -86,7 +106,7 @@
         function getVodCategoryId(menu) {
             var flag = '';
             if (menu.this.config) {
-                angular.forEach(menu.this.config, function(config, key2) {
+                angular.forEach(menu.this.config, function (config, key2) {
                     if (config.name === '__category') {
                         flag = config.value;
                         angular.break;
@@ -117,14 +137,14 @@
 
         function checkFreeProduct(product) {
             var temp = false;
-            angular.forEach(product.locations, function(location, key) {
-                angular.forEach(location.parameter, function(parameter, key) {
+            angular.forEach(product.locations, function (location, key) {
+                angular.forEach(location.parameter, function (parameter, key) {
                     if (parameter.name === 'Audience' && parameter.value === 'private:All') {
                         temp = true;
                     }
                 });
                 if (!temp) {
-                    angular.forEach(product.price, function(price, key) {
+                    angular.forEach(product.price, function (price, key) {
                         if (price.currency === 'VND' && price.value === 0) {
                             temp = true;
                         }
@@ -144,8 +164,8 @@
             var priceObj = {};
             var priceObjs = [];
             if (product.rental_periods.length > 0) {
-                angular.forEach(product.rental_periods, function(rental_period, key) {
-                    angular.forEach(rental_period.price, function(price, key) {
+                angular.forEach(product.rental_periods, function (rental_period, key) {
+                    angular.forEach(rental_period.price, function (price, key) {
                         priceObj = {};
                         if (price.currency === 'VND') {
                             priceObj.price = Math.ceil(price.value - product.discount_rate * price.value);
@@ -156,7 +176,7 @@
                     });
                 });
             } else {
-                angular.forEach(product.price, function(price, key) {
+                angular.forEach(product.price, function (price, key) {
                     priceObj = {};
                     if (price.currency === 'VND') {
                         priceObj.price = Math.ceil(price.value - product.discount_rate * price.value);
@@ -297,7 +317,7 @@
                 svod.genres = '';
                 if (typeof vod.program.genres !== 'undefined' && vod.program.genres !== null) {
                     if (vod.program.genres.length > 1) {
-                        angular.forEach(vod.program.genres, function(genres, key) {
+                        angular.forEach(vod.program.genres, function (genres, key) {
                             if (key === vod.program.genres.length - 1) {
                                 svod.genres = svod.genres + genres;
                             } else {
@@ -331,7 +351,7 @@
             }
             //check isPublish
             if (typeof vod.config !== 'undefined') {
-                angular.forEach(vod.config, function(item, key) {
+                angular.forEach(vod.config, function (item, key) {
                     if (item.name === "Public" && item.value === "1") {
                         svod.isPublish = true;
                     }
@@ -339,7 +359,7 @@
             }
             //check isVtvCab
             if (typeof vod.channel !== 'undefined' && typeof vod.channel.genres !== 'undefined') {
-                angular.forEach(vod.channel.genres, function(item, key) {
+                angular.forEach(vod.channel.genres, function (item, key) {
                     if (item === "1:11:0:0") {
                         svod.isVtvCab = true;
                     }
@@ -347,7 +367,7 @@
             }
 
             // check package
-            angular.forEach(vod.product, function(product, key) {
+            angular.forEach(vod.product, function (product, key) {
                 // Check  free
                 svod.isFreeNoPair = checkFreeProduct(product);
                 //check has Wifi package
@@ -387,7 +407,7 @@
                         }
                     } else {
                         //get vod format 1
-                        angular.forEach(product.locations, function(location, key) {
+                        angular.forEach(product.locations, function (location, key) {
                             if (location.device === "handheld") {
                                 svod.vodLocator = location.locator;
                             }
@@ -443,7 +463,7 @@
             if (svod.description) svod.description = svod.description[0].text;
 
             svod.isSeriesEnd = false;
-            angular.forEach(seriesVod.config, function(config, key) {
+            angular.forEach(seriesVod.config, function (config, key) {
                 if (config.name === 'seriesend' && config.value === 'true') {
                     svod.isSeriesEnd = true;
                 }
@@ -453,7 +473,7 @@
 
         function transformSeriesVODList(seriesVodList) {
             var arrayTemp = [];
-            angular.forEach(seriesVodList, function(vod, key) {
+            angular.forEach(seriesVodList, function (vod, key) {
                 var svod = transformSeriesVOD(vod);
                 // console.log('VOD on OTT Check:',vod);
                 arrayTemp.push(svod);
@@ -464,7 +484,7 @@
 
         function transformVODList(vodList) {
             var arrayTemp = [];
-            angular.forEach(vodList, function(vod, key) {
+            angular.forEach(vodList, function (vod, key) {
                 var svod = transformVOD(vod);
                 // console.log('VOD on OTT Check:',vod);
                 arrayTemp.push(svod);

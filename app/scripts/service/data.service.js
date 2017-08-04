@@ -311,7 +311,10 @@
             $http.get(url)
                 .then(function(response) {
                     if (response.data.data) {
-                        episodeVodList = UltilService.transformVODList(response.data.data);
+                        if (response.data.data !== null && response.data.data.length > 0) {
+                             episodeVodList = UltilService.transformVODList(response.data.data);
+                        } 
+                            
                         def.resolve(episodeVodList);
                     } else {
                         // def.reject("Failed to get getEpisodesInSeries");
@@ -349,12 +352,12 @@
             var token = $rootScope.token.access_token;
             // console.log("$rootScope.access_token");
             // console.log($rootScope.token.access_token);
-            // console.log($rootScope);
+            console.log('getVodURL:------:' + UltilService.getLoginUserId());
             if (isFreeNoPair) {
                 // url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?id=' + programId + '&product_id=' + productId;
-                url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?access_token=' + SETTINGS.guest_access_token + '&id=' + programId + '&product_id=' + productId + '&bw_profile=5&category_id=VC_OTT&service_provider=SmartTV';
+                url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?access_token=' + SETTINGS.guest_access_token + '&id=' + programId + '&product_id=' + productId + '&version=1&bwProfile=5&category_id=VC_OTT&serviceProvider=SmartTV&userId=' + UltilService.getLoginUserId();
             } else {
-                url = CONSTANT.API_HOST + '/api1/watches/vod/prepare?id=' + programId + '&product_id=' + productId + '&bw_profile=5&category_id=VC_OTT&service_provider=SmartTV';
+                url = CONSTANT.API_HOST + '/api1/watches/vod/prepare?id=' + programId + '&regionId=GUEST&product_id=' + productId + '&version=1&bwProfile=5&category_id=VC_OTT&serviceProvider=SmartTV&userId=' + UltilService.getLoginUserId();
             }
 
             var def = $q.defer();
@@ -436,7 +439,10 @@
 
                         getVodByProgramIdList(programIds).then(
                             function success(response) {
-                                relatedVodList = response;
+                                if (response !== null && response.length > 0) {
+                                    relatedVodList = response;
+                                } 
+                                
                                 def.resolve(relatedVodList);
                             },
                             function error(response) {
@@ -615,6 +621,7 @@
                         item.channelId = item.service_id;
                         item.isChannel = true;
                         item.guides = [];
+                        item.index = index;
                         item.currentProgram = function() {
 
                         };
