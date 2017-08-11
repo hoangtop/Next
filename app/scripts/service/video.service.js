@@ -1,12 +1,12 @@
-(function() {
+(function () {
     // 'use strict';
 
     app
         .factory('VideoService', VideoService);
 
-    VideoService.inject = ['$timeout', '$http', '$q', 'CONSTANT', 'SETTINGS', 'DataService','UltilService'];
+    VideoService.inject = ['$timeout', '$http', '$q', 'CONSTANT', 'SETTINGS', 'DataService', 'UltilService'];
 
-    function VideoService($timeout, $http, $q, CONSTANT, SETTINGS, DataService,UltilService) {
+    function VideoService($timeout, $http, $q, CONSTANT, SETTINGS, DataService, UltilService) {
         //interface
         var hls;
         var cb;
@@ -58,21 +58,21 @@
             hls.loadSource(stream);
             hls.attachMedia(video);
 
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            hls.on(Hls.Events.MANIFEST_PARSED, function () {
                 console.log('load MANIFEST_PARSED successfully1');
                 // def.resolve('load MANIFEST_PARSED successfully1');
             });
 
-            hls.on(Hls.Events.LEVEL_LOADED, function(event, data) {
+            hls.on(Hls.Events.LEVEL_LOADED, function (event, data) {
                 console.log('load LEVEL_LOADED successfully2');
                 // def.resolve('load LEVEL_LOADED successfully2');
             });
 
-            hls.on(Hls.Events.MEDIA_DETACHED, function() {
+            hls.on(Hls.Events.MEDIA_DETACHED, function () {
                 console.log('MEDIA_DETACHED ........................');
             });
 
-            hls.on(Hls.Events.ERROR, function(event, data) {
+            hls.on(Hls.Events.ERROR, function (event, data) {
                 switch (data.details) {
                     case Hls.ErrorDetails.MANIFEST_LOAD_ERROR:
                         try {
@@ -202,6 +202,12 @@
         }
 
         function playChannelStream(serviceId, video) {
+            // var deviceId = UltilService.getDeviceUdid();
+            // var clientId = SETTINGS.client_id;
+            // var appSecret = SETTINGS.app_secret;
+            // var ts = (new Date()).getTime();
+            // var hash = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA1(clientId + deviceId +  UltilService.getLoginUserId() + ts, appSecret));
+
             var param = {
                 version: 3,
                 regionId: "GUEST",
@@ -211,20 +217,23 @@
                 clientIP: "220.231.127.1",
                 manifestType: "HLS",
                 bwProfile: 5,
-                serviceProvider: "SmartTV",                
+                serviceProvider: "SmartTV",
                 userId: UltilService.getLoginUserId()
+                // client_id:clientId,
+                // hash:hash,
+                // ts:ts
             };
 
             var def = $q.defer();
 
             DataService.getPrepareChannel(param).then(
                 function success(response) {
-                    if (typeof(response.data.glbAddress) !== 'undefined' && response.data.glbAddress.length > 0) {
+                    if (typeof (response.data.glbAddress) !== 'undefined' && response.data.glbAddress.length > 0) {
                         var src = [];
                         var abc = 0;
                         if (response.data.glbAddress.length > 0) {
                             for (var i = 0; i < response.data.glbAddress.length; i++) {
-                                var stream = 'http://' + response.data.glbAddress[i] + '/' + param.assetId + ".m3u8" + '?AdaptiveType=HLS&VOD_RequestID=' + encodeURI(response.data.requestId);
+                                var stream = 'http://' + response.data.glbAddress[i] + '/' + param.assetId + ".m3u8" + '?AdaptiveType=HLS&VOD_RequestID=' + encodeURIComponent(response.data.requestId);
                             }
 
                             playStream(stream, video, def);
@@ -268,7 +277,7 @@
                         var stream = '';
                         if (response.data.gsdm.glb_addresses.length > 0) {
                             for (var i = 0; i < response.data.gsdm.glb_addresses.length; i++) {
-                                stream = 'http://' + response.data.gsdm.glb_addresses[i] + '/' + vod.vodLocator + '?AdaptiveType=HLS&VOD_RequestID=' + encodeURI(vodRequestId);
+                                stream = 'http://' + response.data.gsdm.glb_addresses[i] + '/' + vod.vodLocator + '?AdaptiveType=HLS&VOD_RequestID=' + encodeURIComponent(vodRequestId);
                                 // stream = 'http://192.168.1.149:8080/amazon_hdr_[4k_hevc_ott_ts_webvtt]_HEVC/amazon_hdr_[4k_hevc_ott_ts_webvtt]_HEVC.m3u8';
                             }
                         }
@@ -321,37 +330,37 @@
                     break;
                 case 'loadeddata':
                     console.log("loadeddata ---");
-                    // break;
+                // break;
                 case 'canplay':
                     console.log("canplay ---");
-                    // break;
+                // break;
                 case 'canplaythrough':
                     console.log("canplaythrough ---");
-                    // break;
+                // break;
                 case 'ended':
                     console.log("ended ---");
-                    // isEnded = true;
-                    // if (isEnded && isStalled) {
-                    //     cb();
-                    // }
-                    // cb();
+                // isEnded = true;
+                // if (isEnded && isStalled) {
+                //     cb();
+                // }
+                // cb();
                 case 'seeking':
                 case 'play':
-                    // console.log("play ---");
-                    // break;
+                // console.log("play ---");
+                // break;
                 case 'playing':
                     // console.log("play ---");
 
                     break;
-                    // lastStartPosition = evt.target.currentTime;
+                // lastStartPosition = evt.target.currentTime;
                 case 'pause':
                 case 'waiting':
                 case 'stalled':
-                    // isStalled = true;
-                    // console.log("stalled ---");
-                    // if (isEnded && isStalled) {
-                    //     cb();
-                    // }
+                // isStalled = true;
+                // console.log("stalled ---");
+                // if (isEnded && isStalled) {
+                //     cb();
+                // }
                 case 'error':
                     data = Math.round(evt.target.currentTime * 1000);
                     if (evt.type === 'error') {
@@ -378,9 +387,9 @@
                         console.error(errorTxt);
                     }
                     break;
-                    // case 'progress':
-                    //   data = 'currentTime:' + evt.target.currentTime + ',bufferRange:[' + this.video.buffered.start(0) + ',' + this.video.buffered.end(0) + ']';
-                    //   break;
+                // case 'progress':
+                //   data = 'currentTime:' + evt.target.currentTime + ',bufferRange:[' + this.video.buffered.start(0) + ',' + this.video.buffered.end(0) + ']';
+                //   break;
                 default:
                     break;
             }

@@ -25,13 +25,18 @@
             addHours: addHours,
             getCatchupId: getCatchupId,
             getLoginUserId: getLoginUserId,
-            getChannelByIndex: getChannelByIndex
+            getChannelByIndex: getChannelByIndex,
+            getDeviceUdid:getDeviceUdid
 
         };
 
         return service;
 
         //implementation
+        function getDeviceUdid() {
+            return localStorageService.get('deviceUdid');
+        }
+
         function getChannelByIndex(channelList, index) {
             var channel;
             angular.forEach(channelList, function (channelItem, key) {
@@ -41,7 +46,7 @@
                 }
 
             });
-               console.log("getChannelByIndex3:", channel);
+            console.log("getChannelByIndex3:", channel);
             return channel;
         }
         function getLoginUserId() {

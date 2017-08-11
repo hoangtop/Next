@@ -1777,7 +1777,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         var depth;
         depth = $scope.DEPTH.DETAIL;
         depth && changeDepth(depth);
-        // $(".list-wrapper.page").fadeOut(100, "linear");
+
         $scope.currentDepthZone = 0;
         $scope.isInfoShownInPlayer = true;
         // $scope.lastDepth = $scope.DEPTH.DETAIL;
@@ -2730,16 +2730,16 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                     $scope.relatedPlaylist = [CONSTANT.ITEM];
                     targetDepth = $scope.DEPTH.INDEX;
                     $scope.currentDepth = $scope.DEPTH.INDEX;
-                    $timeout(function () {
+                    // $timeout(function () {
 
-                        if ($scope.currentOverview.isSpotlight) {
-                            console.log("$scope.currentOverview.isSpotlight ...");
-                            $scope.currentDepthZone = $scope.DEPTH_ZONE.INDEX.SPOTLIGHT;
-                        }
+                    if ($scope.currentOverview.isSpotlight) {
+                        console.log("$scope.currentOverview.isSpotlight ...");
+                        $scope.currentDepthZone = $scope.DEPTH_ZONE.INDEX.SPOTLIGHT;
+                    }
 
-                        console.log("return to index ...", targetDepth, lastFocusedGroup);
-                        focusController.setDepth(targetDepth, lastFocusedGroup);
-                    }, CONSTANT.EFFECT_DELAY_TIME);
+                    console.log("return to index ...", targetDepth, lastFocusedGroup);
+                    focusController.setDepth(targetDepth, lastFocusedGroup);
+                    // }, CONSTANT.EFFECT_DELAY_TIME);
                 }
                 break;
             case $scope.DEPTH.PLAYER:

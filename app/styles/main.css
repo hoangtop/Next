@@ -1646,9 +1646,16 @@ span.login-input-lable {
     background-color: rgba(15, 24, 38, 0.9);
 }
 
-.spotlight-page-fade-out {
+.spotlight-page-fadeOut {
+    transition: opacity 0s ease-out !important;
     opacity: 0 !important;
-    /*transition: opacity 3s ease-out;*/
+    
+}
+
+.spotlight-page-fadeInt {
+    transition: opacity .5s ease-out !important;
+    opacity: 1 !important;
+    
 }
 
 .spotlight-page .overview.desc {
