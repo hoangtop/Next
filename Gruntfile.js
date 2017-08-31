@@ -305,8 +305,8 @@ module.exports = function(grunt) {
             options: {
                 mangle: false,
                 compress: {
-                    // drop_console: true
-                    //                    unsafe :true
+                    drop_console: true
+                        //                    unsafe :true
                 }
             }
 

@@ -40,50 +40,50 @@
                 }
             };
         }
-    ])
+    ]);
 
     /**
      * $http interceptor.
      * On 401 response (without 'ignoreAuthModule' option) stores the request
      * and broadcasts 'event:angular-auth-loginRequired'.
      */
-    .config([
-        '$httpProvider',
-        function($httpProvider) {
-            $httpProvider.interceptors.push([
-                '$rootScope', '$q', 'httpBuffer',
-                function($rootScope, $q, httpBuffer) {
-                    return {
-                        responseError: function(rejection) {
-                            if (rejection.status === 401 && !rejection.config.ignoreAuthModule) {
-                                var deferred = $q.defer();
-                                httpBuffer.append(rejection.config, deferred);
-                                $rootScope.$broadcast('event:auth-loginRequired', rejection);
-                                return deferred.promise;
-                            }
+    // .config([
+    //     '$httpProvider',
+    //     function($httpProvider) {
+    //         $httpProvider.interceptors.push([
+    //             '$rootScope', '$q', 'httpBuffer',
+    //             function($rootScope, $q, httpBuffer) {
+    //                 return {
+    //                     responseError: function(rejection) {
+    //                         if (rejection.status === 401 && !rejection.config.ignoreAuthModule) {
+    //                             var deferred = $q.defer();
+    //                             httpBuffer.append(rejection.config, deferred);
+    //                             $rootScope.$broadcast('event:auth-loginRequired', rejection);
+    //                             return deferred.promise;
+    //                         }
 
-                            if (rejection.status === 410 && !rejection.config.ignoreAuthModule) {
-                                var deferred = $q.defer();
-                                httpBuffer.append(rejection.config, deferred);
-                                $rootScope.$broadcast('event:auth-expired', rejection);
-                                return deferred.promise;
-                            }
+    //                         if (rejection.status === 410 && !rejection.config.ignoreAuthModule) {
+    //                             var deferred = $q.defer();
+    //                             httpBuffer.append(rejection.config, deferred);
+    //                             $rootScope.$broadcast('event:auth-expired', rejection);
+    //                             return deferred.promise;
+    //                         }
 
-                            if (rejection.status === 403 && !rejection.config.ignoreAuthModule) {
-                                var deferred = $q.defer();
-                                httpBuffer.append(rejection.config, deferred);
-                                $rootScope.$broadcast('event:auth-notAuthorized', rejection);
-                                return deferred.promise;
-                            }
+    //                         if (rejection.status === 403 && !rejection.config.ignoreAuthModule) {
+    //                             var deferred = $q.defer();
+    //                             httpBuffer.append(rejection.config, deferred);
+    //                             $rootScope.$broadcast('event:auth-notAuthorized', rejection);
+    //                             return deferred.promise;
+    //                         }
 
-                            // otherwise, default behaviour
-                            return $q.reject(rejection);
-                        }
-                    };
-                }
-            ]);
-        }
-    ]);
+    //                         // otherwise, default behaviour
+    //                         return $q.reject(rejection);
+    //                     }
+    //                 };
+    //             }
+    //         ]);
+    //     }
+    // ]);
 
     /**
      * Private module, a utility, required internally by 'http-auth-interceptor'.
@@ -138,9 +138,9 @@
                 /**
                  * Retries all the buffered requests clears the buffer.
                  */
-                retryAll: function(updater) {
+                retryAll: function() {
                     for (var i = 0; i < buffer.length; ++i) {
-                        retryHttpRequest(updater(buffer[i].config), buffer[i].deferred);
+                        retryHttpRequest((buffer[i].config), buffer[i].deferred);
                     }
                     buffer = [];
                 }

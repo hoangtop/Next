@@ -1347,6 +1347,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
 
 
                     // $(".background-layer").hide();
+                    toaster.clear('*');
                     VideoService.playChannelStream(channelProduct.service_id, video).then(function success(response) {
                         $timeout(function () {
                             // $scope.lastDepth = $scope.currentDepth;
@@ -1387,7 +1388,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                     toaster.pop({
                         type: 'error',
                         title: 'Chưa mua dịch vụ',
-                        body: 'Nội dung chưa được hỗ trợ trên ứng dụng cho SmartTV. Vui lòng xem nội dung trên Set-Top-Box hoặc ứng dụng Viettel trên điện thoại!',
+                        body: 'Quý khách vui lòng đăng ký gói cước trên ứng dụng ViettelTV dành cho SmartPhone/Máy tính bảng iOS/Android hoặc truy cập website http://vietteltv.vn',
                         timeout: 10000,
                         toasterId: 1
                     });
@@ -1398,8 +1399,8 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 toaster.clear('*');
                 toaster.pop({
                     type: 'warning',
-                    title: 'Không xem được Video',
-                    body: 'Bạn cần mua gói dịch vụ trên ứng dụng ViettelTV phiên bản cho Mobile để tiếp tục xem Video!',
+                    title: 'Không xem được Nội dung',
+                    body: 'Quý khách vui lòng đăng ký gói cước trên ứng dụng ViettelTV dành cho SmartPhone/Máy tính bảng iOS/Android hoặc truy cập website http://vietteltv.vn',
                     timeout: 10000,
                     toasterId: 1
                 });
@@ -1506,6 +1507,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 }
 
                 if (playable) {
+                    toaster.clear('*');
                     VideoService.playChannelStream(playingChannel.channelId, video).then(function success(response) {
                         $timeout(function () {
                             // $scope.lastDepth = $scope.currentDepth;
@@ -1549,7 +1551,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                     toaster.pop({
                         type: 'error',
                         title: 'Chưa mua dịch vụ',
-                        body: 'Nội dung chưa được hỗ trợ trên ứng dụng cho SmartTV. Vui lòng xem nội dung trên Set-Top-Box hoặc ứng dụng Viettel trên điện thoại!',
+                        body: 'Quý khách vui lòng đăng ký gói cước trên ứng dụng ViettelTV dành cho SmartPhone/Máy tính bảng iOS/Android hoặc truy cập website http://vietteltv.vn',
                         timeout: 10000,
                         toasterId: 1
                     });
@@ -1560,8 +1562,8 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                 toaster.clear('*');
                 toaster.pop({
                     type: 'warning',
-                    title: 'Không xem được Video',
-                    body: 'Bạn cần mua gói dịch vụ trên ứng dụng ViettelTV phiên bản cho Mobile để tiếp tục xem Video!',
+                    title: 'Không xem được Nội dung',
+                    body: 'Quý khách vui lòng đăng ký gói cước trên ứng dụng ViettelTV dành cho SmartPhone/Máy tính bảng iOS/Android hoặc truy cập website http://vietteltv.vn',
                     timeout: 10000,
                     toasterId: 1
                 });
@@ -1677,6 +1679,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
 
                         if (playable) {
                             changeDepth($scope.DEPTH.PLAYER);
+                            toaster.clear('*');
                             VideoService.playChannelStream($scope.channelOverview.channelId, video).then(function success(response) {
                                 $timeout(function () {
                                     // $scope.lastDepth = $scope.currentDepth;
@@ -1719,7 +1722,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                             toaster.pop({
                                 type: 'error',
                                 title: 'Chưa mua dịch vụ',
-                                body: 'Nội dung chưa được hỗ trợ trên ứng dụng cho SmartTV. Vui lòng xem nội dung trên Set-Top-Box hoặc ứng dụng Viettel trên điện thoại!',
+                                body: 'Quý khách vui lòng đăng ký gói cước trên ứng dụng ViettelTV dành cho SmartPhone/Máy tính bảng iOS/Android hoặc truy cập website http://vietteltv.vn',
                                 timeout: 10000,
                                 toasterId: 1
                             });
@@ -1730,8 +1733,8 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
                         toaster.clear('*');
                         toaster.pop({
                             type: 'warning',
-                            title: 'Không xem được Video',
-                            body: 'Bạn cần mua gói dịch vụ trên ứng dụng ViettelTV phiên bản cho Mobile để tiếp tục xem Video!',
+                            title: 'Không xem được Nội dung',
+                            body: 'Quý khách vui lòng đăng ký gói cước trên ứng dụng ViettelTV dành cho SmartPhone/Máy tính bảng iOS/Android hoặc truy cập website http://vietteltv.vn',
                             timeout: 10000,
                             toasterId: 1
                         });
@@ -2691,6 +2694,7 @@ function Controller($rootScope, $scope, $state, $timeout, $document, FocusUtil, 
         }
 
         console.log("back 2222...");
+        toaster.clear('*');
         $timeout.cancel(detailSectionTimmer);
         $timeout.cancel(processPlayerTimer);
         $interval.cancel(videoProgressTrackTimer);

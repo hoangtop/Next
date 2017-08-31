@@ -355,9 +355,9 @@
             console.log('getVodURL:------:' + UltilService.getLoginUserId());
             if (isFreeNoPair) {
                 // url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?id=' + programId + '&product_id=' + productId;
-                url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?access_token=' + SETTINGS.guest_access_token + '&id=' + programId + '&product_id=' + productId + '&version=1&bwProfile=5&category_id=VC_OTT&serviceProvider=SmartTV&userId=' + UltilService.getLoginUserId();
+                url = CONSTANT.API_HOST + '/api1/watches/fvod/prepare?access_token=' + SETTINGS.guest_access_token + '&id=' + programId + '&product_id=' + productId + '&version=1&bw_profile=5&category_id=VC_OTT&service_provider=SmartTV&user_id=' + UltilService.getLoginUserId();
             } else {
-                url = CONSTANT.API_HOST + '/api1/watches/vod/prepare?id=' + programId + '&regionId=GUEST&product_id=' + productId + '&version=1&bwProfile=5&category_id=VC_OTT&serviceProvider=SmartTV&userId=' + UltilService.getLoginUserId();
+                url = CONSTANT.API_HOST + '/api1/watches/vod/prepare?id=' + programId + '&region_id=GUEST&product_id=' + productId + '&version=1&bw_profile=5&category_id=VC_OTT&service_provider=SmartTV&user_id=' + UltilService.getLoginUserId();
             }
 
             var def = $q.defer();
